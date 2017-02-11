@@ -19,7 +19,7 @@
         </Grid.ColumnDefinitions>
 
         <Menu Grid.Row="0" Grid.ColumnSpan="2">
-
+            <MenuItem Header="Options" Command="{Binding OpenOptionsCommand}"/>
         </Menu>
 
         <GroupBox Grid.Column="0" Grid.Row="1">
@@ -46,65 +46,95 @@
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Open Post" Command="{Binding OpenPostCommand}"/>
-                    <Separator/>
-                    <MenuItem Header="View Profile"  Command="{Binding ViewProfileCommand}"/>
-                    <MenuItem Header="Follow User"  Command="{Binding FollowUserCommand}"/>
+                    <Separator Visibility="{Binding PostVisibility}"/>
+                    <MenuItem Header="View Profile"  Command="{Binding ViewProfileCommand}"  Visibility="{Binding PostVisibility}"/>
+                    <MenuItem Header="Follow User"  Command="{Binding FollowUserCommand}"  Visibility="{Binding PostVisibility}"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
-            
+
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="60"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical">
+                        <!-- General Feed-->
+                        <Grid>
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Type}" Value="Post">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
 
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                        <Label FontSize="20" Grid.Column="0" Grid.RowSpan="2" 
+                            <Label FontSize="20" Grid.Column="0" Grid.RowSpan="2" 
                                VerticalAlignment="Top" HorizontalAlignment="Center"
                                Content="{Binding Votes}"/>
 
-                        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" Margin="0 5 0 0">
-                            <Label FontWeight="Bold" FontSize="14">
-                                <TextBlock Text="{Binding Username}"/>
-                            </Label>
+                            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" Margin="0 5 0 0">
+                                <Label FontWeight="Bold" FontSize="14">
+                                    <TextBlock Text="{Binding Username}"/>
+                                </Label>
 
-                            <!--
+                                <!--
                             <Label Content="{Binding CreateTime}"/>
                             -->
+                            </StackPanel>
+
+                            <Label Grid.Column="1" Grid.Row="1">
+                                <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
+                            </Label>
+
+                            <Image Source="{Binding Picture}" Grid.Row="2" Grid.Column="1"/>
+
+                            <DockPanel Grid.Row="3" Grid.Column="1">
+
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                    <Label FontWeight="Bold">Comments:</Label>
+                                    <Label Content="{Binding CommentsCount}"/>
+                                </StackPanel>
+
+                                <StackPanel Visibility="{Binding TagsVisibility}" DockPanel.Dock="Left" Orientation="Horizontal">
+                                    <Label FontWeight="Bold">Tags:</Label>
+                                    <Label Content="{Binding TagsString}"/>
+                                </StackPanel>
+                            </DockPanel>
+                        </Grid>
+
+                        <!-- Notifications-->
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Type}" Value="Notification">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+
+                            <Label>
+                                <TextBlock Text="{Binding Text}"/>
+                            </Label>
                         </StackPanel>
-                        
-                        <Label Grid.Column="1" Grid.Row="1">
-                            <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
-                        </Label>
-
-                        <Image Source="{Binding Picture}" Grid.Row="2" Grid.Column="1"/>
-                        
-                        <DockPanel Grid.Row="3" Grid.Column="1">
-
-                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
-                                <Label FontWeight="Bold">Comments:</Label>
-                                <Label Content="{Binding CommentsCount}"/>
-                            </StackPanel>
-
-                            <StackPanel Visibility="{Binding TagsVisibility}" DockPanel.Dock="Left" Orientation="Horizontal">
-                                <Label FontWeight="Bold">Tags: </Label>
-                                <Label Content="{Binding TagsString}"/>
-                            </StackPanel>
-                        </DockPanel>
-
-                    </Grid>
+                    </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        
+
         <!--
         <Button Command="{Binding TestCommand}">Test</Button>
         -->

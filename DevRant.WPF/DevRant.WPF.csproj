@@ -93,6 +93,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\Notification.cs" />
     <Compile Include="ViewModels\FeedItem.cs" />
     <Compile Include="ViewModels\Rant.cs" />
     <Page Include="MainWindow.xaml">

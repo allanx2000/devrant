@@ -11,7 +11,6 @@ using Innouvous.Utils;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.ComponentModel;
-using System.Threading;
 using DevRant.WPF.ViewModels;
 using System.Diagnostics;
 
@@ -26,7 +25,8 @@ namespace DevRant.WPF
         public bool IsLoading
         {
             get { return Get<bool>(); }
-            private set {
+            private set
+            {
                 Set(value);
                 RaisePropertyChanged();
             }
@@ -42,12 +42,13 @@ namespace DevRant.WPF
             feedView.Source = feeds;
         }
 
-        public Rant SelectedPost { get; set; }
+        public FeedItem SelectedPost { get; set; }
 
         #region Sections
 
         public const string SectionGeneral = "GeneralFeed";
         public const string SectionNotifications = "MyNotifications";
+        
         public const string SectionFollowed = "FollowedUsers";
         public async Task LoadSection(string section)
         {
@@ -57,16 +58,32 @@ namespace DevRant.WPF
             {
                 case SectionGeneral:
                     await LoadFeed();
+                    ListType = FeedItem.FeedItemType.Post;
+                    break;
+                case SectionNotifications:
+                    await LoadNotifications();
+                    ListType = FeedItem.FeedItemType.Notification;
                     break;
             }
 
             IsLoading = false;
         }
 
+        private async Task LoadNotifications()
+        {
+            //TODO: Add get notifications
+
+            feeds.Clear();
+
+            feeds.Add(new Notification());
+            feeds.Add(new Notification());
+            feeds.Add(new Notification());
+        }
+
         private async Task LoadFeed()
         {
             var rants = await api.GetRantsAsync();
-            
+
             feeds.Clear();
 
             foreach (var rant in rants)
@@ -74,6 +91,12 @@ namespace DevRant.WPF
                 Rant r = new Rant(rant);
                 feeds.Add(r);
             }
+        }
+
+        public Visibility PostVisibility
+        {
+            get { return ListType == FeedItem.FeedItemType.Post ? Visibility.Visible : Visibility.Collapsed; }
+
         }
 
         public ICommand OpenPostCommand
@@ -88,17 +111,16 @@ namespace DevRant.WPF
 
         private void ViewProfile()
         {
-            Process.Start(SelectedPost.ProfileURL);
+            Process.Start(((Rant)SelectedPost).ProfileURL);
         }
 
-        private void OpenPost()
+        public void OpenPost()
         {
             if (SelectedPost == null)
                 return;
-
-            //TODO: Switch on Type...
-
-            Process.Start(SelectedPost.PostURL);
+            else if (SelectedPost is Rant)
+                Process.Start(((Rant)SelectedPost).PostURL);
+            //TODO: Add Notification
         }
 
         private ObservableCollection<FeedItem> feeds = new ObservableCollection<FeedItem>();
@@ -118,6 +140,17 @@ namespace DevRant.WPF
         public ICommand TestCommand
         {
             get { return new mvvm.CommandHelper(Test); }
+        }
+
+        public FeedItem.FeedItemType ListType
+        {
+            get { return Get<FeedItem.FeedItemType>(); }
+            private set
+            {
+                Set(value);
+                RaisePropertyChanged("ListType");
+                RaisePropertyChanged("PostVisibility");
+            }
         }
 
         private async void Test()

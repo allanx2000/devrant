@@ -48,12 +48,7 @@ namespace DevRant.WPF
 
         private void FeedListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            Rant rant = (Rant) FeedListBox.SelectedItem;
-
-            if (rant != null)
-            {
-                Process.Start(rant.PostURL);
-            }
+            vm.OpenPost();
         }
     }
 }
