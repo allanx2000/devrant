@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DevRantClient.cs" />
+    <Compile Include="Dtos\ImageInfo.cs" />
     <Compile Include="Dtos\Profile.cs" />
     <Compile Include="Dtos\RantInfo.cs" />
     <Compile Include="Dtos\RantSort.cs" />

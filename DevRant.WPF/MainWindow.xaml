@@ -1,0 +1,112 @@
+﻿<Window x:Class="DevRant.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DevRant.WPF"
+        xmlns:vm="clr-namespace:DevRant.WPF.ViewModels"
+        mc:Ignorable="d"
+        Title="devRant" Height="800" Width="800" IsEnabled="{Binding !IsLoading}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Menu Grid.Row="0" Grid.ColumnSpan="2">
+
+        </Menu>
+
+        <GroupBox Grid.Column="0" Grid.Row="1">
+            <ListBox SelectionChanged="SectionChanged">
+                <ListBox.Resources>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Padding" Value="5"/>
+                        <Setter Property="FontSize" Value="20"/>
+                    </Style>
+                </ListBox.Resources>
+
+                <ListBoxItem Name="GeneralFeed" IsSelected="True">General Feed</ListBoxItem>
+                <ListBoxItem Name="MyNotifications" Content="{Binding NotificationsLabel, FallbackValue='My Notifications'}" FontStyle="{Binding NotificationsStyle}"/>
+                <ListBoxItem Name="FollowedUsers" Content="{Binding FollowedUsersLabel, FallbackValue='Followed Users'}" FontStyle="{Binding FollowedUsersStyle}"/>
+            </ListBox>
+        </GroupBox>
+
+        <!-- Example of perfect wrapping ListBox... -->
+        <ListBox Name="FeedListBox" Grid.Row="1" Grid.Column="1" MouseDoubleClick="FeedListBox_MouseDoubleClick" 
+                 HorizontalContentAlignment="Stretch"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 ItemsSource="{Binding FeedView}"  SelectedItem="{Binding SelectedPost}" Margin="0,4,0,-4" Grid.RowSpan="2">
+
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Open Post" Command="{Binding OpenPostCommand}"/>
+                    <Separator/>
+                    <MenuItem Header="View Profile"  Command="{Binding ViewProfileCommand}"/>
+                    <MenuItem Header="Follow User"  Command="{Binding FollowUserCommand}"/>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+            
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label FontSize="20" Grid.Column="0" Grid.RowSpan="2" 
+                               VerticalAlignment="Top" HorizontalAlignment="Center"
+                               Content="{Binding Votes}"/>
+
+                        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" Margin="0 5 0 0">
+                            <Label FontWeight="Bold" FontSize="14">
+                                <TextBlock Text="{Binding Username}"/>
+                            </Label>
+
+                            <!--
+                            <Label Content="{Binding CreateTime}"/>
+                            -->
+                        </StackPanel>
+                        
+                        <Label Grid.Column="1" Grid.Row="1">
+                            <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
+                        </Label>
+
+                        <Image Source="{Binding Picture}" Grid.Row="2" Grid.Column="1"/>
+                        
+                        <DockPanel Grid.Row="3" Grid.Column="1">
+
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                <Label FontWeight="Bold">Comments:</Label>
+                                <Label Content="{Binding CommentsCount}"/>
+                            </StackPanel>
+
+                            <StackPanel Visibility="{Binding TagsVisibility}" DockPanel.Dock="Left" Orientation="Horizontal">
+                                <Label FontWeight="Bold">Tags: </Label>
+                                <Label Content="{Binding TagsString}"/>
+                            </StackPanel>
+                        </DockPanel>
+
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        
+        <!--
+        <Button Command="{Binding TestCommand}">Test</Button>
+        -->
+    </Grid>
+</Window>
