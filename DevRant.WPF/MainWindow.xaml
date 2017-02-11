@@ -41,7 +41,7 @@
         <ListBox Name="FeedListBox" Grid.Row="1" Grid.Column="1" MouseDoubleClick="FeedListBox_MouseDoubleClick" 
                  HorizontalContentAlignment="Stretch"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 ItemsSource="{Binding FeedView}"  SelectedItem="{Binding SelectedPost}" Margin="0,4,0,-4" Grid.RowSpan="2">
+                 ItemsSource="{Binding FeedView}"  SelectedItem="{Binding SelectedPost}" Margin="0,5,0,-5" Grid.RowSpan="2">
 
             <ListBox.ContextMenu>
                 <ContextMenu>
@@ -85,8 +85,44 @@
 
                             <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" Margin="0 5 0 0">
                                 <Label FontWeight="Bold" FontSize="14">
+                                    <Label.Style>
+                                        <Style TargetType="{x:Type Label}">
+                                            <Setter Property="Foreground" Value="Black"/>
+
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Followed}" Value="True">
+                                                    <Setter Property="Foreground" Value="Green"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Label.Style>
                                     <TextBlock Text="{Binding Username}"/>
                                 </Label>
+
+                                <Label Width="20"/>
+
+                                <Label MinWidth="30" HorizontalContentAlignment="Center" Background="Gray" Foreground="White" FontWeight="Bold" Content="{Binding UserScore}">
+                                    <Label.Style>
+                                        <Style TargetType="{x:Type Label}">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type Label}">
+                                                        <Border BorderBrush="{TemplateBinding BorderBrush}" 
+                                                            BorderThickness="{TemplateBinding BorderThickness}" 
+                                                            Background="{TemplateBinding Background}" 
+                                                            Padding="{TemplateBinding Padding}" 
+                                                            SnapsToDevicePixels="true" 
+                                                            CornerRadius="7">
+                                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Label.Style>
+                                </Label>
+
+
 
                                 <!--
                             <Label Content="{Binding CreateTime}"/>

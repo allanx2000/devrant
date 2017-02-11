@@ -19,6 +19,8 @@ namespace DevRant.WPF.ViewModels
 
         public string Username { get { return rant.Username; } }
 
+        public int UserScore { get { return rant.UserScore; } }
+
         public string CreateTime { get; private set; }
 
 
@@ -35,6 +37,18 @@ namespace DevRant.WPF.ViewModels
 
         public BitmapImage Picture { get; private set; }
         
+        public bool Followed
+        {
+            get
+            {
+                return Get<bool>();
+            }
+            set
+            {
+                Set(value);
+                RaisePropertyChanged();
+            }
+        }
 
         public Rant(RantInfo rant) : base(FeedItemType.Post)
         {
@@ -52,12 +66,19 @@ namespace DevRant.WPF.ViewModels
             {
                 var request = WebRequest.Create(rant.Image.Url);
 
-                using (var response = request.GetResponse())
-                using (var stream = response.GetResponseStream())
+                try
                 {
-                    Bitmap bitmap = new Bitmap(stream);
+                    using (var response = request.GetResponse())
+                    using (var stream = response.GetResponseStream())
+                    {
+                        Bitmap bitmap = new Bitmap(stream);
 
-                    App.Current.Dispatcher.Invoke(() => Picture = BitmapToImageSource(bitmap));
+                        App.Current.Dispatcher.Invoke(() => Picture = BitmapToImageSource(bitmap));
+                    }
+                }
+                catch (Exception e)
+                {
+                    //Timeout?
                 }
             }
         }

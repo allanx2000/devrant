@@ -91,6 +91,8 @@ namespace DevRant.WPF
                 Rant r = new Rant(rant);
                 feeds.Add(r);
             }
+
+            UpdateFollow();
         }
 
         public Visibility PostVisibility
@@ -104,6 +106,32 @@ namespace DevRant.WPF
             get { return new mvvm.CommandHelper(OpenPost); }
         }
 
+        public ICommand FollowUserCommand
+        {
+            get { return new mvvm.CommandHelper(FollowUser); }
+        }
+
+        private void FollowUser()
+        {
+            if (SelectedPost == null)
+                return;
+
+            ds.Follow(SelectedPost.AsRant().Username);
+
+            UpdateFollow();
+        }
+
+        private void UpdateFollow()
+        {
+            var followed = ds.FollowedUsers;
+
+            foreach (Rant rant in feeds)
+            {
+                if (followed.Contains(rant.Username))
+                    rant.Followed = true;
+            }
+        }
+
         public ICommand ViewProfileCommand
         {
             get { return new mvvm.CommandHelper(ViewProfile); }
@@ -111,6 +139,9 @@ namespace DevRant.WPF
 
         private void ViewProfile()
         {
+            if (SelectedPost == null)
+                return;
+
             Process.Start(((Rant)SelectedPost).ProfileURL);
         }
 

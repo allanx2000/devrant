@@ -8,11 +8,16 @@ namespace DevRant.WPF
 {
     interface IDataStore
     {
-        List<string> FollowedUsers { get; }
+        IReadOnlyList<string> FollowedUsers { get; }
         void Unfollow(string user);
         void Follow(string user);
-        
-        //TODO: Login, current user
 
+        //string GeneralSortOrder { get; }
+        //int SizeGeneral { get; }
+
+        /*
+        string Username { get; }
+        string Password { get; }
+        */
     }
 }

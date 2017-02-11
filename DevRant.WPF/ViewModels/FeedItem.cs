@@ -1,6 +1,8 @@
-﻿namespace DevRant.WPF.ViewModels
+﻿using System;
+
+namespace DevRant.WPF.ViewModels
 {
-    public abstract class FeedItem
+    public abstract class FeedItem : Innouvous.Utils.Merged45.MVVM45.ViewModel
     {
         
         public FeedItem(FeedItemType type)
@@ -16,5 +18,10 @@
         }
 
         public FeedItemType Type { get; private set; }
+
+        public Rant AsRant()
+        {
+            return (Rant) this;
+        }
     }
 }
