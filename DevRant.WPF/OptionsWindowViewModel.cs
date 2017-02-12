@@ -192,6 +192,7 @@ namespace DevRant.WPF
             ds.SetDefaultFeed(DefaultFeed);
 
             ds.SetFollowing(users);
+            ds.SetUpdatesInterval(UpdateCheckInterval);
 
             Cancelled = false;
             window.Close();

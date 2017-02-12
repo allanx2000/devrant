@@ -26,6 +26,8 @@ namespace DevRant.WPF
         private FollowedUserChecker checker;
 
         private FeedType currentSection;
+        private ObservableCollection<FeedItem> feeds = new ObservableCollection<FeedItem>();
+        private CollectionViewSource feedView;
 
         public MainWindowViewModel(Window window)
         {
@@ -33,34 +35,23 @@ namespace DevRant.WPF
             ds = new AppSettingsDataStore();
             api = new DevRantClient();
 
-            checker = new FollowedUserChecker(ds, api);
-            checker.OnUpdate += UpdateFollowedPosts;
-
-            UpdateFollowedPosts(new FollowedUserChecker.UpdateArgs(), false);
-
             statusMessages = new MessageCollection();
             statusMessages.Changed += StatusChanged;
-
 
             feedView = new CollectionViewSource();
             feedView.Source = feeds;
 
+            //Initialize the properties
+            UpdateFollowedPosts(new FollowedUserChecker.UpdateArgs(), false);
+
+            checker = new FollowedUserChecker(ds, api);
+            checker.OnUpdate += UpdateFollowedPosts;
             checker.Start();
-            //TODO: Need to close thread
 
             //Test();
         }
 
-        public bool IsLoading
-        {
-            get { return Get<bool>(); }
-            private set
-            {
-                Set(value);
-                RaisePropertyChanged();
-            }
-        }
-
+        
         #region Status
 
         private MessageCollection statusMessages;
@@ -72,12 +63,33 @@ namespace DevRant.WPF
         {
             RaisePropertyChanged("StatusMessage");
         }
+
+        private void UpdateStatus(string message, bool includeTime = true)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (includeTime)
+            {
+                string time = DateTime.Now.ToShortTimeString();
+                sb.Append(time + ": ");
+            }
+
+            sb.Append(message);
+
+            statusMessages.AddMessage(sb.ToString());
+        }
         #endregion
 
         #region Properties
-        private ObservableCollection<FeedItem> feeds = new ObservableCollection<FeedItem>();
-        private CollectionViewSource feedView;
-
+        public bool IsLoading
+        {
+            get { return Get<bool>(); }
+            private set
+            {
+                Set(value);
+                RaisePropertyChanged();
+            }
+        }
         public ICollectionView FeedView
         {
             get
@@ -257,7 +269,7 @@ namespace DevRant.WPF
 
             ds.Unfollow(SelectedPost.AsRant().Username);
 
-            UpdateFollow();
+            UpdateFollowedInRants();
         }
 
         public ICommand FollowUserCommand
@@ -272,7 +284,7 @@ namespace DevRant.WPF
 
             ds.Follow(SelectedPost.AsRant().Username);
 
-            UpdateFollow();
+            UpdateFollowedInRants();
         }
 
         public ICommand ViewProfileCommand
@@ -296,6 +308,27 @@ namespace DevRant.WPF
         private void ViewNotifications()
         {
             Process.Start(Utilities.BaseURL + "/notifs");
+        }
+
+        #endregion
+
+        #region Test Functions
+
+        public ICommand TestCommand
+        {
+            get { return new mvvm.CommandHelper(Test); }
+        }
+
+        private async void Test()
+        {
+            var profile = await GetProfile();
+            MessageBoxFactory.ShowInfo(profile.Skills, "Test");
+        }
+
+        public async Task<Dtos.Profile> GetProfile()
+        {
+            var profile = await api.GetProfileAsync("allanx2000");
+            return profile;
         }
 
         #endregion
@@ -329,21 +362,6 @@ namespace DevRant.WPF
             }
         }
 
-        private void UpdateStatus(string message, bool includeTime = true)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            if (includeTime)
-            {
-                string time = DateTime.Now.ToShortTimeString();
-                sb.Append(time + ": ");
-            }
-
-            sb.Append(message);
-
-            statusMessages.AddMessage(sb.ToString());
-        }
-
         private void LoadFollowed()
         {
             feeds.Clear();
@@ -354,7 +372,7 @@ namespace DevRant.WPF
                     feeds.Add(rant);
             }
 
-            UpdateFollow();
+            UpdateFollowedInRants();
             currentSection = FeedType.Updates;
         }
 
@@ -396,13 +414,16 @@ namespace DevRant.WPF
                 feeds.Add(r);
             }
 
-            UpdateFollow();
+            UpdateFollowedInRants();
 
             currentSection = type;
             UpdateStatus("Loaded " + rants.Count + " rants");
         }
         
-        private void UpdateFollow()
+        /// <summary>
+        /// Updates the Followed property in the rants, which is also shown in the View
+        /// </summary>
+        private void UpdateFollowedInRants()
         {
             var followed = ds.FollowedUsers;
 
@@ -414,29 +435,9 @@ namespace DevRant.WPF
                     rant.Followed = false;
             }
 
-            //Update Menu
+            //Updates the ContextMenu
             RaisePropertyChanged("SelectedPost");
         }
         
-        #region Test Functions
-
-        public ICommand TestCommand
-        {
-            get { return new mvvm.CommandHelper(Test); }
-        }
-        
-        private async void Test()
-        {
-            var profile = await GetProfile();
-            MessageBoxFactory.ShowInfo(profile.Skills, "Test");
-        }
-
-        public async Task<Dtos.Profile> GetProfile()
-        {
-            var profile = await api.GetProfileAsync("allanx2000");
-            return profile;
-        }
-
-        #endregion
     }
 }

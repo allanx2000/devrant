@@ -124,5 +124,11 @@ namespace DevRant.WPF
             followedUsers.AddRange(users);
             SaveUsers();
         }
+
+        public void SetUpdatesInterval(int updateCheckInterval)
+        {
+            Settings.FollowedUsersUpdateInterval = updateCheckInterval;
+            Settings.Save();
+        }
     }
 }
