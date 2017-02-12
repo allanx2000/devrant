@@ -46,7 +46,27 @@ namespace DevRant
             var response = await client.GetAsync($"/api/users/{userId}?app={appVersion}");
             var responseText = await response.Content.ReadAsStringAsync();
 
-            return ParseProperty<Profile>(responseText, "profile");
+            JObject obj = JObject.Parse(responseText);
+            Profile profile = obj["profile"].ToObject<Profile>();
+
+            //Add Rants
+            JObject content = obj["profile"]["content"]["content"] as JObject;
+
+            JArray rants = content["rants"] as JArray;
+
+            if (rants != null)
+            {
+                List<RantInfo> rantsList = new List<RantInfo>();
+                foreach (var r in rants)
+                {
+                    RantInfo info = r.ToObject<RantInfo>();
+                    rantsList.Add(info);
+                }
+
+                profile.Rants = rantsList;
+            }
+
+            return profile;
         }
 
         /// <summary>

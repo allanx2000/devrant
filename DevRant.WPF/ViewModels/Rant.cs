@@ -53,7 +53,7 @@ namespace DevRant.WPF.ViewModels
         public Rant(RantInfo rant) : base(FeedItemType.Post)
         {
             this.rant = rant;
-            DateTime dt = FromUnixTime(rant.CreatedTime);
+            DateTime dt = Utilities.FromUnixTime(rant.CreatedTime);
             //CreateTime = dt.ToString("M/d/yyyy");
 
             Thread th = new Thread(() => LoadImage());
@@ -99,10 +99,6 @@ namespace DevRant.WPF.ViewModels
             }
         }
 
-        public static DateTime FromUnixTime(long unixTime)
-        {
-            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            return epoch.AddSeconds(unixTime);
-        }
+       
     }
 }

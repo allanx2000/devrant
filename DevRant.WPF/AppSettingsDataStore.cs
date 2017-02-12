@@ -33,7 +33,19 @@ namespace DevRant.WPF
                 return followedUsers.AsReadOnly();
             }
         }
-        
+
+        public long FollowedUsersLastChecked
+        {
+            get
+            {
+                return Settings.LastChecked;
+            }
+            set
+            {
+                Settings.LastChecked = value;
+                Settings.Save();
+            }
+        }
 
         public void Follow(string user)
         {

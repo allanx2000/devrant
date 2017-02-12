@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace DevRant.Dtos
 {
@@ -42,5 +43,11 @@ namespace DevRant.Dtos
         /// </summary>
         [JsonProperty("score")]
         public int Score { get; set; }
+
+        /// <summary>
+        /// Rants
+        /// </summary>
+        [JsonProperty("content.content.rants")]
+        public List<RantInfo> Rants { get; set; }
     }
 }

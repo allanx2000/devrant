@@ -13,6 +13,7 @@ using System.Windows.Data;
 using System.ComponentModel;
 using DevRant.WPF.ViewModels;
 using System.Diagnostics;
+using DevRant.WPF.Converters;
 
 namespace DevRant.WPF
 {
@@ -21,6 +22,8 @@ namespace DevRant.WPF
         private Window window;
         private IDataStore ds;
         private DevRantClient api;
+
+        private FollowedUserChecker checker;
 
         public bool IsLoading
         {
@@ -38,11 +41,67 @@ namespace DevRant.WPF
             ds = new AppSettingsDataStore();
             api = new DevRantClient();
 
+            checker = new FollowedUserChecker(ds, api);
+            checker.OnUpdate += UpdateFollowedPosts;
+            UpdateFollowedPosts(new FollowedUserChecker.UpdateArgs());
+
             feedView = new CollectionViewSource();
             feedView.Source = feeds;
+
+            checker.Start();
+            //TODO: Need to close thread
+            
+        }
+        
+        public string FollowedUsersLabel
+        {
+            get { return Get<string>(); }
+            private set
+            {
+                Set(value);
+                RaisePropertyChanged();
+            }
         }
 
-        public FeedItem SelectedPost { get; set; }
+        public FontWeight FollowedUsersWeight
+        {
+            get
+            {
+                return Get<FontWeight>();
+            }
+            private set
+            {
+                Set(value);
+                RaisePropertyChanged();
+            }
+        }
+        private void UpdateFollowedPosts(FollowedUserChecker.UpdateArgs args)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Updates");
+            
+            if (args.TotalUnread > 0)
+            {
+                FollowedUsersWeight = FontWeights.Bold;
+                sb.Append(" (" + args.TotalUnread + ")");
+            }
+            else
+            {
+                FollowedUsersWeight = FontWeights.Normal;
+            }
+
+            FollowedUsersLabel = sb.ToString();
+        }
+
+        public FeedItem SelectedPost {
+            get { return Get<FeedItem>(); }
+            set
+            {
+                Set(value);
+                VisibilityConverter.State.SetSelectedItem(value);
+                RaisePropertyChanged();
+            }
+        }
 
         #region Sections
 
@@ -58,15 +117,32 @@ namespace DevRant.WPF
             {
                 case SectionGeneral:
                     await LoadFeed();
-                    ListType = FeedItem.FeedItemType.Post;
+                    //ListType = FeedItem.FeedItemType.Post;
                     break;
                 case SectionNotifications:
                     await LoadNotifications();
-                    ListType = FeedItem.FeedItemType.Notification;
+                    //ListType = FeedItem.FeedItemType.Notification;
+                    break;
+                case SectionFollowed:
+                    LoadFollowed();
+                    //ListType = FeedItem.FeedItemType.Post;
                     break;
             }
 
             IsLoading = false;
+        }
+
+        private void LoadFollowed()
+        {
+            feeds.Clear();
+
+            foreach (var rant in checker.Posts)
+            {
+                feeds.Add(rant);
+            }
+
+            checker.Posts.Clear();
+            UpdateFollow();
         }
 
         private async Task LoadNotifications()

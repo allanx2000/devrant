@@ -4,9 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DevRant.WPF"
-        xmlns:vm="clr-namespace:DevRant.WPF.ViewModels"
+        xmlns:converters="clr-namespace:DevRant.WPF.Converters"
         mc:Ignorable="d"
         Title="devRant" Height="800" Width="800" IsEnabled="{Binding !IsLoading}">
+
+    <Window.Resources>
+        <converters:VisibilityConverter x:Key="VisibilityConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -14,7 +18,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="180"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -27,13 +31,15 @@
                 <ListBox.Resources>
                     <Style TargetType="ListBoxItem">
                         <Setter Property="Padding" Value="5"/>
-                        <Setter Property="FontSize" Value="20"/>
+                        <Setter Property="FontSize" Value="16"/>
                     </Style>
                 </ListBox.Resources>
 
-                <ListBoxItem Name="GeneralFeed" IsSelected="True">General Feed</ListBoxItem>
-                <ListBoxItem Name="MyNotifications" Content="{Binding NotificationsLabel, FallbackValue='My Notifications'}" FontStyle="{Binding NotificationsStyle}"/>
-                <ListBoxItem Name="FollowedUsers" Content="{Binding FollowedUsersLabel, FallbackValue='Followed Users'}" FontStyle="{Binding FollowedUsersStyle}"/>
+                <ListBoxItem Name="GeneralFeed" IsSelected="True">General</ListBoxItem>
+                <ListBoxItem Name="StoriesFeed">Stories</ListBoxItem>
+                <ListBoxItem Name="CollabFeed">Collab</ListBoxItem>
+                <ListBoxItem Name="MyNotifications" Content="{Binding NotificationsLabel, FallbackValue='Notifications'}" FontWeight="{Binding NotificationsWeight}"/>
+                <ListBoxItem Name="FollowedUsers" Content="{Binding FollowedUsersLabel, FallbackValue='Users Updates'}" FontWeight="{Binding FollowedUsersWeight}"/>
             </ListBox>
         </GroupBox>
 
@@ -46,9 +52,10 @@
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Open Post" Command="{Binding OpenPostCommand}"/>
-                    <Separator Visibility="{Binding PostVisibility}"/>
-                    <MenuItem Header="View Profile"  Command="{Binding ViewProfileCommand}"  Visibility="{Binding PostVisibility}"/>
-                    <MenuItem Header="Follow User"  Command="{Binding FollowUserCommand}"  Visibility="{Binding PostVisibility}"/>
+                    <Separator Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=IsRant}"/>
+                    <MenuItem Header="View Profile"  Command="{Binding ViewProfileCommand}"  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=IsRant}"/>
+                    <MenuItem Header="Follow User"  Command="{Binding FollowUserCommand}"  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=Follow}"/>
+                    <MenuItem Header="Unfollow User"  Command="{Binding UnfollowUserCommand}"  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=Unfollow}"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
 

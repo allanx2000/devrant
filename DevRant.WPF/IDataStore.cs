@@ -9,6 +9,8 @@ namespace DevRant.WPF
     interface IDataStore
     {
         IReadOnlyList<string> FollowedUsers { get; }
+        long FollowedUsersLastChecked { get; set; }
+
         void Unfollow(string user);
         void Follow(string user);
 
