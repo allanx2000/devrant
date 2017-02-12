@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:DevRant.WPF"
         xmlns:converters="clr-namespace:DevRant.WPF.Converters"
         mc:Ignorable="d"
-        Title="devRant" Height="800" Width="800" IsEnabled="{Binding !IsLoading}">
+        Title="devRant" Height="800" Width="800" IsEnabled="{Binding !IsLoading}"
+        Closed="Window_Closed">
 
     <Window.Resources>
         <converters:VisibilityConverter x:Key="VisibilityConverter"/>

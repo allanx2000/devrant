@@ -50,5 +50,10 @@ namespace DevRant.WPF
         {
             vm.OpenPost();
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            App.Current.Shutdown();
+        }
     }
 }
