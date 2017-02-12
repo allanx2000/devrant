@@ -39,8 +39,8 @@ namespace DevRant.WPF
         {
             get
             {
-                return Utilities.ToUnixTime(DateTime.UtcNow.AddHours(-12));
-                //return Settings.LastChecked;
+                //return Utilities.ToUnixTime(DateTime.UtcNow.AddHours(-12));
+                return Settings.LastChecked;
             }
             set
             {

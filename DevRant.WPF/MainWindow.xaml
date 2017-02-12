@@ -39,7 +39,7 @@
                         <Setter Property="Padding" Value="5"/>
                         <Setter Property="FontSize" Value="16"/>
                     </Style>
-                    
+
                     <Style x:Key="SubSection" TargetType="ListBoxItem">
                         <Setter Property="Padding" Value="20 4"/>
                         <Setter Property="FontSize" Value="13"/>
@@ -50,7 +50,7 @@
                 <ListBoxItem Style="{StaticResource SubSection}" Name="GeneralAlgo">Algo</ListBoxItem>
                 <ListBoxItem Style="{StaticResource SubSection}" Name="GeneralTop">Top</ListBoxItem>
                 <ListBoxItem Style="{StaticResource SubSection}" Name="GeneralRecent">Recent</ListBoxItem>
-                
+
                 <ListBoxItem Name="StoriesFeed">Stories</ListBoxItem>
                 <ListBoxItem Style="{StaticResource SubSection}" Name="StoriesDay">Day</ListBoxItem>
                 <ListBoxItem Style="{StaticResource SubSection}" Name="StoriesWeek">Week</ListBoxItem>
@@ -58,150 +58,156 @@
                 <ListBoxItem Style="{StaticResource SubSection}" Name="StoriesAll">All</ListBoxItem>
 
                 <ListBoxItem Name="CollabFeed">Collab</ListBoxItem>
-                
+
                 <!--
                 <ListBoxItem Name="MyNotifications" Content="{Binding NotificationsLabel, FallbackValue='Notifications'}" FontWeight="{Binding NotificationsWeight}"/>
                 -->
-                
+
                 <ListBoxItem Name="FollowedUsers" Content="{Binding FollowedUsersLabel, FallbackValue='Users Updates'}" FontWeight="{Binding FollowedUsersWeight}"/>
             </ListBox>
         </GroupBox>
 
-        <!-- Example of perfect wrapping ListBox... -->
-        <ListBox Name="FeedListBox" Grid.Row="1" Grid.Column="1" MouseDoubleClick="FeedListBox_MouseDoubleClick" 
+        <GroupBox Grid.Row="1" Grid.Column="1">
+            <!-- Example of perfect wrapping ListBox... -->
+            <ListBox Name="FeedListBox" MouseDoubleClick="FeedListBox_MouseDoubleClick" 
                  HorizontalContentAlignment="Stretch"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                  ItemsSource="{Binding FeedView}"  SelectedItem="{Binding SelectedPost}" Margin="0,5,0,-5" Grid.RowSpan="2">
 
-            <ListBox.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Open Post" Command="{Binding OpenPostCommand}"/>
-                    <Separator Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=IsRant}"/>
-                    <MenuItem Header="View Profile"  Command="{Binding ViewProfileCommand}"  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=IsRant}"/>
-                    <MenuItem Header="Follow User"  Command="{Binding FollowUserCommand}"  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=Follow}"/>
-                    <MenuItem Header="Unfollow User"  Command="{Binding UnfollowUserCommand}"  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=Unfollow}"/>
-                </ContextMenu>
-            </ListBox.ContextMenu>
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Open Post" Command="{Binding OpenPostCommand}"/>
+                        <Separator Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=IsRant}"/>
+                        <MenuItem Header="View Profile"  Command="{Binding ViewProfileCommand}"  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=IsRant}"/>
+                        <MenuItem Header="Follow User"  Command="{Binding FollowUserCommand}"  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=Follow}"/>
+                        <MenuItem Header="Unfollow User"  Command="{Binding UnfollowUserCommand}"  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=Unfollow}"/>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
 
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Vertical">
-                        <!-- General Feed-->
-                        <Grid>
-                            <Grid.Style>
-                                <Style TargetType="Grid">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Type}" Value="Post">
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Grid.Style>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="60"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <!-- General Feed-->
+                            <Grid>
+                                <Grid.Style>
+                                    <Style TargetType="Grid">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Type}" Value="Post">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Grid.Style>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
 
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-                            <Label FontSize="20" Grid.Column="0" Grid.RowSpan="2" 
+                                <Label FontSize="20" Grid.Column="0" Grid.RowSpan="2" 
                                VerticalAlignment="Top" HorizontalAlignment="Center"
                                Content="{Binding Votes}"/>
 
-                            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" Margin="0 5 0 0">
-                                <Label FontWeight="Bold" FontSize="14">
-                                    <Label.Style>
-                                        <Style TargetType="{x:Type Label}">
-                                            <Setter Property="Foreground" Value="Black"/>
+                                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" Margin="0 5 0 0">
+                                    <Label FontWeight="Bold" FontSize="14">
+                                        <Label.Style>
+                                            <Style TargetType="{x:Type Label}">
+                                                <Setter Property="Foreground" Value="Black"/>
 
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Followed}" Value="True">
-                                                    <Setter Property="Foreground" Value="Green"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Label.Style>
-                                    <TextBlock Text="{Binding Username}"/>
-                                </Label>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Followed}" Value="True">
+                                                        <Setter Property="Foreground" Value="Green"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Label.Style>
+                                        <TextBlock Text="{Binding Username}"/>
+                                    </Label>
 
-                                <Label Width="20"/>
+                                    <Label Width="20"/>
 
-                                <Label MinWidth="30" HorizontalContentAlignment="Center" Background="Gray" Foreground="White" FontWeight="Bold" Content="{Binding UserScore}">
-                                    <Label.Style>
-                                        <Style TargetType="{x:Type Label}">
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="{x:Type Label}">
-                                                        <Border BorderBrush="{TemplateBinding BorderBrush}" 
+                                    <Label MinWidth="30" HorizontalContentAlignment="Center" Background="Gray" Foreground="White" FontWeight="Bold" Content="{Binding UserScore}">
+                                        <Label.Style>
+                                            <Style TargetType="{x:Type Label}">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="{x:Type Label}">
+                                                            <Border BorderBrush="{TemplateBinding BorderBrush}" 
                                                             BorderThickness="{TemplateBinding BorderThickness}" 
                                                             Background="{TemplateBinding Background}" 
                                                             Padding="{TemplateBinding Padding}" 
                                                             SnapsToDevicePixels="true" 
                                                             CornerRadius="7">
-                                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                                                        </Border>
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </Label.Style>
-                                </Label>
+                                                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                            </Border>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Label.Style>
+                                    </Label>
 
 
 
-                                <!--
+                                    <!--
                             <Label Content="{Binding CreateTime}"/>
                             -->
+                                </StackPanel>
+
+                                <Label Grid.Column="1" Grid.Row="1">
+                                    <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
+                                </Label>
+
+                                <Image Source="{Binding Picture}" Grid.Row="2" Grid.Column="1"/>
+
+                                <DockPanel Grid.Row="3" Grid.Column="1">
+
+                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                        <Label FontWeight="Bold">Comments:</Label>
+                                        <Label Content="{Binding CommentsCount}"/>
+                                    </StackPanel>
+
+                                    <StackPanel Visibility="{Binding TagsVisibility}" DockPanel.Dock="Left" Orientation="Horizontal">
+                                        <Label FontWeight="Bold">Tags:</Label>
+                                        <Label Content="{Binding TagsString}"/>
+                                    </StackPanel>
+                                </DockPanel>
+                            </Grid>
+
+                            <!-- Notifications-->
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Type}" Value="Notification">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+
+                                <Label>
+                                    <TextBlock Text="{Binding Text}"/>
+                                </Label>
                             </StackPanel>
-
-                            <Label Grid.Column="1" Grid.Row="1">
-                                <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
-                            </Label>
-
-                            <Image Source="{Binding Picture}" Grid.Row="2" Grid.Column="1"/>
-
-                            <DockPanel Grid.Row="3" Grid.Column="1">
-
-                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
-                                    <Label FontWeight="Bold">Comments:</Label>
-                                    <Label Content="{Binding CommentsCount}"/>
-                                </StackPanel>
-
-                                <StackPanel Visibility="{Binding TagsVisibility}" DockPanel.Dock="Left" Orientation="Horizontal">
-                                    <Label FontWeight="Bold">Tags:</Label>
-                                    <Label Content="{Binding TagsString}"/>
-                                </StackPanel>
-                            </DockPanel>
-                        </Grid>
-
-                        <!-- Notifications-->
-                        <StackPanel Orientation="Horizontal">
-                            <StackPanel.Style>
-                                <Style TargetType="StackPanel">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Type}" Value="Notification">
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </StackPanel.Style>
-
-                            <Label>
-                                <TextBlock Text="{Binding Text}"/>
-                            </Label>
                         </StackPanel>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </GroupBox>
 
+        <StatusBar Grid.Row="2" Grid.ColumnSpan="2" Padding="3">
+            <TextBlock Text="{Binding StatusMessage}"/>
+        </StatusBar>
+        
         <!--
         <Button Command="{Binding TestCommand}">Test</Button>
         -->

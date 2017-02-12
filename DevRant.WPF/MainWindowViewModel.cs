@@ -36,6 +36,18 @@ namespace DevRant.WPF
             }
         }
 
+        private MessageCollection statusMessages;        
+        public string StatusMessage
+        {
+            get { return statusMessages.LastMessage; }
+        }
+        private void StatusChanged()
+        {
+            RaisePropertyChanged("StatusMessage");
+        }
+
+
+
         public MainWindowViewModel(Window window)
         {
             this.window = window;
@@ -44,7 +56,12 @@ namespace DevRant.WPF
 
             checker = new FollowedUserChecker(ds, api);
             checker.OnUpdate += UpdateFollowedPosts;
-            UpdateFollowedPosts(new FollowedUserChecker.UpdateArgs());
+
+            UpdateFollowedPosts(new FollowedUserChecker.UpdateArgs(), false);
+
+            statusMessages = new MessageCollection();
+            statusMessages.Changed += StatusChanged;
+
 
             feedView = new CollectionViewSource();
             feedView.Source = feeds;
@@ -79,6 +96,10 @@ namespace DevRant.WPF
         }
         private void UpdateFollowedPosts(FollowedUserChecker.UpdateArgs args)
         {
+            UpdateFollowedPosts(args, true);
+        }
+        private void UpdateFollowedPosts(FollowedUserChecker.UpdateArgs args, bool updateStatus)
+        {
             StringBuilder sb = new StringBuilder();
             sb.Append("Updates");
 
@@ -93,6 +114,27 @@ namespace DevRant.WPF
             }
 
             FollowedUsersLabel = sb.ToString();
+            
+            if (updateStatus)
+            {
+                string message = string.Format("Checker found {0} new posts.", args.Added);
+                UpdateStatus(message);
+            }
+        }
+
+        private void UpdateStatus(string message, bool includeTime = true)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (includeTime)
+            {
+                string time = DateTime.Now.ToShortTimeString();
+                sb.Append(time + ": ");
+            }
+
+            sb.Append(message);
+
+            statusMessages.AddMessage(sb.ToString());
         }
 
         public FeedItem SelectedPost
