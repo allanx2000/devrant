@@ -77,9 +77,9 @@ namespace DevRant.WPF
                     {
                         long latest = added.Max(x => x.CreatedTime);
                         ds.FollowedUsersLastChecked = latest;
-
-                        SendUpdate(added.Count);
                     }
+
+                    SendUpdate(added.Count);
 
                     int millis = ds.FollowedUsersUpdateInterval * 60 * 1000;
                     Thread.Sleep(millis);

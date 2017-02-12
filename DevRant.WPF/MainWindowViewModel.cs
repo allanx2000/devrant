@@ -286,6 +286,7 @@ namespace DevRant.WPF
             UpdateFollow();
 
             currentSection = type;
+            UpdateStatus("Loaded " + rants.Count + " rants");
         }
 
         public Visibility PostVisibility
