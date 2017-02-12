@@ -23,30 +23,9 @@ namespace DevRant.WPF
         private Window window;
         private IDataStore ds;
         private DevRantClient api;
-
         private FollowedUserChecker checker;
 
-        public bool IsLoading
-        {
-            get { return Get<bool>(); }
-            private set
-            {
-                Set(value);
-                RaisePropertyChanged();
-            }
-        }
-
-        private MessageCollection statusMessages;        
-        public string StatusMessage
-        {
-            get { return statusMessages.LastMessage; }
-        }
-        private void StatusChanged()
-        {
-            RaisePropertyChanged("StatusMessage");
-        }
-
-
+        private FeedType currentSection;
 
         public MainWindowViewModel(Window window)
         {
@@ -72,6 +51,41 @@ namespace DevRant.WPF
             //Test();
         }
 
+        public bool IsLoading
+        {
+            get { return Get<bool>(); }
+            private set
+            {
+                Set(value);
+                RaisePropertyChanged();
+            }
+        }
+
+        #region Status
+
+        private MessageCollection statusMessages;
+        public string StatusMessage
+        {
+            get { return statusMessages.LastMessage; }
+        }
+        private void StatusChanged()
+        {
+            RaisePropertyChanged("StatusMessage");
+        }
+        #endregion
+
+        #region Properties
+        private ObservableCollection<FeedItem> feeds = new ObservableCollection<FeedItem>();
+        private CollectionViewSource feedView;
+
+        public ICollectionView FeedView
+        {
+            get
+            {
+                return feedView.View;
+            }
+        }
+
         public string FollowedUsersLabel
         {
             get { return Get<string>(); }
@@ -94,49 +108,7 @@ namespace DevRant.WPF
                 RaisePropertyChanged();
             }
         }
-        private void UpdateFollowedPosts(FollowedUserChecker.UpdateArgs args)
-        {
-            UpdateFollowedPosts(args, true);
-        }
-        private void UpdateFollowedPosts(FollowedUserChecker.UpdateArgs args, bool updateStatus)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Updates");
-
-            if (args.TotalUnread > 0)
-            {
-                FollowedUsersWeight = FontWeights.Bold;
-                sb.Append(" (" + args.TotalUnread + ")");
-            }
-            else
-            {
-                FollowedUsersWeight = FontWeights.Normal;
-            }
-
-            FollowedUsersLabel = sb.ToString();
-            
-            if (updateStatus)
-            {
-                string message = string.Format("Checker found {0} new posts.", args.Added);
-                UpdateStatus(message);
-            }
-        }
-
-        private void UpdateStatus(string message, bool includeTime = true)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            if (includeTime)
-            {
-                string time = DateTime.Now.ToShortTimeString();
-                sb.Append(time + ": ");
-            }
-
-            sb.Append(message);
-
-            statusMessages.AddMessage(sb.ToString());
-        }
-
+        
         public FeedItem SelectedPost
         {
             get { return Get<FeedItem>(); }
@@ -157,8 +129,28 @@ namespace DevRant.WPF
                 RaisePropertyChanged();
             }
         }
+        
+        #endregion
+
+        #region Public Methods
+        public void OpenPost()
+        {
+            if (SelectedPost == null)
+                return;
+            else if (SelectedPost is Rant)
+                Process.Start(((Rant)SelectedPost).PostURL);
+            //TODO: Add For Notification
+        }
 
         #region Sections
+
+        private enum FeedType
+        {
+            Stories,
+            General,
+            Collab,
+            Updates
+        }
 
         public const string SectionGeneral = "GeneralFeed";
         public const string SectionGeneralAlgo = "GeneralAlgo";
@@ -170,22 +162,12 @@ namespace DevRant.WPF
         public const string SectionStoriesWeek = "StoriesWeek";
         public const string SectionStoriesMonth = "StoriesMonth";
         public const string SectionStoriesAll = "StoriesAll";
-
-
+        
         public const string SectionCollab = "CollabFeed";
-
-
+        
         public const string SectionNotifications = "MyNotifications";
         
         public const string SectionFollowed = "FollowedUsers";
-
-        private enum FeedType
-        {
-            Stories,
-            General,
-            Collab,
-            Updates
-        }
 
         public async Task LoadSection(string section)
         {
@@ -222,9 +204,12 @@ namespace DevRant.WPF
                     await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.All);
                     break;
 
+                /*
                 case SectionNotifications:
                     await LoadNotifications();
                     break;
+                */
+
                 case SectionFollowed:
                     LoadFollowed();
                     break;
@@ -233,71 +218,10 @@ namespace DevRant.WPF
             IsLoading = false;
         }
 
-
-        private void LoadFollowed()
-        {
-            feeds.Clear();
-
-            foreach (var rant in checker.Posts)
-            {
-                if (!rant.Read)
-                    feeds.Add(rant);
-            }
-
-            UpdateFollow();
-            currentSection = FeedType.Updates;
-        }
-
-        private async Task LoadNotifications()
-        {
-            //TODO: Add get notifications
-
-            //var notif = await api.GetNotificationsAsync("allanx2000");
-
-            feeds.Clear();
-
-            feeds.Add(new Notification());
-            feeds.Add(new Notification());
-            feeds.Add(new Notification());
-        }
-        
-        private async Task LoadFeed(FeedType type, RantSort sort = RantSort.Algo, StoryRange range = StoryRange.Day)
-        {
-            IReadOnlyCollection<Dtos.RantInfo> rants;
-            switch (type)
-            {
-                case FeedType.General:
-                    rants = await api.GetRantsAsync(sort: sort);
-                    break;
-                case FeedType.Stories:
-                    rants = await api.GetStoriesAsync(range: range, sort: sort);
-                    break;
-                default:
-                    return;
-            }
-
-            feeds.Clear();
-
-            foreach (var rant in rants)
-            {
-                Rant r = new Rant(rant);
-                feeds.Add(r);
-            }
-
-            UpdateFollow();
-
-            currentSection = type;
-            UpdateStatus("Loaded " + rants.Count + " rants");
-        }
-
-        public Visibility PostVisibility
-        {
-            get { return ListType == FeedItem.FeedItemType.Post ? Visibility.Visible : Visibility.Collapsed; }
-
-        }
+        #endregion
+        #endregion
 
         #region Commands
-        
 
         public ICommand OpenOptionsCommand
         {
@@ -350,7 +274,7 @@ namespace DevRant.WPF
 
             UpdateFollow();
         }
-        
+
         public ICommand ViewProfileCommand
         {
             get { return new mvvm.CommandHelper(ViewProfile); }
@@ -363,7 +287,7 @@ namespace DevRant.WPF
 
             Process.Start(((Rant)SelectedPost).ProfileURL);
         }
-        
+
         public ICommand ViewNotificationsCommand
         {
             get { return new mvvm.CommandHelper(ViewNotifications); }
@@ -376,6 +300,108 @@ namespace DevRant.WPF
 
         #endregion
 
+        private void UpdateFollowedPosts(FollowedUserChecker.UpdateArgs args)
+        {
+            UpdateFollowedPosts(args, true);
+        }
+
+        private void UpdateFollowedPosts(FollowedUserChecker.UpdateArgs args, bool updateStatus)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Updates");
+
+            if (args.TotalUnread > 0)
+            {
+                FollowedUsersWeight = FontWeights.Bold;
+                sb.Append(" (" + args.TotalUnread + ")");
+            }
+            else
+            {
+                FollowedUsersWeight = FontWeights.Normal;
+            }
+
+            FollowedUsersLabel = sb.ToString();
+
+            if (updateStatus)
+            {
+                string message = string.Format("Checker found {0} new posts.", args.Added);
+                UpdateStatus(message);
+            }
+        }
+
+        private void UpdateStatus(string message, bool includeTime = true)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (includeTime)
+            {
+                string time = DateTime.Now.ToShortTimeString();
+                sb.Append(time + ": ");
+            }
+
+            sb.Append(message);
+
+            statusMessages.AddMessage(sb.ToString());
+        }
+
+        private void LoadFollowed()
+        {
+            feeds.Clear();
+
+            foreach (var rant in checker.Posts)
+            {
+                if (!rant.Read)
+                    feeds.Add(rant);
+            }
+
+            UpdateFollow();
+            currentSection = FeedType.Updates;
+        }
+
+        /*
+        private async Task LoadNotifications()
+        {
+            //TODO: Add get notifications
+
+            //var notif = await api.GetNotificationsAsync("allanx2000");
+
+            feeds.Clear();
+
+            feeds.Add(new Notification());
+            feeds.Add(new Notification());
+            feeds.Add(new Notification());
+        }
+        */
+        
+        private async Task LoadFeed(FeedType type, RantSort sort = RantSort.Algo, StoryRange range = StoryRange.Day)
+        {
+            IReadOnlyCollection<Dtos.RantInfo> rants;
+            switch (type)
+            {
+                case FeedType.General:
+                    rants = await api.GetRantsAsync(sort: sort);
+                    break;
+                case FeedType.Stories:
+                    rants = await api.GetStoriesAsync(range: range, sort: sort);
+                    break;
+                default:
+                    return;
+            }
+
+            feeds.Clear();
+
+            foreach (var rant in rants)
+            {
+                Rant r = new Rant(rant);
+                feeds.Add(r);
+            }
+
+            UpdateFollow();
+
+            currentSection = type;
+            UpdateStatus("Loaded " + rants.Count + " rants");
+        }
+        
         private void UpdateFollow()
         {
             var followed = ds.FollowedUsers;
@@ -391,48 +417,14 @@ namespace DevRant.WPF
             //Update Menu
             RaisePropertyChanged("SelectedPost");
         }
-
-        public void OpenPost()
-        {
-            if (SelectedPost == null)
-                return;
-            else if (SelectedPost is Rant)
-                Process.Start(((Rant)SelectedPost).PostURL);
-            //TODO: Add For Notification
-        }
-
-        private ObservableCollection<FeedItem> feeds = new ObservableCollection<FeedItem>();
-        private CollectionViewSource feedView;
-
-        //TODO: Add listbox and feed, 2 types, notification and post
-        //Convert DevRantFeed to actual rant post with contents and pictures?
-        public ICollectionView FeedView
-        {
-            get
-            {
-                return feedView.View;
-            }
-        }
-        #endregion
+        
+        #region Test Functions
 
         public ICommand TestCommand
         {
             get { return new mvvm.CommandHelper(Test); }
         }
-
-        public FeedItem.FeedItemType ListType
-        {
-            get { return Get<FeedItem.FeedItemType>(); }
-            private set
-            {
-                Set(value);
-                RaisePropertyChanged("ListType");
-                RaisePropertyChanged("PostVisibility");
-            }
-        }
-
-        private FeedType currentSection;
-
+        
         private async void Test()
         {
             var profile = await GetProfile();
@@ -444,5 +436,7 @@ namespace DevRant.WPF
             var profile = await api.GetProfileAsync("allanx2000");
             return profile;
         }
+
+        #endregion
     }
 }
