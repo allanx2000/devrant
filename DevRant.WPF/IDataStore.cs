@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,13 +15,15 @@ namespace DevRant.WPF
         int FollowedUsersUpdateInterval { get; }
 
         StoryRange DefaultRange { get; }
-        RantSort DefaultSort { get;}
+        RantSort DefaultFeed { get;}
 
         void Unfollow(string user);
         void Follow(string user);
 
-        //string GeneralSortOrder { get; }
-        //int SizeGeneral { get; }
+        void SetDefaultRange(StoryRange defaultStoryRange);
+        void SetDefaultFeed(RantSort defaultFeed);
+        void SetFollowing(ICollection<string> users);
+        
 
         /*
         string Username { get; }

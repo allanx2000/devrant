@@ -42,7 +42,7 @@ namespace DevRant.WPF
             {
                 RantSorts.Add(i);
             }
-            DefaultFeed = ds.DefaultSort;
+            DefaultFeed = ds.DefaultFeed;
 
             StoryRanges = new List<StoryRange>();
             foreach (StoryRange i in Enum.GetValues(typeof(StoryRange)))
@@ -179,6 +179,24 @@ namespace DevRant.WPF
         {
             get { return new mvvm.CommandHelper(() => window.Close()); }
         }
+
+        public ICommand SaveCommand
+        {
+            get { return new mvvm.CommandHelper(Save); }
+        }
+
+        private void Save()
+        {
+
+            ds.SetDefaultRange(DefaultStoryRange);
+            ds.SetDefaultFeed(DefaultFeed);
+
+            ds.SetFollowing(users);
+
+            Cancelled = false;
+            window.Close();
+        }
+        
 
         #endregion
     }

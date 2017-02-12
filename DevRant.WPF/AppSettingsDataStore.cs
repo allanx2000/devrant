@@ -65,7 +65,7 @@ namespace DevRant.WPF
             }
         }
 
-        public RantSort DefaultSort
+        public RantSort DefaultFeed
         {
             get
             {
@@ -104,6 +104,25 @@ namespace DevRant.WPF
                 followedUsers.Remove(user);
                 SaveUsers();
             }
+        }
+
+        public void SetDefaultRange(StoryRange defaultStoryRange)
+        {
+            Settings.StoryRange = defaultStoryRange;
+            Settings.Save();
+        }
+
+        public void SetDefaultFeed(RantSort defaultFeed)
+        {
+            Settings.StorySort = defaultFeed;
+            Settings.Save();
+        }
+
+        public void SetFollowing(ICollection<string> users)
+        {
+            followedUsers.Clear();
+            followedUsers.AddRange(users);
+            SaveUsers();
         }
     }
 }

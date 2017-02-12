@@ -194,7 +194,7 @@ namespace DevRant.WPF
             switch (section)
             {
                 case SectionGeneral:
-                    await LoadFeed(FeedType.General, sort: ds.DefaultSort); //TODO: Add params from Settings
+                    await LoadFeed(FeedType.General, sort: ds.DefaultFeed); //TODO: Add params from Settings
                     break;
                 case SectionGeneralAlgo:
                     await LoadFeed(FeedType.General, sort: RantSort.Algo);
@@ -207,19 +207,19 @@ namespace DevRant.WPF
                     break;
 
                 case SectionStories:
-                    await LoadFeed(FeedType.Stories, ds.DefaultSort, ds.DefaultRange);
+                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, ds.DefaultRange);
                     break;
                 case SectionStoriesDay:
-                    await LoadFeed(FeedType.Stories, ds.DefaultSort, StoryRange.Day);
+                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Day);
                     break;
                 case SectionStoriesWeek:
-                    await LoadFeed(FeedType.Stories, ds.DefaultSort, StoryRange.Week);
+                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Week);
                     break;
                 case SectionStoriesMonth:
-                    await LoadFeed(FeedType.Stories, ds.DefaultSort, StoryRange.Month);
+                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Month);
                     break;
                 case SectionStoriesAll:
-                    await LoadFeed(FeedType.Stories, ds.DefaultSort, StoryRange.All);
+                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.All);
                     break;
 
                 case SectionNotifications:
