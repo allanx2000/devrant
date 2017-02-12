@@ -18,7 +18,7 @@ using DevRant.Dtos;
 
 namespace DevRant.WPF
 {
-    class MainWindowViewModel : ViewModel
+    internal class MainWindowViewModel : ViewModel
     {
         private Window window;
         private IDataStore ds;
@@ -194,7 +194,7 @@ namespace DevRant.WPF
             switch (section)
             {
                 case SectionGeneral:
-                    await LoadFeed(FeedType.General); //TODO: Add params from Settings
+                    await LoadFeed(FeedType.General, sort: ds.DefaultSort); //TODO: Add params from Settings
                     break;
                 case SectionGeneralAlgo:
                     await LoadFeed(FeedType.General, sort: RantSort.Algo);
@@ -207,19 +207,19 @@ namespace DevRant.WPF
                     break;
 
                 case SectionStories:
-                    await LoadFeed(FeedType.Stories, ds.StorySort, ds.StoryRange);
+                    await LoadFeed(FeedType.Stories, ds.DefaultSort, ds.DefaultRange);
                     break;
                 case SectionStoriesDay:
-                    await LoadFeed(FeedType.Stories, ds.StorySort, StoryRange.Day);
+                    await LoadFeed(FeedType.Stories, ds.DefaultSort, StoryRange.Day);
                     break;
                 case SectionStoriesWeek:
-                    await LoadFeed(FeedType.Stories, ds.StorySort, StoryRange.Week);
+                    await LoadFeed(FeedType.Stories, ds.DefaultSort, StoryRange.Week);
                     break;
                 case SectionStoriesMonth:
-                    await LoadFeed(FeedType.Stories, ds.StorySort, StoryRange.Month);
+                    await LoadFeed(FeedType.Stories, ds.DefaultSort, StoryRange.Month);
                     break;
                 case SectionStoriesAll:
-                    await LoadFeed(FeedType.Stories, ds.StorySort, StoryRange.All);
+                    await LoadFeed(FeedType.Stories, ds.DefaultSort, StoryRange.All);
                     break;
 
                 case SectionNotifications:
@@ -232,6 +232,7 @@ namespace DevRant.WPF
 
             IsLoading = false;
         }
+
 
         private void LoadFollowed()
         {
@@ -295,12 +296,30 @@ namespace DevRant.WPF
 
         }
 
+        #region Commands
+        
+
+        public ICommand OpenOptionsCommand
+        {
+            get { return new mvvm.CommandHelper(OpenOptions); }
+        }
+
+        private void OpenOptions()
+        {
+            var dlg = new OptionsWindow(ds, api);
+            dlg.ShowDialog();
+
+            if (!dlg.Cancelled)
+            {
+                checker.Stop();
+                checker.Start();
+            }
+        }
+
         public ICommand OpenPostCommand
         {
             get { return new mvvm.CommandHelper(OpenPost); }
         }
-
-
 
         public ICommand UnfollowUserCommand
         {
@@ -331,6 +350,31 @@ namespace DevRant.WPF
 
             UpdateFollow();
         }
+        
+        public ICommand ViewProfileCommand
+        {
+            get { return new mvvm.CommandHelper(ViewProfile); }
+        }
+
+        private void ViewProfile()
+        {
+            if (SelectedPost == null)
+                return;
+
+            Process.Start(((Rant)SelectedPost).ProfileURL);
+        }
+        
+        public ICommand ViewNotificationsCommand
+        {
+            get { return new mvvm.CommandHelper(ViewNotifications); }
+        }
+
+        private void ViewNotifications()
+        {
+            Process.Start(Utilities.BaseURL + "/notifs");
+        }
+
+        #endregion
 
         private void UpdateFollow()
         {
@@ -346,29 +390,6 @@ namespace DevRant.WPF
 
             //Update Menu
             RaisePropertyChanged("SelectedPost");
-        }
-
-        public ICommand ViewProfileCommand
-        {
-            get { return new mvvm.CommandHelper(ViewProfile); }
-        }
-
-        private void ViewProfile()
-        {
-            if (SelectedPost == null)
-                return;
-
-            Process.Start(((Rant)SelectedPost).ProfileURL);
-        }
-
-        public ICommand ViewNotificationsCommand
-        {
-            get { return new mvvm.CommandHelper(ViewNotifications); }
-        }
-
-        private void ViewNotifications()
-        {
-            Process.Start(Utilities.BaseURL + "/notifs");
         }
 
         public void OpenPost()

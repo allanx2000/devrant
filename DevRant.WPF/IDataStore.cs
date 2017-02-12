@@ -7,14 +7,14 @@ using DevRant.Dtos;
 
 namespace DevRant.WPF
 {
-    interface IDataStore
+    public interface IDataStore
     {
         IReadOnlyList<string> FollowedUsers { get; }
         long FollowedUsersLastChecked { get; set; }
         int FollowedUsersUpdateInterval { get; }
 
-        StoryRange StoryRange { get; }
-        RantSort StorySort { get;}
+        StoryRange DefaultRange { get; }
+        RantSort DefaultSort { get;}
 
         void Unfollow(string user);
         void Follow(string user);

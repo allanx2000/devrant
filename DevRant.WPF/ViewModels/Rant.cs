@@ -15,7 +15,12 @@ namespace DevRant.WPF.ViewModels
         private RantInfo rant;
         
         public string Text { get { return rant.Text; } }
-        public int Votes { get { return rant.NrOfUpvotes - rant.NrOfDownvotes; } }
+        public int Votes {
+            get {
+                return rant.Score;
+                //return rant.NrOfUpvotes - rant.NrOfDownvotes;
+            }
+        }
 
         public string Username { get { return rant.Username; } }
 

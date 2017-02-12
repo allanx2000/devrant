@@ -68,6 +68,13 @@ namespace DevRant.Dtos
         public int NrOfDownvotes { get; set; }
 
         /// <summary>
+        /// Score
+        /// </summary>
+        [JsonProperty("score")]
+        public int Score { get; set; }
+
+
+        /// <summary>
         /// Comments
         /// </summary>
         [JsonProperty("num_comments")]
@@ -77,7 +84,7 @@ namespace DevRant.Dtos
         /// Tags
         /// </summary>
         public TagsCollection Tags { get; set; }
-
+        
         /// <summary>
         /// Tags Collection
         /// </summary>

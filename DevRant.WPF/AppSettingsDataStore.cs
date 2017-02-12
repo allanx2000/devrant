@@ -57,7 +57,7 @@ namespace DevRant.WPF
             }
         }
 
-        public StoryRange StoryRange
+        public StoryRange DefaultRange
         {
             get
             {
@@ -65,7 +65,7 @@ namespace DevRant.WPF
             }
         }
 
-        public RantSort StorySort
+        public RantSort DefaultSort
         {
             get
             {

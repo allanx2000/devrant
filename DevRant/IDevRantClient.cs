@@ -16,6 +16,13 @@ namespace DevRant
         Task<Profile> GetProfileAsync(string username);
 
         /// <summary>
+        /// Checks if user exists
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        Task<bool> IsValidUser(string username);
+
+        /// <summary>
         /// Requests notification details
         /// </summary>
         /// <param name="username">Username of the profile to request.</param>

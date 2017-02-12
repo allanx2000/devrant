@@ -151,6 +151,11 @@ namespace DevRant
             return ParseProperty<List<RantInfo>>(responseText, "rants");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         private async Task<int?> GetUserId(string username)
         {
             var response = await client.GetAsync($"/api/get-user-id?app={appVersion}&username={username}");
@@ -178,5 +183,15 @@ namespace DevRant
             client = null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public async Task<bool> IsValidUser(string username)
+        {
+            int? id = await GetUserId(username);
+            return id != null;
+        }
     }
 }
