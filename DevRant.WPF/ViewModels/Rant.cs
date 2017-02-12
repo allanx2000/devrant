@@ -33,7 +33,15 @@ namespace DevRant.WPF.ViewModels
 
         public string TagsString { get { return string.Join(", ", rant.Tags);  } }
 
-        public BitmapImage Picture { get; private set; }
+        public BitmapImage Picture {
+            get {
+                return Get<BitmapImage>(); }
+            private set
+            {
+                Set(value);
+                RaisePropertyChanged();
+            }
+        }
         
         public bool Followed
         {
