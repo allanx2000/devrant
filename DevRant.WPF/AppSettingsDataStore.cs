@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DevRant.Dtos;
 
 namespace DevRant.WPF
 {
@@ -38,12 +39,37 @@ namespace DevRant.WPF
         {
             get
             {
-                return Settings.LastChecked;
+                return Utilities.ToUnixTime(DateTime.UtcNow.AddHours(-12));
+                //return Settings.LastChecked;
             }
             set
             {
                 Settings.LastChecked = value;
                 Settings.Save();
+            }
+        }
+
+        public int FollowedUsersUpdateInterval
+        {
+            get
+            {
+                return Settings.FollowedUsersUpdateInterval;
+            }
+        }
+
+        public StoryRange StoryRange
+        {
+            get
+            {
+                return Settings.StoryRange;
+            }
+        }
+
+        public RantSort StorySort
+        {
+            get
+            {
+                return Settings.StorySort;
             }
         }
 

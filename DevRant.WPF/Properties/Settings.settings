@@ -20,5 +20,14 @@
     <Setting Name="UnreadPosts" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="FollowedUsersUpdateInterval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="StoryRange" Type="DevRant.Dtos.StoryRange" Scope="User">
+      <Value Profile="(Default)">Week</Value>
+    </Setting>
+    <Setting Name="StorySort" Type="DevRant.Dtos.RantSort" Scope="User">
+      <Value Profile="(Default)">Algo</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

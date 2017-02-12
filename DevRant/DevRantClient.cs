@@ -26,6 +26,52 @@ namespace DevRant
             client.BaseAddress = new Uri(baseAddress);
         }
 
+        /*
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public async Task<Profile> GetNotificationsAsync(string username)
+        {
+            if (string.IsNullOrEmpty(username)) throw new ArgumentException("Must be non-empty.", nameof(username));
+
+            var userId = await GetUserId(username);
+
+            if (userId == null)
+            {
+                return null;
+            }
+
+            var response = await client.GetAsync($"/api/users/me/notif-feed?app={appVersion}&user_id={userId}");
+            var responseText = await response.Content.ReadAsStringAsync();
+
+            return null;
+         
+        JObject obj = JObject.Parse(responseText);
+            Profile profile = obj["profile"].ToObject<Profile>();
+
+            //Add Rants
+            JObject content = obj["profile"]["content"]["content"] as JObject;
+
+            JArray rants = content["rants"] as JArray;
+
+            if (rants != null)
+            {
+                List<RantInfo> rantsList = new List<RantInfo>();
+                foreach (var r in rants)
+                {
+                    RantInfo info = r.ToObject<RantInfo>();
+                    rantsList.Add(info);
+                }
+
+                profile.Rants = rantsList;
+            }
+
+            return profile;
+        }
+        */
+
         /// <summary>
         /// Requests profile details to the rest-api.
         /// </summary>
@@ -67,6 +113,23 @@ namespace DevRant
             }
 
             return profile;
+        }
+
+
+        /// <summary>
+        /// Requests a collection of stories sorted and selected by the arguments from the rest-api.
+        /// </summary>
+        /// <inheritdoc />
+        public async Task<IReadOnlyCollection<RantInfo>> GetStoriesAsync(RantSort sort = RantSort.Top, StoryRange range = StoryRange.Day, int limit = 50, int skip = 0)
+        {
+            var sortText = sort.ToString().ToLower();
+            var rangeText = range.ToString().ToLower();
+
+
+            var response = await client.GetAsync($"/api/devrant/story-rants?app={appVersion}&range={rangeText}&sort={sortText}&limit={limit}&skip={skip}");
+            var responseText = await response.Content.ReadAsStringAsync();
+
+            return ParseProperty<List<RantInfo>>(responseText, "rants");
         }
 
         /// <summary>
@@ -114,5 +177,6 @@ namespace DevRant
             client?.Dispose();
             client = null;
         }
+
     }
 }

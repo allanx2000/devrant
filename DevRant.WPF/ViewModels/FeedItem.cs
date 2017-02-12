@@ -19,6 +19,8 @@ namespace DevRant.WPF.ViewModels
 
         public FeedItemType Type { get; private set; }
 
+        public bool Read { get; set; }
+
         public Rant AsRant()
         {
             return (Rant) this;

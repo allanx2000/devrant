@@ -12,6 +12,7 @@ namespace DevRant.WPF
     {
         private DevRantClient api;
         private IDataStore ds;
+        private Thread thread;
 
         public ObservableCollection<Rant> Posts { get; private set; }
 
@@ -23,59 +24,83 @@ namespace DevRant.WPF
             Posts = new ObservableCollection<Rant>();
         }
 
-        
+
         public delegate void OnUpdatedHandler(UpdateArgs args);
         public event OnUpdatedHandler OnUpdate;
 
         internal class UpdateArgs
         {
+            public int Total { get; set; }
             public int TotalUnread { get; set; }
             public int Added { get; set; }
         }
 
         public void Start()
         {
-            //TODO: Timer
-
-            Thread th = new Thread(DoCheck);
-            th.Start();
+            thread = new Thread(RunChecker);
+            thread.Start();
         }
 
-        private async void DoCheck()
+        public void Stop()
         {
-            long lastTime = ds.FollowedUsersLastChecked;
+            thread.Abort();
+        }
 
-
-            List<RantInfo> added = new List<RantInfo>(); 
-
-            foreach (string user in ds.FollowedUsers)
+        private async void RunChecker()
+        {
+            while (true)
             {
-                Profile profile = await api.GetProfileAsync(user);     
-             
-                foreach (var rant in profile.Rants)
+                try
                 {
-                    if (rant.CreatedTime > lastTime)
+                    long lastTime = ds.FollowedUsersLastChecked;
+
+                    List<RantInfo> added = new List<RantInfo>();
+
+                    var users = ds.FollowedUsers.ToList(); //Can be modified while checking
+
+                    foreach (string user in users)
                     {
-                        Rant r = new Rant(rant);
-                        Posts.Add(r);
-                        added.Add(rant);
+                        Profile profile = await api.GetProfileAsync(user);
+
+                        foreach (var rant in profile.Rants)
+                        {
+                            if (rant.CreatedTime > lastTime)
+                            {
+                                Rant r = new Rant(rant);
+                                Posts.Add(r);
+                                added.Add(rant);
+                            }
+                        }
                     }
-                }              
-            }
 
-            if (added.Count > 0)
-            {
-                long latest = added.Max(x => x.CreatedTime);
-                ds.FollowedUsersLastChecked = latest;
-
-                if (OnUpdate != null)
-                {
-                    OnUpdate.Invoke(new UpdateArgs()
+                    if (added.Count > 0)
                     {
-                        Added = added.Count,
-                        TotalUnread = Posts.Count
-                    });
+                        long latest = added.Max(x => x.CreatedTime);
+                        ds.FollowedUsersLastChecked = latest;
+
+                        SendUpdate(added.Count);
+                    }
+
+                    int millis = ds.FollowedUsersUpdateInterval * 60 * 1000;
+                    Thread.Sleep(millis);
                 }
+                catch (Exception e)
+                {
+                    var ex = e.StackTrace;
+                }
+            }
+        }
+
+        internal void SendUpdate(int added = 0)
+        {
+            if (OnUpdate != null)
+            {
+                OnUpdate.Invoke(new UpdateArgs()
+                {
+                    Added = added,
+                    Total = Posts.Count,
+                    TotalUnread = Posts.Count(x => !x.Read)
+                });
             }
         }
     }

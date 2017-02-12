@@ -23,7 +23,13 @@
         </Grid.ColumnDefinitions>
 
         <Menu Grid.Row="0" Grid.ColumnSpan="2">
+            <Menu.Resources>
+                <Style TargetType="MenuItem">
+                    <Setter Property="Padding" Value="5"/>
+                </Style>
+            </Menu.Resources>
             <MenuItem Header="Options" Command="{Binding OpenOptionsCommand}"/>
+            <MenuItem Header="View Notifications" Command="{Binding ViewNotificationsCommand }"/>
         </Menu>
 
         <GroupBox Grid.Column="0" Grid.Row="1">
@@ -33,12 +39,30 @@
                         <Setter Property="Padding" Value="5"/>
                         <Setter Property="FontSize" Value="16"/>
                     </Style>
+                    
+                    <Style x:Key="SubSection" TargetType="ListBoxItem">
+                        <Setter Property="Padding" Value="20 4"/>
+                        <Setter Property="FontSize" Value="13"/>
+                    </Style>
                 </ListBox.Resources>
 
                 <ListBoxItem Name="GeneralFeed" IsSelected="True">General</ListBoxItem>
+                <ListBoxItem Style="{StaticResource SubSection}" Name="GeneralAlgo">Algo</ListBoxItem>
+                <ListBoxItem Style="{StaticResource SubSection}" Name="GeneralTop">Top</ListBoxItem>
+                <ListBoxItem Style="{StaticResource SubSection}" Name="GeneralRecent">Recent</ListBoxItem>
+                
                 <ListBoxItem Name="StoriesFeed">Stories</ListBoxItem>
+                <ListBoxItem Style="{StaticResource SubSection}" Name="StoriesDay">Day</ListBoxItem>
+                <ListBoxItem Style="{StaticResource SubSection}" Name="StoriesWeek">Week</ListBoxItem>
+                <ListBoxItem Style="{StaticResource SubSection}" Name="StoriesMonth">Month</ListBoxItem>
+                <ListBoxItem Style="{StaticResource SubSection}" Name="StoriesAll">All</ListBoxItem>
+
                 <ListBoxItem Name="CollabFeed">Collab</ListBoxItem>
+                
+                <!--
                 <ListBoxItem Name="MyNotifications" Content="{Binding NotificationsLabel, FallbackValue='Notifications'}" FontWeight="{Binding NotificationsWeight}"/>
+                -->
+                
                 <ListBoxItem Name="FollowedUsers" Content="{Binding FollowedUsersLabel, FallbackValue='Users Updates'}" FontWeight="{Binding FollowedUsersWeight}"/>
             </ListBox>
         </GroupBox>

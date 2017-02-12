@@ -14,6 +14,7 @@ using System.ComponentModel;
 using DevRant.WPF.ViewModels;
 using System.Diagnostics;
 using DevRant.WPF.Converters;
+using DevRant.Dtos;
 
 namespace DevRant.WPF
 {
@@ -50,9 +51,10 @@ namespace DevRant.WPF
 
             checker.Start();
             //TODO: Need to close thread
-            
+
+            //Test();
         }
-        
+
         public string FollowedUsersLabel
         {
             get { return Get<string>(); }
@@ -79,7 +81,7 @@ namespace DevRant.WPF
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Updates");
-            
+
             if (args.TotalUnread > 0)
             {
                 FollowedUsersWeight = FontWeights.Bold;
@@ -93,10 +95,21 @@ namespace DevRant.WPF
             FollowedUsersLabel = sb.ToString();
         }
 
-        public FeedItem SelectedPost {
+        public FeedItem SelectedPost
+        {
             get { return Get<FeedItem>(); }
             set
             {
+                if (value != null)
+                {
+                    value.Read = true;
+
+                    if (currentSection == FeedType.Updates)
+                    {
+                        checker.SendUpdate();
+                    }
+                }
+
                 Set(value);
                 VisibilityConverter.State.SetSelectedItem(value);
                 RaisePropertyChanged();
@@ -106,9 +119,32 @@ namespace DevRant.WPF
         #region Sections
 
         public const string SectionGeneral = "GeneralFeed";
+        public const string SectionGeneralAlgo = "GeneralAlgo";
+        public const string SectionGeneralTop = "GeneralTop";
+        public const string SectionGeneralRecent = "GeneralRecent";
+
+        public const string SectionStories = "StoriesFeed";
+        public const string SectionStoriesDay = "StoriesDay";
+        public const string SectionStoriesWeek = "StoriesWeek";
+        public const string SectionStoriesMonth = "StoriesMonth";
+        public const string SectionStoriesAll = "StoriesAll";
+
+
+        public const string SectionCollab = "CollabFeed";
+
+
         public const string SectionNotifications = "MyNotifications";
         
         public const string SectionFollowed = "FollowedUsers";
+
+        private enum FeedType
+        {
+            Stories,
+            General,
+            Collab,
+            Updates
+        }
+
         public async Task LoadSection(string section)
         {
             IsLoading = true;
@@ -116,16 +152,39 @@ namespace DevRant.WPF
             switch (section)
             {
                 case SectionGeneral:
-                    await LoadFeed();
-                    //ListType = FeedItem.FeedItemType.Post;
+                    await LoadFeed(FeedType.General); //TODO: Add params from Settings
                     break;
+                case SectionGeneralAlgo:
+                    await LoadFeed(FeedType.General, sort: RantSort.Algo);
+                    break;
+                case SectionGeneralRecent:
+                    await LoadFeed(FeedType.General, sort: RantSort.Recent);
+                    break;
+                case SectionGeneralTop:
+                    await LoadFeed(FeedType.General, sort: RantSort.Top);
+                    break;
+
+                case SectionStories:
+                    await LoadFeed(FeedType.Stories, ds.StorySort, ds.StoryRange);
+                    break;
+                case SectionStoriesDay:
+                    await LoadFeed(FeedType.Stories, ds.StorySort, StoryRange.Day);
+                    break;
+                case SectionStoriesWeek:
+                    await LoadFeed(FeedType.Stories, ds.StorySort, StoryRange.Week);
+                    break;
+                case SectionStoriesMonth:
+                    await LoadFeed(FeedType.Stories, ds.StorySort, StoryRange.Month);
+                    break;
+                case SectionStoriesAll:
+                    await LoadFeed(FeedType.Stories, ds.StorySort, StoryRange.All);
+                    break;
+
                 case SectionNotifications:
                     await LoadNotifications();
-                    //ListType = FeedItem.FeedItemType.Notification;
                     break;
                 case SectionFollowed:
                     LoadFollowed();
-                    //ListType = FeedItem.FeedItemType.Post;
                     break;
             }
 
@@ -138,16 +197,19 @@ namespace DevRant.WPF
 
             foreach (var rant in checker.Posts)
             {
-                feeds.Add(rant);
+                if (!rant.Read)
+                    feeds.Add(rant);
             }
 
-            checker.Posts.Clear();
             UpdateFollow();
+            currentSection = FeedType.Updates;
         }
 
         private async Task LoadNotifications()
         {
             //TODO: Add get notifications
+
+            //var notif = await api.GetNotificationsAsync("allanx2000");
 
             feeds.Clear();
 
@@ -155,10 +217,21 @@ namespace DevRant.WPF
             feeds.Add(new Notification());
             feeds.Add(new Notification());
         }
-
-        private async Task LoadFeed()
+        
+        private async Task LoadFeed(FeedType type, RantSort sort = RantSort.Algo, StoryRange range = StoryRange.Day)
         {
-            var rants = await api.GetRantsAsync();
+            IReadOnlyCollection<Dtos.RantInfo> rants;
+            switch (type)
+            {
+                case FeedType.General:
+                    rants = await api.GetRantsAsync(sort: sort);
+                    break;
+                case FeedType.Stories:
+                    rants = await api.GetStoriesAsync(range: range, sort: sort);
+                    break;
+                default:
+                    return;
+            }
 
             feeds.Clear();
 
@@ -169,6 +242,8 @@ namespace DevRant.WPF
             }
 
             UpdateFollow();
+
+            currentSection = type;
         }
 
         public Visibility PostVisibility
@@ -180,6 +255,23 @@ namespace DevRant.WPF
         public ICommand OpenPostCommand
         {
             get { return new mvvm.CommandHelper(OpenPost); }
+        }
+
+
+
+        public ICommand UnfollowUserCommand
+        {
+            get { return new mvvm.CommandHelper(UnfollowUser); }
+        }
+
+        private void UnfollowUser()
+        {
+            if (SelectedPost == null)
+                return;
+
+            ds.Unfollow(SelectedPost.AsRant().Username);
+
+            UpdateFollow();
         }
 
         public ICommand FollowUserCommand
@@ -205,7 +297,12 @@ namespace DevRant.WPF
             {
                 if (followed.Contains(rant.Username))
                     rant.Followed = true;
+                else
+                    rant.Followed = false;
             }
+
+            //Update Menu
+            RaisePropertyChanged("SelectedPost");
         }
 
         public ICommand ViewProfileCommand
@@ -221,13 +318,23 @@ namespace DevRant.WPF
             Process.Start(((Rant)SelectedPost).ProfileURL);
         }
 
+        public ICommand ViewNotificationsCommand
+        {
+            get { return new mvvm.CommandHelper(ViewNotifications); }
+        }
+
+        private void ViewNotifications()
+        {
+            Process.Start(Utilities.BaseURL + "/notifs");
+        }
+
         public void OpenPost()
         {
             if (SelectedPost == null)
                 return;
             else if (SelectedPost is Rant)
                 Process.Start(((Rant)SelectedPost).PostURL);
-            //TODO: Add Notification
+            //TODO: Add For Notification
         }
 
         private ObservableCollection<FeedItem> feeds = new ObservableCollection<FeedItem>();
@@ -259,6 +366,8 @@ namespace DevRant.WPF
                 RaisePropertyChanged("PostVisibility");
             }
         }
+
+        private FeedType currentSection;
 
         private async void Test()
         {

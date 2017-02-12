@@ -63,6 +63,7 @@
     <Compile Include="Dtos\RantSort.cs" />
     <Compile Include="IDevRantClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Dtos\StoryRange.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

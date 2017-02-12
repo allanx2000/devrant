@@ -8,6 +8,8 @@ namespace DevRant.WPF
 {
     public static class Utilities
     {
+        public const string BaseURL = "https://www.devrant.io/";
+        
         public static long ToUnixTime(DateTime time)
         {
             long unixTimestamp = (long)(time.ToUniversalTime().Subtract(new DateTime(1970, 1, 1))).TotalSeconds;

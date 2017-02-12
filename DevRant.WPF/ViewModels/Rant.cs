@@ -22,12 +22,10 @@ namespace DevRant.WPF.ViewModels
         public int UserScore { get { return rant.UserScore; } }
 
         public string CreateTime { get; private set; }
+        
+        public string PostURL { get { return Utilities.BaseURL + "rants/" + rant.Id; } }
 
-
-        public const string BaseURL = "https://www.devrant.io/";
-        public string PostURL { get { return BaseURL + "rants/" + rant.Id; } }
-
-        public string ProfileURL { get { return BaseURL + "users/" + rant.Username; } }
+        public string ProfileURL { get { return Utilities.BaseURL + "users/" + rant.Username; } }
 
         public Visibility TagsVisibility { get { return string.IsNullOrEmpty(TagsString) ? Visibility.Hidden : Visibility.Visible; } }
 

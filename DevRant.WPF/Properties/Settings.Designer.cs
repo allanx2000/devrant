@@ -92,5 +92,41 @@ namespace DevRant.WPF.Properties {
                 this["UnreadPosts"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int FollowedUsersUpdateInterval {
+            get {
+                return ((int)(this["FollowedUsersUpdateInterval"]));
+            }
+            set {
+                this["FollowedUsersUpdateInterval"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Week")]
+        public global::DevRant.Dtos.StoryRange StoryRange {
+            get {
+                return ((global::DevRant.Dtos.StoryRange)(this["StoryRange"]));
+            }
+            set {
+                this["StoryRange"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Algo")]
+        public global::DevRant.Dtos.RantSort StorySort {
+            get {
+                return ((global::DevRant.Dtos.RantSort)(this["StorySort"]));
+            }
+            set {
+                this["StorySort"] = value;
+            }
+        }
     }
 }
