@@ -22,9 +22,22 @@ namespace DevRant.WPF.ViewModels
             }
         }
 
+        public string VotesString
+        {
+            get
+            {
+                return Votes.ToString("N0");
+            }
+        }
+
         public string Username { get { return rant.Username; } }
 
         public int UserScore { get { return rant.UserScore; } }
+        public string UserScoreString {
+            get {
+                return UserScore.ToString("N0");
+            }
+        }
 
         public string CreateTime { get; private set; }
         

@@ -116,7 +116,7 @@
 
                                 <Label FontSize="20" Grid.Column="0" Grid.RowSpan="2" 
                                VerticalAlignment="Top" HorizontalAlignment="Center"
-                               Content="{Binding Votes}"/>
+                               Content="{Binding VotesString}"/>
 
                                 <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" Margin="0 5 0 0">
                                     <Label FontWeight="Bold" FontSize="14">
@@ -136,7 +136,8 @@
 
                                     <Label Width="20"/>
 
-                                    <Label MinWidth="30" HorizontalContentAlignment="Center" Background="Gray" Foreground="White" FontWeight="Bold" Content="{Binding UserScore}">
+                                    <Label MinWidth="30" HorizontalContentAlignment="Center" Background="Gray" Foreground="White" FontWeight="Bold" 
+                                           Content="{Binding UserScoreString}">
                                         <Label.Style>
                                             <Style TargetType="{x:Type Label}">
                                                 <Setter Property="Template">
