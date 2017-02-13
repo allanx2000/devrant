@@ -27,7 +27,7 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
-                    <Label>Check for updates every</Label>
+                    <Label>Check for new updates every</Label>
                     <TextBox Width="30" Text="{Binding UpdateCheckInterval}"/>
                     <Label>minutes</Label>
                 </StackPanel>

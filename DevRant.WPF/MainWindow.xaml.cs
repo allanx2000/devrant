@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -23,6 +24,14 @@ namespace DevRant.WPF
             InitializeComponent();
         }
 
+        private async void RefreshFeed(object sender, RoutedEventArgs e)
+        {
+            var item = (ListBoxItem)SectionsListBox.SelectedItem;
+            if (item != null)
+            {
+                await LoadFeed(item.Name);
+            }
+        }
 
         private async void SectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -32,8 +41,13 @@ namespace DevRant.WPF
             if (item == null)
                 return;
 
+            await LoadFeed(item.Name);
+        }
+
+        private async Task LoadFeed(string section)
+        {
             IsEnabled = false;
-            await vm.LoadSection(item.Name);
+            await vm.LoadSection(section);
             IsEnabled = true;
 
             if (FeedListBox.Items.Count > 0)
@@ -54,5 +68,6 @@ namespace DevRant.WPF
         {
             vm.ShowStatusHistory();
         }
+        
     }
 }
