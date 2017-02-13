@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DevRant.WPF
 {
-    class MessageCollection
+    public class MessageCollection
     {
         public delegate void OnMessageChanged();
 
@@ -26,6 +26,13 @@ namespace DevRant.WPF
                     return null;
                 else
                     return messages.Last();
+            }
+        }
+
+        public IReadOnlyCollection<string> AllMessages {
+            get
+            {
+                return messages.AsReadOnly();
             }
         }
 

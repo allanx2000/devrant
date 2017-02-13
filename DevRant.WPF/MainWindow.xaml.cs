@@ -49,5 +49,10 @@ namespace DevRant.WPF
         {
             App.Current.Shutdown();
         }
+
+        private void StatusBar_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            vm.ShowStatusHistory();
+        }
     }
 }

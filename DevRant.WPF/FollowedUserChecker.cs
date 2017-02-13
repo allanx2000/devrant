@@ -103,5 +103,11 @@ namespace DevRant.WPF
                 });
             }
         }
+
+        public void Restart()
+        {
+            Stop();
+            Start();
+        }
     }
 }

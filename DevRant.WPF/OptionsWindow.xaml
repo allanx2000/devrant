@@ -5,7 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DevRant.WPF"
         mc:Ignorable="d"
-        Title="Options" Width="300" SizeToContent="Height">
+        Title="Options" Width="300" SizeToContent="Height"
+        WindowStyle="ToolWindow"
+        WindowStartupLocation="CenterOwner"
+        >
     <StackPanel>
 
         <GroupBox Header="General">

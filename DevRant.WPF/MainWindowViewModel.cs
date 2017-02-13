@@ -51,8 +51,16 @@ namespace DevRant.WPF
             //Test();
         }
 
-        
+
         #region Status
+        
+        public void ShowStatusHistory()
+        {
+            var dlg = new StatusViewerWindow(statusMessages);
+            dlg.Owner = window;
+
+            dlg.ShowDialog();
+        }
 
         private MessageCollection statusMessages;
         public string StatusMessage
@@ -235,20 +243,31 @@ namespace DevRant.WPF
 
         #region Commands
 
+        public ICommand CheckUpdatesCommand
+        {
+            get { return new mvvm.CommandHelper(CheckForUpdates); }
+        }
+        private void CheckForUpdates()
+        {
+            UpdateStatus("Checking for updates...");
+            checker.Restart();
+        }
+
         public ICommand OpenOptionsCommand
         {
             get { return new mvvm.CommandHelper(OpenOptions); }
         }
-
+        
         private void OpenOptions()
         {
             var dlg = new OptionsWindow(ds, api);
+            dlg.Owner = window;
+
             dlg.ShowDialog();
 
             if (!dlg.Cancelled)
             {
-                checker.Stop();
-                checker.Start();
+                checker.Restart();
             }
         }
 

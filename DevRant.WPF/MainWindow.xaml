@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:DevRant.WPF"
         xmlns:converters="clr-namespace:DevRant.WPF.Converters"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="devRant" Height="800" Width="800" IsEnabled="{Binding !IsLoading}"
         Closed="Window_Closed">
 
@@ -30,6 +31,7 @@
                 </Style>
             </Menu.Resources>
             <MenuItem Header="Options" Command="{Binding OpenOptionsCommand}"/>
+            <MenuItem Header="Check For Updates" Command="{Binding CheckUpdatesCommand}"/>
             <MenuItem Header="View Notifications" Command="{Binding ViewNotificationsCommand }"/>
         </Menu>
 
@@ -64,7 +66,7 @@
                 <ListBoxItem Name="MyNotifications" Content="{Binding NotificationsLabel, FallbackValue='Notifications'}" FontWeight="{Binding NotificationsWeight}"/>
                 -->
 
-                <ListBoxItem Name="FollowedUsers" Content="{Binding FollowedUsersLabel, FallbackValue='Users Updates'}" FontWeight="{Binding FollowedUsersWeight}"/>
+                <ListBoxItem Name="FollowedUsers" Content="{Binding FollowedUsersLabel, FallbackValue='Updates'}" FontWeight="{Binding FollowedUsersWeight}"/>
             </ListBox>
         </GroupBox>
 
@@ -205,7 +207,7 @@
             </ListBox>
         </GroupBox>
 
-        <StatusBar Grid.Row="2" Grid.ColumnSpan="2" Padding="3">
+        <StatusBar Grid.Row="2" Grid.ColumnSpan="2" Padding="3" MouseDoubleClick="StatusBar_MouseDoubleClick">
             <TextBlock Text="{Binding StatusMessage}"/>
         </StatusBar>
         
