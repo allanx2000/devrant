@@ -118,11 +118,18 @@ namespace DevRant.WPF
             Settings.Save();
         }
 
-        public void SetFollowing(ICollection<string> users)
+        public List<string> SetFollowing(ICollection<string> users)
         {
+            var same = users.Intersect(followedUsers);
+
+            var added = from i in users where !same.Contains(i) select i;
+            var list = added.ToList();
+
             followedUsers.Clear();
             followedUsers.AddRange(users);
             SaveUsers();
+
+            return list;
         }
 
         public void SetUpdatesInterval(int updateCheckInterval)

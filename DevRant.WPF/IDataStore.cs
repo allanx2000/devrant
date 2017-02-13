@@ -22,7 +22,7 @@ namespace DevRant.WPF
 
         void SetDefaultRange(StoryRange defaultStoryRange);
         void SetDefaultFeed(RantSort defaultFeed);
-        void SetFollowing(ICollection<string> users);
+        List<string> SetFollowing(ICollection<string> users);
         void SetUpdatesInterval(int updateCheckInterval);
 
 

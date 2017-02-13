@@ -28,6 +28,7 @@ namespace DevRant.WPF
             InitializeComponent();
         }
 
+        public List<string> AddedUsers { get { return vm.AddedUsers; } }
         public bool Cancelled { get { return vm.Cancelled; } }
     }
 }

@@ -185,13 +185,15 @@ namespace DevRant.WPF
             get { return new mvvm.CommandHelper(Save); }
         }
 
+        public List<string> AddedUsers { get; private set; }
+
         private void Save()
         {
 
             ds.SetDefaultRange(DefaultStoryRange);
             ds.SetDefaultFeed(DefaultFeed);
 
-            ds.SetFollowing(users);
+            AddedUsers = ds.SetFollowing(users);
             ds.SetUpdatesInterval(UpdateCheckInterval);
 
             Cancelled = false;

@@ -267,7 +267,8 @@ namespace DevRant.WPF
 
             if (!dlg.Cancelled)
             {
-                checker.Restart();
+                if (dlg.AddedUsers.Count > 0)
+                    checker.GetAll(dlg.AddedUsers);                
             }
         }
 
@@ -301,9 +302,11 @@ namespace DevRant.WPF
             if (SelectedPost == null)
                 return;
 
-            ds.Follow(SelectedPost.AsRant().Username);
+            var username = SelectedPost.AsRant().Username;
+            ds.Follow(username);
 
             UpdateFollowedInRants();
+            checker.GetAll(username);
         }
 
         public ICommand ViewProfileCommand

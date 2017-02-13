@@ -109,5 +109,44 @@ namespace DevRant.WPF
             Stop();
             Start();
         }
+
+        public void GetAll(string username)
+        {
+            var list = new List<string>();
+            list.Add(username);
+            GetAll(list);
+        }
+
+        public void GetAll(IEnumerable<string> users)
+        {
+            Thread th = new Thread(() => GetAllForUsers(users));
+            th.Start();
+        }
+
+        private async void GetAllForUsers(IEnumerable<string> users)
+        {
+            List<Rant> added = new List<Rant>();
+
+            foreach (string user in users)
+            {
+                try
+                {
+                    Profile profile = await api.GetProfileAsync(user);
+
+                    foreach (var rant in profile.Rants)
+                    {
+                        Rant r = new Rant(rant);
+                        Posts.Add(r);
+                        added.Add(r);
+                    }
+                }
+                catch (Exception e)
+                {
+                    var st = e.StackTrace;
+                }
+            }
+
+            SendUpdate(added.Count);
+        }
     }
 }
