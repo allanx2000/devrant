@@ -97,7 +97,7 @@
     </ApplicationDefinition>
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="FollowedUserChecker.cs" />
-    <Compile Include="LoginInfo.cs" />
+    <None Include="DataStore\LoginInfo.cs.ex" />
     <Compile Include="MessageCollection.cs" />
     <Compile Include="OptionsWindow.xaml.cs">
       <DependentUpon>OptionsWindow.xaml</DependentUpon>
@@ -119,8 +119,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AppSettingsDataStore.cs" />
-    <Compile Include="IDataStore.cs" />
+    <Compile Include="DataStore\AppSettingsDataStore.cs" />
+    <Compile Include="DataStore\IDataStore.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

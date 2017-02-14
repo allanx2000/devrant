@@ -15,6 +15,7 @@ using DevRant.WPF.ViewModels;
 using System.Diagnostics;
 using DevRant.WPF.Converters;
 using DevRant.Dtos;
+using DevRant.WPF.DataStore;
 
 namespace DevRant.WPF
 {

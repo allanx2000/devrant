@@ -1,4 +1,5 @@
 ﻿using DevRant.Dtos;
+using DevRant.WPF.DataStore;
 using DevRant.WPF.ViewModels;
 using System;
 using System.Collections.Generic;

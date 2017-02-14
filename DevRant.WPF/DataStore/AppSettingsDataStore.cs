@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DevRant.Dtos;
 
-namespace DevRant.WPF
+namespace DevRant.WPF.DataStore
 {
     class AppSettingsDataStore : IDataStore
     {
