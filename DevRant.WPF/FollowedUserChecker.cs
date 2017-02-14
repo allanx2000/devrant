@@ -14,6 +14,12 @@ namespace DevRant.WPF
         private IDataStore ds;
         private Thread thread;
 
+
+        public UpdateArgs GetFeedUpdate()
+        {
+            return new UpdateArgs(UpdateType.UpdateFeed, 0, null, Posts);
+        }
+
         public ObservableCollection<Rant> Posts { get; private set; }
 
         public FollowedUserChecker(IDataStore ds, DevRantClient api)
@@ -27,18 +33,42 @@ namespace DevRant.WPF
 
         public delegate void OnUpdatedHandler(UpdateArgs args);
         public event OnUpdatedHandler OnUpdate;
-
-        internal class UpdateArgs
+        
+        public enum UpdateType
         {
-            public int Total { get; set; }
-            public int TotalUnread { get; set; }
-            public int Added { get; set; }
+            GetAllForUser,
+            UpdatesCheck,
+            UpdateFeed
+        }
+
+        public class UpdateArgs
+        {
+            public UpdateArgs(UpdateType type, int added, string users, ICollection<Rant> posts)
+            {
+                Added = added;
+                Type = type;
+
+                if (posts != null)
+                {
+                    Total = posts.Count;
+                    TotalUnread = posts.Count(x => !x.Read);
+                }
+
+                if (users != null)
+                    Users = users;
+            }
+            
+            public UpdateType Type { get; private set; }
+            public int Total { get; private set; }
+            public int TotalUnread { get; private set; }
+            public int Added { get; private set; }
+            public string Users { get; private set; }
         }
 
         public void Start()
-        {
+        {            
             thread = new Thread(RunChecker);
-            thread.Start();
+            thread.Start();            
         }
 
         public void Stop()
@@ -79,7 +109,7 @@ namespace DevRant.WPF
                         ds.FollowedUsersLastChecked = latest;
                     }
 
-                    SendUpdate(added.Count);
+                    SendUpdate(UpdateType.UpdatesCheck, added.Count);
 
                     int millis = ds.FollowedUsersUpdateInterval * 60 * 1000;
                     Thread.Sleep(millis);
@@ -91,16 +121,14 @@ namespace DevRant.WPF
             }
         }
 
-        internal void SendUpdate(int added = 0)
+        internal void SendUpdate(UpdateType type, int added = 0, string users = null)
         {
             if (OnUpdate != null)
             {
-                OnUpdate.Invoke(new UpdateArgs()
-                {
-                    Added = added,
-                    Total = Posts.Count,
-                    TotalUnread = Posts.Count(x => !x.Read)
-                });
+                var update = new UpdateArgs(type, added, users, Posts);
+
+
+                OnUpdate.Invoke(update);
             }
         }
 
@@ -118,7 +146,7 @@ namespace DevRant.WPF
         }
 
         public void GetAll(IEnumerable<string> users)
-        {
+        {   
             Thread th = new Thread(() => GetAllForUsers(users));
             th.Start();
         }
@@ -146,7 +174,7 @@ namespace DevRant.WPF
                 }
             }
 
-            SendUpdate(added.Count);
+            SendUpdate(UpdateType.GetAllForUser, added.Count, string.Join(", ", users));
         }
     }
 }

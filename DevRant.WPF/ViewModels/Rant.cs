@@ -78,7 +78,7 @@ namespace DevRant.WPF.ViewModels
         {
             this.rant = rant;
             DateTime dt = Utilities.FromUnixTime(rant.CreatedTime);
-            //CreateTime = dt.ToString("M/d/yyyy");
+            CreateTime = dt.ToLocalTime().ToString("M/d/yyyy h:mm tt");
 
             Thread th = new Thread(() => LoadImage());
             th.Start();

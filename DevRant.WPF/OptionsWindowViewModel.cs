@@ -61,7 +61,21 @@ namespace DevRant.WPF
             usersView = new CollectionViewSource();
             usersView.SortDescriptions.Add(new SortDescription(null, ListSortDirection.Ascending));
             usersView.Source = users;
+
+            LoginInfo login = ds.GetLoginInfo();
+            if (login != null)
+            {
+                Password = login.Password;
+                Username = login.Username;
+            }
+
+            ShowUsername = !ds.HideUsername;
+            ShowCreateTime = ds.ShowCreateTime;
         }
+        
+        public string Password { get; set; }
+        public string Username { get; set; }
+
 
         public bool Cancelled { get; private set; }
 
@@ -187,17 +201,32 @@ namespace DevRant.WPF
 
         public List<string> AddedUsers { get; private set; }
 
+        public bool ShowUsername {get; set; }
+        public bool ShowCreateTime { get; set; }
+
         private void Save()
         {
+            try
+            {
+                ds.SetDefaultRange(DefaultStoryRange);
+                ds.SetDefaultFeed(DefaultFeed);
 
-            ds.SetDefaultRange(DefaultStoryRange);
-            ds.SetDefaultFeed(DefaultFeed);
+                AddedUsers = ds.SetFollowing(users);
+                ds.SetUpdatesInterval(UpdateCheckInterval);
 
-            AddedUsers = ds.SetFollowing(users);
-            ds.SetUpdatesInterval(UpdateCheckInterval);
+                if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
+                    api.CheckLogin(Username, Password);
 
-            Cancelled = false;
-            window.Close();
+                ds.SetHideUsername(!ShowUsername);
+                ds.SetShowCreateTime(ShowCreateTime);
+
+                Cancelled = false;
+                window.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBoxFactory.ShowError(e);
+            }
         }
         
 

@@ -73,6 +73,22 @@ namespace DevRant.WPF
             }
         }
 
+        public bool HideUsername
+        {
+            get
+            {
+                return Settings.HideUsername;
+            }
+        }
+
+        public bool ShowCreateTime
+        {
+            get
+            {
+                return Settings.ShowCreateTime;
+            }
+        }
+
         public void Follow(string user)
         {
             if (!followedUsers.Contains(user))
@@ -135,6 +151,28 @@ namespace DevRant.WPF
         public void SetUpdatesInterval(int updateCheckInterval)
         {
             Settings.FollowedUsersUpdateInterval = updateCheckInterval;
+            Settings.Save();
+        }
+
+        public LoginInfo GetLoginInfo()
+        {
+            if (string.IsNullOrEmpty(Settings.Username) && string.IsNullOrEmpty(Settings.Password))
+            {
+                return new LoginInfo(Settings.Username, Settings.Password);
+            }
+            else
+                return null;
+        }
+
+        public void SetHideUsername(bool hide)
+        {
+            Settings.HideUsername = hide;
+            Settings.Save();
+        }
+
+        public void SetShowCreateTime(bool showCreateTime)
+        {
+            Settings.ShowCreateTime = showCreateTime;
             Settings.Save();
         }
     }

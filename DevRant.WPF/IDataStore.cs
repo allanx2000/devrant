@@ -16,6 +16,8 @@ namespace DevRant.WPF
 
         StoryRange DefaultRange { get; }
         RantSort DefaultFeed { get;}
+        bool HideUsername { get; }
+        bool ShowCreateTime { get; }
 
         void Unfollow(string user);
         void Follow(string user);
@@ -24,6 +26,9 @@ namespace DevRant.WPF
         void SetDefaultFeed(RantSort defaultFeed);
         List<string> SetFollowing(ICollection<string> users);
         void SetUpdatesInterval(int updateCheckInterval);
+        LoginInfo GetLoginInfo();
+        void SetHideUsername(bool hideUsername);
+        void SetShowCreateTime(bool showCreateTime);
 
 
         /*

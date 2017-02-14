@@ -193,5 +193,35 @@ namespace DevRant
             int? id = await GetUserId(username);
             return id != null;
         }
+
+        /// <summary>
+        /// Login as user
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        public void Login(string username, string password)
+        {
+            throw new NotImplementedException();
+        }
+
+        private AccessInfo token;
+
+        /// <summary>
+        /// Whether the client is logged in or not
+        /// </summary>
+        public bool LoggedIn
+        {
+            get { return token != null; }
+        }
+
+        /// <summary>
+        /// Checks the credentials are valid
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        public void CheckLogin(string username, string password)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

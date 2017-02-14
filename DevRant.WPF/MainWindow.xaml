@@ -104,7 +104,7 @@
                                     </Style>
                                 </Grid.Style>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition Width="80"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
@@ -115,11 +115,22 @@
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
-                                <Label FontSize="20" Grid.Column="0" Grid.RowSpan="2" 
-                               VerticalAlignment="Top" HorizontalAlignment="Center"
-                               Content="{Binding VotesString}"/>
+                                <!-- Left Column -->
+                                <StackPanel Orientation="Vertical" Grid.Column="0" Grid.RowSpan="4">
+                                    <Label FontSize="20" 
+                                           VerticalAlignment="Top" HorizontalAlignment="Center"
+                                    Content="{Binding VotesString}"/>
 
-                                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" Margin="0 5 0 0">
+                                    <Label HorizontalAlignment="Center" 
+                                           Visibility="{Binding ElementName=FeedListBox, Path=DataContext.DateVisibility}">
+                                        <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="{Binding CreateTime}"/>
+                                    </Label>
+                                </StackPanel>
+                                
+                                <!-- Right -->
+                                <StackPanel Orientation="Horizontal" 
+                                            Visibility="{Binding ElementName=FeedListBox, Path=DataContext.UsernameVisibility}" 
+                                            Grid.Column="1" Grid.Row="0" Margin="0 5 0 0">
                                     <Label FontWeight="Bold" FontSize="14">
                                         <Label.Style>
                                             <Style TargetType="{x:Type Label}">
@@ -158,12 +169,6 @@
                                             </Style>
                                         </Label.Style>
                                     </Label>
-
-
-
-                                    <!--
-                            <Label Content="{Binding CreateTime}"/>
-                            -->
                                 </StackPanel>
 
                                 <Label Grid.Column="1" Grid.Row="1">
@@ -212,7 +217,7 @@
         <StatusBar Grid.Row="2" Grid.ColumnSpan="2" Padding="3" MouseDoubleClick="StatusBar_MouseDoubleClick">
             <TextBlock Text="{Binding StatusMessage}"/>
         </StatusBar>
-        
+
         <!--
         <Button Command="{Binding TestCommand}">Test</Button>
         -->

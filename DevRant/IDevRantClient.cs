@@ -46,6 +46,19 @@ namespace DevRant
         /// <returns></returns>
         Task<IReadOnlyCollection<RantInfo>> GetStoriesAsync(RantSort sort = RantSort.Top, StoryRange range = StoryRange.Day, int limit = 50, int skip = 0);
 
+        /// <summary>
+        /// Login
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        void Login(string username, string password);
+
+        /// <summary>
+        /// Checks if credentials are valid
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        void CheckLogin(string username, string password);
     }
     
 }

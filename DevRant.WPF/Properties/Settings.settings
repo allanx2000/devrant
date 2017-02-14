@@ -29,5 +29,11 @@
     <Setting Name="StorySort" Type="DevRant.Dtos.RantSort" Scope="User">
       <Value Profile="(Default)">Algo</Value>
     </Setting>
+    <Setting Name="HideUsername" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ShowCreateTime" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

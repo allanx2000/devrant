@@ -30,5 +30,10 @@ namespace DevRant.WPF
 
         public List<string> AddedUsers { get { return vm.AddedUsers; } }
         public bool Cancelled { get { return vm.Cancelled; } }
+
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            vm.Password = (((PasswordBox)sender).Password);
+        }
     }
 }

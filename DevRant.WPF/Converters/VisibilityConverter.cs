@@ -17,11 +17,11 @@ namespace DevRant.WPF.Converters
             //public FeedItem SelectedItem { get; private set; }
 
             private FeedItem SelectedItem;
-
+            
             public bool Following { get { return SelectedItem is Rant ? SelectedItem.AsRant().Followed : false; }}
             public bool IsRant { get { return SelectedItem != null && SelectedItem.Type == FeedItem.FeedItemType.Post; } }
             public bool IsNotification { get { return SelectedItem != null && SelectedItem.Type == FeedItem.FeedItemType.Notification; } }
-
+            
             public void SetSelectedItem(FeedItem value)
             {
                 SelectedItem = value;

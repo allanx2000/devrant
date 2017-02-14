@@ -128,5 +128,29 @@ namespace DevRant.WPF.Properties {
                 this["StorySort"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool HideUsername {
+            get {
+                return ((bool)(this["HideUsername"]));
+            }
+            set {
+                this["HideUsername"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowCreateTime {
+            get {
+                return ((bool)(this["ShowCreateTime"]));
+            }
+            set {
+                this["ShowCreateTime"] = value;
+            }
+        }
     }
 }

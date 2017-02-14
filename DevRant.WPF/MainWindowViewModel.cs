@@ -42,18 +42,20 @@ namespace DevRant.WPF
             feedView.Source = feeds;
 
             //Initialize the properties
-            UpdateFollowedPosts(new FollowedUserChecker.UpdateArgs(), false);
-
+            
             checker = new FollowedUserChecker(ds, api);
             checker.OnUpdate += UpdateFollowedPosts;
             checker.Start();
+
+            UpdateFollowedPosts(checker.GetFeedUpdate());
+
 
             //Test();
         }
 
 
         #region Status
-        
+
         public void ShowStatusHistory()
         {
             var dlg = new StatusViewerWindow(statusMessages);
@@ -98,6 +100,21 @@ namespace DevRant.WPF
                 RaisePropertyChanged();
             }
         }
+
+        public Visibility DateVisibility
+        {
+            get
+            {
+                return ds.ShowCreateTime ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+        public Visibility UsernameVisibility
+        {
+            get {
+                return ds.HideUsername ? Visibility.Collapsed : Visibility.Visible;
+            }
+        }
+
         public ICollectionView FeedView
         {
             get
@@ -139,8 +156,8 @@ namespace DevRant.WPF
                     value.Read = true;
 
                     if (currentSection == FeedType.Updates)
-                    {
-                        checker.SendUpdate();
+                    {                        
+                        UpdateFollowedPosts(checker.GetFeedUpdate());
                     }
                 }
 
@@ -268,7 +285,11 @@ namespace DevRant.WPF
             if (!dlg.Cancelled)
             {
                 if (dlg.AddedUsers.Count > 0)
-                    checker.GetAll(dlg.AddedUsers);                
+                    checker.GetAll(dlg.AddedUsers);
+
+                RaisePropertyChanged("UsernameVisibility");
+                RaisePropertyChanged("DateVisibility");
+                
             }
         }
 
@@ -362,25 +383,37 @@ namespace DevRant.WPF
 
         private void UpdateFollowedPosts(FollowedUserChecker.UpdateArgs args, bool updateStatus)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Updates");
+            StringBuilder labelBuilder = new StringBuilder();
+            labelBuilder.Append("Updates");
 
             if (args.TotalUnread > 0)
             {
                 FollowedUsersWeight = FontWeights.Bold;
-                sb.Append(" (" + args.TotalUnread + ")");
+                labelBuilder.Append(" (" + args.TotalUnread + ")");
             }
             else
             {
                 FollowedUsersWeight = FontWeights.Normal;
             }
 
-            FollowedUsersLabel = sb.ToString();
+            FollowedUsersLabel = labelBuilder.ToString();
 
-            if (updateStatus)
+            if (updateStatus && args.Type != FollowedUserChecker.UpdateType.UpdateFeed)
             {
-                string message = string.Format("Checker found {0} new posts.", args.Added);
-                UpdateStatus(message);
+                string message = null;
+
+                switch (args.Type)
+                {
+                    case FollowedUserChecker.UpdateType.UpdatesCheck:
+                        message = string.Format("Checker found {0} new posts.", args.Added);
+                        break;
+                    case FollowedUserChecker.UpdateType.GetAllForUser:
+                        message = "Got rants for user: " + args.Users;
+                        break;
+                }
+
+                if (!string.IsNullOrEmpty(message))
+                    UpdateStatus(message);
             }
         }
 

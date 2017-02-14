@@ -26,21 +26,49 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+                <StackPanel Grid.Row="0" HorizontalAlignment="Center" Grid.ColumnSpan="2" Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding ShowUsername}">Show Username</CheckBox>
+                    <CheckBox IsChecked="{Binding ShowCreateTime}">Show Create Time</CheckBox>
+                </StackPanel>
+                
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
                     <Label>Check for new updates every</Label>
                     <TextBox Width="30" Text="{Binding UpdateCheckInterval}"/>
                     <Label>minutes</Label>
                 </StackPanel>
-                
-                <Label Grid.Column="0" Grid.Row="2" Style="{StaticResource GridField}">Default Feed:</Label>
-                <ComboBox Grid.Column="1" Grid.Row="2" ItemsSource="{Binding RantSorts}" SelectedItem="{Binding DefaultFeed}" />
+
+                <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource GridField}">Default Feed:</Label>
+                <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding RantSorts}" SelectedItem="{Binding DefaultFeed}" />
 
                 <Label Grid.Column="0" Grid.Row="3" Style="{StaticResource GridField}">Default Story:</Label>
                 <ComboBox Grid.Column="1" Grid.Row="3" ItemsSource="{Binding StoryRanges}" SelectedItem="{Binding DefaultStoryRange}" />
 
             </Grid>
         </GroupBox>
-        
+
+        <GroupBox Header="Login">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource GridField}">Username:</Label>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Username}"/>
+
+                <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource GridField}">Password:</Label>
+                <PasswordBox Grid.Row="1" Grid.Column="1" PasswordChanged="PasswordBox_PasswordChanged"
+                             Margin="5 0" Padding="3" />
+
+            </Grid>
+        </GroupBox>
+
         <GroupBox Header="Following">
             <StackPanel>
                 <Grid>
@@ -49,7 +77,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0">Follow: </Label>
+                    <Label Grid.Column="0">Follow:</Label>
                     <TextBox Grid.Column="1" Text="{Binding UserToFollow}"/>
                     <Button Grid.Column="2" Padding="13 3" Command="{Binding AddUserCommand}" >Add</Button>
                 </Grid>
@@ -59,12 +87,13 @@
                 <DockPanel LastChildFill="True">
                     <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center" Orientation="Vertical">
                         <Button IsEnabled="{Binding UserSelected}" Command="{Binding OpenProfileCommand}">
-                            <TextBlock TextAlignment="Center">Open<LineBreak/> Profile</TextBlock></Button>
+                            <TextBlock TextAlignment="Center">Open<LineBreak/> Profile</TextBlock>
+                        </Button>
                         <Button IsEnabled="{Binding UserSelected}" Command="{Binding RemoveUserCommand}">Remove</Button>
                     </StackPanel>
                     <ListBox Height="200" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}"/>
                 </DockPanel>
-                
+
             </StackPanel>
         </GroupBox>
 
@@ -72,6 +101,6 @@
             <Button Command="{Binding SaveCommand}">Save</Button>
             <Button Command="{Binding CancelCommand}">Cancel</Button>
         </StackPanel>
-        
+
     </StackPanel>
 </Window>
