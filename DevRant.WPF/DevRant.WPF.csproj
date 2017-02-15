@@ -196,6 +196,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Libs\innouvous.Utils.Merged.dll" />
+    <Content Include="Libs\Innouvous.Utils.Merged45.dll" />
     <Content Include="Libs\System.Data.SQLite.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
