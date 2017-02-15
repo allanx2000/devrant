@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevRant.WPF", "DevRant.WPF\DevRant.WPF.csproj", "{AF3D152A-7705-4194-BFA1-9BE0893154E0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Innouvous.Utils.Data.SQLiteWrapper", "..\..\Visual Studio 2013\Projects\Innouvous.Utils\Innouvous.Utils.SQLiteWrapper\Innouvous.Utils.Data.SQLiteWrapper.csproj", "{183BD0E1-5F1E-45E3-8BE9-34D9B64A5B99}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{AF3D152A-7705-4194-BFA1-9BE0893154E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF3D152A-7705-4194-BFA1-9BE0893154E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF3D152A-7705-4194-BFA1-9BE0893154E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{183BD0E1-5F1E-45E3-8BE9-34D9B64A5B99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{183BD0E1-5F1E-45E3-8BE9-34D9B64A5B99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{183BD0E1-5F1E-45E3-8BE9-34D9B64A5B99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{183BD0E1-5F1E-45E3-8BE9-34D9B64A5B99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

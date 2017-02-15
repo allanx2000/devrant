@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DevRant.WPF"
         mc:Ignorable="d"
-        Title="Options" Width="300" SizeToContent="Height"
+        Title="Options" Width="350" SizeToContent="Height"
         WindowStyle="ToolWindow"
         WindowStartupLocation="CenterOwner"
         >
@@ -26,10 +26,22 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Row="0" HorizontalAlignment="Center" Grid.ColumnSpan="2" Orientation="Horizontal">
-                    <CheckBox IsChecked="{Binding ShowUsername}">Show Username</CheckBox>
-                    <CheckBox IsChecked="{Binding ShowCreateTime}">Show Create Time</CheckBox>
-                </StackPanel>
+                <Grid Grid.Row="0" Grid.ColumnSpan="2">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                            <CheckBox IsChecked="{Binding ShowUsername}">Show Username</CheckBox>
+                            <CheckBox IsChecked="{Binding ShowCreateTime}">Show Create Time</CheckBox>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1">
+                        <CheckBox>Don't count read rants</CheckBox>
+                    </StackPanel>
+                </Grid>
                 
                 <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
                     <Label>Check for new updates every</Label>

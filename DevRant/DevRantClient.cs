@@ -1,4 +1,4 @@
-﻿using DevRant.Dto;
+﻿using DevRant.Dtos;
 using DevRant.Dtos;
 using Newtonsoft.Json.Linq;
 using System;
@@ -32,7 +32,7 @@ namespace DevRant
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<object> GetNotificationsAsync()
+        public async Task<List<NotificationInfo>> GetNotificationsAsync()
         {
             if (!LoggedIn)
                 throw new Exception("User not logged in.");

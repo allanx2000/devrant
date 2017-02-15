@@ -11,7 +11,7 @@ namespace DevRant.WPF
 {
     internal class FollowedUserChecker
     {
-        private DevRantClient api;
+        private IDevRantClient api;
         private IDataStore ds;
         private Thread thread;
 
@@ -23,7 +23,7 @@ namespace DevRant.WPF
 
         public ObservableCollection<Rant> Posts { get; private set; }
 
-        public FollowedUserChecker(IDataStore ds, DevRantClient api)
+        public FollowedUserChecker(IDataStore ds, IDevRantClient api)
         {
             this.ds = ds;
             this.api = api;

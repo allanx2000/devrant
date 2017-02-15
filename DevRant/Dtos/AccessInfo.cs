@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace DevRant.Dto
+namespace DevRant.Dtos
 {
     /// <summary>
     /// Holds the info for successful login

@@ -27,14 +27,14 @@
     <MapFileExtensions>true</MapFileExtensions>
     <TargetCulture>en</TargetCulture>
     <ProductName>DevRant</ProductName>
-    <ApplicationRevision>16</ApplicationRevision>
+    <ApplicationRevision>17</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -68,11 +68,13 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="innouvous.Utils.Merged">
-      <HintPath>..\..\..\Visual Studio 2015\Projects\innouvous.Utils.Merged\innouvous.Utils.Merged\bin\Debug\innouvous.Utils.Merged.dll</HintPath>
+    <Reference Include="innouvous.Utils.Merged, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\innouvous.Utils.Merged.dll</HintPath>
     </Reference>
-    <Reference Include="Innouvous.Utils.Merged45">
-      <HintPath>..\..\..\Visual Studio 2015\Projects\innouvous.Utils.Merged\Innouvous.Utils.Merged45\bin\Debug\Innouvous.Utils.Merged45.dll</HintPath>
+    <Reference Include="Innouvous.Utils.Merged45, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\Innouvous.Utils.Merged45.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -96,6 +98,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\VisibilityConverter.cs" />
+    <Compile Include="DataStore\HistoryStore.cs" />
+    <Compile Include="DataStore\IHistoryStore.cs" />
     <Compile Include="FollowedUserChecker.cs" />
     <Compile Include="DataStore\LoginInfo.cs" />
     <Compile Include="MessageCollection.cs" />
@@ -159,11 +163,18 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Libs\System.Data.SQLite.dll.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Visual Studio 2013\Projects\Innouvous.Utils\Innouvous.Utils.SQLiteWrapper\Innouvous.Utils.Data.SQLiteWrapper.csproj">
+      <Project>{183bd0e1-5f1e-45e3-8be9-34d9b64a5b99}</Project>
+      <Name>Innouvous.Utils.Data.SQLiteWrapper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DevRant\DevRant.csproj">
       <Project>{f59f78c9-806e-4f32-98e9-d50335aeb2a9}</Project>
       <Name>DevRant</Name>
@@ -183,6 +194,14 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Libs\System.Data.SQLite.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Libs\System.Data.SQLite.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -10,6 +10,16 @@ namespace DevRant
     public interface IDevRantClient
     {
         /// <summary>
+        /// 
+        /// </summary>
+        bool LoggedIn { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        string LoggedInUser { get; }
+
+        /// <summary>
         /// Requests profile details to the rest-api.
         /// </summary>
         /// <param name="username">Username of the profile to request.</param>
@@ -52,6 +62,18 @@ namespace DevRant
         /// <param name="username"></param>
         /// <param name="password"></param>
         Task Login(string username, string password);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        Task<List<Dtos.NotificationInfo>> GetNotificationsAsync();
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        Task Logout();
     }
     
 }

@@ -22,8 +22,11 @@ namespace DevRant.WPF
     internal class MainWindowViewModel : ViewModel
     {
         private Window window;
+
         private IDataStore ds;
-        private DevRantClient api;
+        private IDevRantClient api;
+        private IHistoryStore history;
+
         private FollowedUserChecker checker;
 
         private FeedType currentSection;
@@ -35,6 +38,7 @@ namespace DevRant.WPF
             this.window = window;
             ds = new AppSettingsDataStore();
             api = new DevRantClient();
+            history = HistoryStore.Instance;
 
             statusMessages = new MessageCollection();
             statusMessages.Changed += StatusChanged;
@@ -246,7 +250,7 @@ namespace DevRant.WPF
         public const string SectionNotifications = "MyNotifications";
         
         public const string SectionFollowed = "FollowedUsers";
-
+        
         public async Task LoadSection(string section)
         {
             IsLoading = true;
