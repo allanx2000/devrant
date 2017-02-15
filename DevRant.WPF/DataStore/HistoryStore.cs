@@ -71,8 +71,11 @@ namespace DevRant.WPF.DataStore
 
         public void MarkRead(int postId)
         {
-            string query = string.Format(InsertQuery, TableRead, postId, SQLUtils.ToSQLDateTime(DateTime.Now));
-            ExecuteNonQuery(query);
+            if (!IsRead(postId))
+            {
+                string query = string.Format(InsertQuery, TableRead, postId, SQLUtils.ToSQLDateTime(DateTime.Now));
+                ExecuteNonQuery(query);
+            }
         }
     }
 }

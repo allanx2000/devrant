@@ -14,7 +14,7 @@ namespace DevRant.WPF
         private IDevRantClient api;
         private IDataStore ds;
         private Thread thread;
-
+        private IHistoryStore history;
 
         public UpdateArgs GetFeedUpdate()
         {
@@ -23,10 +23,11 @@ namespace DevRant.WPF
 
         public ObservableCollection<Rant> Posts { get; private set; }
 
-        public FollowedUserChecker(IDataStore ds, IDevRantClient api)
+        public FollowedUserChecker(IDataStore ds, IDevRantClient api, IHistoryStore history)
         {
             this.ds = ds;
             this.api = api;
+            this.history = history;
 
             Posts = new ObservableCollection<Rant>();
         }
@@ -83,6 +84,8 @@ namespace DevRant.WPF
             {
                 try
                 {
+                    RemoveRead();
+
                     long lastTime = ds.FollowedUsersLastChecked;
 
                     List<RantInfo> added = new List<RantInfo>();
@@ -97,9 +100,12 @@ namespace DevRant.WPF
                         {
                             if (rant.CreatedTime > lastTime)
                             {
-                                Rant r = new Rant(rant);
-                                Posts.Add(r);
-                                added.Add(rant);
+                                if (!history.IsRead(rant.Id))
+                                {
+                                    Rant r = new Rant(rant);
+                                    Posts.Add(r);
+                                    added.Add(rant);
+                                }
                             }
                         }
                     }
@@ -120,6 +126,14 @@ namespace DevRant.WPF
                     var ex = e.StackTrace;
                 }
             }
+        }
+
+        private void RemoveRead()
+        {
+            var read = Posts.Where(x => x.Read).ToList();
+
+            foreach (var r in read)
+                Posts.Remove(r);
         }
 
         internal void SendUpdate(UpdateType type, int added = 0, string users = null)

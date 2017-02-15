@@ -202,7 +202,7 @@ namespace DevRant.WPF
                     
                     if (value.Type == FeedItem.FeedItemType.Post)
                     {
-                        history.MarkRead(value.AsRant().AsRant().ID);
+                        history.MarkRead(value.AsRant().ID);
                     }
 
                     if (currentSection == FeedType.Updates)
