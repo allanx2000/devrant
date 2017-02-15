@@ -13,5 +13,10 @@ namespace DevRant.WPF
     /// </summary>
     public partial class App : Application
     {
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            if (Innouvous.Utils.SingleInstance.Checker.AlreadyRunning)
+                App.Current.Shutdown();
+        }
     }
 }
