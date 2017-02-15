@@ -81,7 +81,7 @@ namespace DevRant.WPF
 
         private async void TestLogin()
         {
-            await api.Login("allanx2000", "netsurfer");
+            //await api.Login();
             await api.GetNotificationsAsync();
         }
 
