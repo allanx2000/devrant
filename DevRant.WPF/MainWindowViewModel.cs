@@ -199,6 +199,11 @@ namespace DevRant.WPF
                 if (value != null)
                 {
                     value.Read = true;
+                    
+                    if (value.Type == FeedItem.FeedItemType.Post)
+                    {
+                        history.MarkRead(value.AsRant().AsRant().ID);
+                    }
 
                     if (currentSection == FeedType.Updates)
                     {                        
@@ -258,29 +263,31 @@ namespace DevRant.WPF
             switch (section)
             {
                 case SectionGeneral:
-                    await LoadFeed(FeedType.General, sort: ds.DefaultFeed); //TODO: Add params from Settings
+                    await LoadFeed(FeedType.General, sort: ds.DefaultFeed, 
+                        filter: ds.DefaultFeed != RantSort.Top? ds.FilterOutRead : false); //TODO: Add params from Settings
                     break;
                 case SectionGeneralAlgo:
-                    await LoadFeed(FeedType.General, sort: RantSort.Algo);
+                    await LoadFeed(FeedType.General, sort: RantSort.Algo, filter: ds.FilterOutRead);
                     break;
                 case SectionGeneralRecent:
-                    await LoadFeed(FeedType.General, sort: RantSort.Recent);
+                    await LoadFeed(FeedType.General, sort: RantSort.Recent, filter: ds.FilterOutRead);
                     break;
                 case SectionGeneralTop:
                     await LoadFeed(FeedType.General, sort: RantSort.Top);
                     break;
 
                 case SectionStories:
-                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, ds.DefaultRange);
+                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, ds.DefaultRange,
+                        filter: ds.DefaultRange != StoryRange.All ? ds.FilterOutRead : false);
                     break;
                 case SectionStoriesDay:
-                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Day);
+                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Day, filter: ds.FilterOutRead);
                     break;
                 case SectionStoriesWeek:
-                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Week);
+                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Week, filter: ds.FilterOutRead);
                     break;
                 case SectionStoriesMonth:
-                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Month);
+                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Month, filter: ds.FilterOutRead);
                     break;
                 case SectionStoriesAll:
                     await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.All);
@@ -415,6 +422,8 @@ namespace DevRant.WPF
             get { return new mvvm.CommandHelper(Test); }
         }
 
+        public int Limit { get { return 50; } }
+
         private async void Test()
         {
             var profile = await GetProfile();
@@ -499,19 +508,40 @@ namespace DevRant.WPF
         }
         */
         
-        private async Task LoadFeed(FeedType type, RantSort sort = RantSort.Algo, StoryRange range = StoryRange.Day)
+        private async Task LoadFeed(FeedType type, RantSort sort = RantSort.Algo, StoryRange range = StoryRange.Day, bool filter = false)
         {
-            IReadOnlyCollection<Dtos.RantInfo> rants;
+            Func<int, Task<IReadOnlyCollection<RantInfo>>> getter;
+
             switch (type)
             {
                 case FeedType.General:
-                    rants = await api.GetRantsAsync(sort: sort);
+                    getter = async (skip) => await api.GetRantsAsync(sort: sort, skip: skip);
                     break;
                 case FeedType.Stories:
-                    rants = await api.GetStoriesAsync(range: range, sort: sort);
+                    getter = async (skip) => await api.GetStoriesAsync(range: range, sort: sort, skip: skip);
                     break;
                 default:
                     return;
+            }
+
+            List<RantInfo> rants = new List<RantInfo>();
+
+            int page = 0;
+            while (rants.Count < Limit)
+            {
+                int skip = page * Limit;
+
+                var tmp = await getter.Invoke(skip);
+                if (tmp.Count == 0)
+                    break;
+
+                foreach (var r in tmp)
+                {
+                    if (!history.IsRead(r.Id))
+                        rants.Add(r);
+                }
+
+                page++;
             }
 
             feeds.Clear();

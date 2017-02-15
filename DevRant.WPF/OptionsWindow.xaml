@@ -39,7 +39,7 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="1">
-                        <CheckBox>Don't count read rants</CheckBox>
+                        <CheckBox IsChecked="{Binding FilterOutRead}">Don't count read rants</CheckBox>
                     </StackPanel>
                 </Grid>
                 

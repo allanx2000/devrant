@@ -74,6 +74,8 @@ namespace DevRant.WPF.ViewModels
             }
         }
 
+        public int ID { get { return rant.Id; } }
+
         public Rant(RantInfo rant) : base(FeedItemType.Post)
         {
             this.rant = rant;

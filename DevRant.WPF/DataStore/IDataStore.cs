@@ -18,6 +18,7 @@ namespace DevRant.WPF.DataStore
         RantSort DefaultFeed { get;}
         bool HideUsername { get; }
         bool ShowCreateTime { get; }
+        bool FilterOutRead { get; }
 
         void Unfollow(string user);
         void Follow(string user);
@@ -30,6 +31,7 @@ namespace DevRant.WPF.DataStore
         void SetHideUsername(bool hideUsername);
         void SetShowCreateTime(bool showCreateTime);
         void SetLogin(LoginInfo loginInfo);
+        void SetFilterOutRead(bool filterOutRead);
 
 
         /*

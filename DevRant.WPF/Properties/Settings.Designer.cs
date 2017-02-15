@@ -152,5 +152,17 @@ namespace DevRant.WPF.Properties {
                 this["ShowCreateTime"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FilterOutRead {
+            get {
+                return ((bool)(this["FilterOutRead"]));
+            }
+            set {
+                this["FilterOutRead"] = value;
+            }
+        }
     }
 }

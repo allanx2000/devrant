@@ -89,6 +89,14 @@ namespace DevRant.WPF.DataStore
             }
         }
 
+        public bool FilterOutRead
+        {
+            get
+            {
+                return Settings.FilterOutRead;
+            }
+        }
+
         public void Follow(string user)
         {
             if (!followedUsers.Contains(user))
@@ -180,6 +188,12 @@ namespace DevRant.WPF.DataStore
         {
             Settings.Username = info.Username;
             Settings.Password = info.Password;
+            Settings.Save();
+        }
+
+        public void SetFilterOutRead(bool filterOutRead)
+        {
+            Settings.FilterOutRead = filterOutRead;
             Settings.Save();
         }
     }

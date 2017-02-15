@@ -72,13 +72,9 @@ namespace DevRant.WPF
 
             ShowUsername = !ds.HideUsername;
             ShowCreateTime = ds.ShowCreateTime;
+            FilterOutRead = ds.FilterOutRead;
         }
-
-        internal void SetUsername(string username)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public string Password { get; set; }
         public string Username { get; set; }
 
@@ -206,6 +202,8 @@ namespace DevRant.WPF
         }
 
         public List<string> AddedUsers { get; private set; }
+        
+        public bool FilterOutRead { get; set; }
 
         public bool ShowUsername {get; set; }
         public bool ShowCreateTime { get; set; }
@@ -226,9 +224,9 @@ namespace DevRant.WPF
 
                 ds.SetHideUsername(!ShowUsername);
                 ds.SetShowCreateTime(ShowCreateTime);
+                ds.SetFilterOutRead(FilterOutRead);
 
                 //Check/Save Login
-
                 if (Username != null && Password != null)
                 {
                     var info = ds.GetLoginInfo();

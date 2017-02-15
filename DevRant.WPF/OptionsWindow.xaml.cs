@@ -41,6 +41,7 @@ namespace DevRant.WPF
             }
         }
 
+
         public bool LoginChanged { get { return vm.LoginChanged; } }
 
         public List<string> AddedUsers { get { return vm.AddedUsers; } }
