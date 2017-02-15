@@ -43,15 +43,42 @@ namespace DevRant.WPF
             feedView.Source = feeds;
 
             //Initialize the properties
-            
             checker = new FollowedUserChecker(ds, api);
             checker.OnUpdate += UpdateFollowedPosts;
             checker.Start();
 
             UpdateFollowedPosts(checker.GetFeedUpdate());
 
-
+            Login();
+                
+            //TestLogin();
             //Test();
+        }
+
+        private async Task Login()
+        {
+            try
+            {
+                var loginInfo = ds.GetLoginInfo();
+
+                if (loginInfo != null)
+                {
+                    await api.Login(loginInfo.Username, loginInfo.Password);
+                }
+            }
+            catch (Exception e)
+            {
+                UpdateStatus("Failed to login, error: " + e.Message);
+            }
+            
+            RaisePropertyChanged("LoggedInUser");
+            RaisePropertyChanged("LoggedIn");
+        }
+
+        private async void TestLogin()
+        {
+            await api.Login("allanx2000", "netsurfer");
+            await api.GetNotificationsAsync();
         }
 
 
@@ -92,6 +119,19 @@ namespace DevRant.WPF
         #endregion
 
         #region Properties
+
+        public string LoggedInUser
+        {
+            get {
+                return api.LoggedInUser;
+            }
+        }
+
+        public bool LoggedIn
+        {
+            get { return api.LoggedIn; }
+        }
+
         public bool IsLoading
         {
             get { return Get<bool>(); }
@@ -275,8 +315,8 @@ namespace DevRant.WPF
         {
             get { return new mvvm.CommandHelper(OpenOptions); }
         }
-        
-        private void OpenOptions()
+
+        private async void OpenOptions()
         {
             var dlg = new OptionsWindow(ds, api);
             dlg.Owner = window;
@@ -290,7 +330,15 @@ namespace DevRant.WPF
 
                 RaisePropertyChanged("UsernameVisibility");
                 RaisePropertyChanged("DateVisibility");
-                
+
+                if (dlg.LoginChanged)
+                {
+                        await api.Logout();
+
+                        await Login();
+                    
+                }
+
             }
         }
 

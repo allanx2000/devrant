@@ -27,7 +27,21 @@ namespace DevRant.WPF
             DataContext = vm;
 
             InitializeComponent();
+
+            SetUsernamePassword(ds.GetLoginInfo());
         }
+
+        private void SetUsernamePassword(LoginInfo info)
+        {
+            if (info != null)
+            {
+                vm.Username = info.Username;
+                vm.Password = info.Password;
+                PasswordText.Password = info.Password;
+            }
+        }
+
+        public bool LoginChanged { get { return vm.LoginChanged; } }
 
         public List<string> AddedUsers { get { return vm.AddedUsers; } }
         public bool Cancelled { get { return vm.Cancelled; } }

@@ -29,6 +29,7 @@ namespace DevRant.WPF.DataStore
         LoginInfo GetLoginInfo();
         void SetHideUsername(bool hideUsername);
         void SetShowCreateTime(bool showCreateTime);
+        void SetLogin(LoginInfo loginInfo);
 
 
         /*

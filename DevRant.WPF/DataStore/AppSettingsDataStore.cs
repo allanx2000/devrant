@@ -156,7 +156,7 @@ namespace DevRant.WPF.DataStore
 
         public LoginInfo GetLoginInfo()
         {
-            if (string.IsNullOrEmpty(Settings.Username) && string.IsNullOrEmpty(Settings.Password))
+            if (!string.IsNullOrEmpty(Settings.Username) && !string.IsNullOrEmpty(Settings.Password))
             {
                 return new LoginInfo(Settings.Username, Settings.Password);
             }
@@ -173,6 +173,13 @@ namespace DevRant.WPF.DataStore
         public void SetShowCreateTime(bool showCreateTime)
         {
             Settings.ShowCreateTime = showCreateTime;
+            Settings.Save();
+        }
+
+        public void SetLogin(LoginInfo info)
+        {
+            Settings.Username = info.Username;
+            Settings.Password = info.Password;
             Settings.Save();
         }
     }

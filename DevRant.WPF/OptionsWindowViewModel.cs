@@ -73,7 +73,12 @@ namespace DevRant.WPF
             ShowUsername = !ds.HideUsername;
             ShowCreateTime = ds.ShowCreateTime;
         }
-        
+
+        internal void SetUsername(string username)
+        {
+            throw new NotImplementedException();
+        }
+
         public string Password { get; set; }
         public string Username { get; set; }
 
@@ -204,6 +209,7 @@ namespace DevRant.WPF
 
         public bool ShowUsername {get; set; }
         public bool ShowCreateTime { get; set; }
+        public bool LoginChanged { get; private set; }
 
         private void Save()
         {
@@ -216,10 +222,30 @@ namespace DevRant.WPF
                 ds.SetUpdatesInterval(UpdateCheckInterval);
 
                 if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
-                    api.CheckLogin(Username, Password);
+                    api.Login(Username, Password);
 
                 ds.SetHideUsername(!ShowUsername);
                 ds.SetShowCreateTime(ShowCreateTime);
+
+                //Check/Save Login
+
+                if (Username != null && Password != null)
+                {
+                    var info = ds.GetLoginInfo();
+                    if (info != null)
+                    {
+                        if (Username != info.Username || Password != info.Password)
+                        {
+                            ds.SetLogin(new LoginInfo(Username, Password));
+                            LoginChanged = true;
+                        }
+                    }
+                    else
+                    {
+                        ds.SetLogin(new LoginInfo(Username, Password));
+                        LoginChanged = true;
+                    }
+                }
 
                 Cancelled = false;
                 window.Close();

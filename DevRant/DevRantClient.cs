@@ -1,8 +1,10 @@
-﻿using DevRant.Dtos;
+﻿using DevRant.Dto;
+using DevRant.Dtos;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DevRant
@@ -26,29 +28,23 @@ namespace DevRant
             client.BaseAddress = new Uri(baseAddress);
         }
 
-        /*
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="username"></param>
         /// <returns></returns>
-        public async Task<Profile> GetNotificationsAsync(string username)
+        public async Task<object> GetNotificationsAsync()
         {
-            if (string.IsNullOrEmpty(username)) throw new ArgumentException("Must be non-empty.", nameof(username));
+            if (!LoggedIn)
+                throw new Exception("User not logged in.");
+            
 
-            var userId = await GetUserId(username);
-
-            if (userId == null)
-            {
-                return null;
-            }
-
-            var response = await client.GetAsync($"/api/users/me/notif-feed?app={appVersion}&user_id={userId}");
+            var response = await client.GetAsync($"/api/users/me/notif-feed?app={appVersion}&user_id={token.UserID}&token_id={token.ID}&token_key={token.Key}");
             var responseText = await response.Content.ReadAsStringAsync();
 
             return null;
          
-        JObject obj = JObject.Parse(responseText);
+            /*
+            JObject obj = JObject.Parse(responseText);
             Profile profile = obj["profile"].ToObject<Profile>();
 
             //Add Rants
@@ -69,8 +65,8 @@ namespace DevRant
             }
 
             return profile;
+            */
         }
-        */
 
         /// <summary>
         /// Requests profile details to the rest-api.
@@ -89,7 +85,8 @@ namespace DevRant
                 return null;
             }
 
-            var response = await client.GetAsync($"/api/users/{userId}?app={appVersion}");
+            string url = MakeUrl($"/api/users/{userId}");
+            var response = await client.GetAsync(url);
             var responseText = await response.Content.ReadAsStringAsync();
 
             JObject obj = JObject.Parse(responseText);
@@ -116,6 +113,32 @@ namespace DevRant
         }
 
 
+        private const string TokenId = "token_id";
+        private const string TokenKey = "token_key";
+        
+        private string MakeUrl(string path, Parameters otherParams = null)
+        {
+            Parameters paramz = new Parameters();
+            paramz.Add("app", appVersion.ToString());
+
+            if (otherParams != null)
+                paramz.AddRange(otherParams);
+
+            if (LoggedIn)
+            {
+                paramz.Add(TokenKey, token.Key);
+                paramz.Add(TokenId, token.ID);
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(path);
+            sb.Append("?" + paramz.ToQueryString());
+
+            var url = sb.ToString();
+            return url;
+        }
+
+
         /// <summary>
         /// Requests a collection of stories sorted and selected by the arguments from the rest-api.
         /// </summary>
@@ -125,12 +148,81 @@ namespace DevRant
             var sortText = sort.ToString().ToLower();
             var rangeText = range.ToString().ToLower();
 
+            string url = MakeUrl("/api/devrant/story-rants", new Parameters()
+            {
+                {"range", rangeText},
+                {"sort", sortText},
+                {"limit", limit.ToString()},
+                {"skip", skip.ToString()},                
+            });
 
-            var response = await client.GetAsync($"/api/devrant/story-rants?app={appVersion}&range={rangeText}&sort={sortText}&limit={limit}&skip={skip}");
+            var response = await client.GetAsync(url);
             var responseText = await response.Content.ReadAsStringAsync();
 
             return ParseProperty<List<RantInfo>>(responseText, "rants");
         }
+
+        /// <summary>
+        /// Checks the credentials are valid
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        public async Task Login(string username, string password)
+        {
+            if (LoggedIn)
+            {
+                await Logout();
+            }
+
+            string url = "/api/users/auth-token";
+
+            FormUrlEncodedContent content = CreatePostBody(new Parameters() {
+                { "username", username},
+                { "password", password}
+            });
+
+            var response = await client.PostAsync(url, content);
+            var responseText = await response.Content.ReadAsStringAsync();
+
+            JObject obj = JObject.Parse(responseText);
+
+            if (obj["success"].Value<bool>())
+            {
+                token = ParseProperty<AccessInfo>(responseText, "auth_token");
+                token.Username = username;
+            }
+            else
+                throw new Exception("Unable to login");
+        }
+
+        private static FormUrlEncodedContent CreatePostBody(Parameters otherParams)
+        {            
+            Dictionary<string, string> data = new Dictionary<string, string>();
+            data.Add("app", "3");
+            data.Add("plat", "3");
+
+            foreach (var kv in otherParams)
+            {
+                data.Add(kv.Key, kv.Value);
+            }
+
+            FormUrlEncodedContent content = new FormUrlEncodedContent(data);
+            return content;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task Logout()
+        {
+            if (LoggedIn)
+            {
+                //TODO: Logout
+                token = null;
+            }
+        }
+
 
         /// <summary>
         /// Requests a collection of rants sorted and selected by the arguments from the rest-api.
@@ -141,11 +233,16 @@ namespace DevRant
         /// <inheritdoc />
         public async Task<IReadOnlyCollection<RantInfo>> GetRantsAsync(RantSort sort = RantSort.Algo, int limit = 50, int skip = 0)
         {
-            var sortText = sort
-                .ToString()
-                .ToLower();
+            var sortText = sort.ToString().ToLower();
 
-            var response = await client.GetAsync($"/api/devrant/rants?app={appVersion}&sort={sortText}&limit={limit}&skip={skip}");
+            string url = MakeUrl("/api/devrant/rants", new Parameters()
+            {
+                {"sort", sortText},
+                {"limit", limit.ToString()},
+                {"skip", skip.ToString()},
+            });
+
+            var response = await client.GetAsync(url);
             var responseText = await response.Content.ReadAsStringAsync();
 
             return ParseProperty<List<RantInfo>>(responseText, "rants");
@@ -193,17 +290,7 @@ namespace DevRant
             int? id = await GetUserId(username);
             return id != null;
         }
-
-        /// <summary>
-        /// Login as user
-        /// </summary>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        public void Login(string username, string password)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         private AccessInfo token;
 
         /// <summary>
@@ -215,13 +302,13 @@ namespace DevRant
         }
 
         /// <summary>
-        /// Checks the credentials are valid
+        /// 
         /// </summary>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        public void CheckLogin(string username, string password)
-        {
-            throw new NotImplementedException();
+        public string LoggedInUser {
+            get
+            {
+                return token == null ? null : token.Username;
+            }
         }
     }
 }

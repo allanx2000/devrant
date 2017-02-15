@@ -56,14 +56,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccessInfo.cs" />
+    <Compile Include="Dtos\AccessInfo.cs" />
     <Compile Include="DevRantClient.cs" />
     <Compile Include="Dtos\ImageInfo.cs" />
-    <Compile Include="Dtos\LoginInfo.cs" />
     <Compile Include="Dtos\Profile.cs" />
     <Compile Include="Dtos\RantInfo.cs" />
     <Compile Include="Dtos\RantSort.cs" />
     <Compile Include="IDevRantClient.cs" />
+    <Compile Include="KeyValueList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Dtos\StoryRange.cs" />
   </ItemGroup>

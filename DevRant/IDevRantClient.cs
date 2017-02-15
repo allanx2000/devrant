@@ -51,14 +51,7 @@ namespace DevRant
         /// </summary>
         /// <param name="username"></param>
         /// <param name="password"></param>
-        void Login(string username, string password);
-
-        /// <summary>
-        /// Checks if credentials are valid
-        /// </summary>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        void CheckLogin(string username, string password);
+        Task Login(string username, string password);
     }
     
 }

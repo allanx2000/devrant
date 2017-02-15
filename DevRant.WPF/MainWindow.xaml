@@ -16,6 +16,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -36,7 +37,12 @@
             <MenuItem Header="View Notifications" Command="{Binding ViewNotificationsCommand }"/>
         </Menu>
 
-        <GroupBox Grid.Column="0" Grid.Row="1">
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <Label FontWeight="Bold">Logged In As: </Label>
+            <Label Content="{Binding LoggedInUser}"/>
+        </StackPanel>
+
+        <GroupBox Grid.Column="0" Grid.Row="2">
             <ListBox Name="SectionsListBox" SelectionChanged="SectionChanged">
                 <ListBox.Resources>
                     <Style TargetType="ListBoxItem">
@@ -71,7 +77,7 @@
             </ListBox>
         </GroupBox>
 
-        <GroupBox Grid.Row="1" Grid.Column="1">
+        <GroupBox Grid.Row="2" Grid.Column="1">
             <!-- Example of perfect wrapping ListBox... -->
             <ListBox Name="FeedListBox" MouseDoubleClick="FeedListBox_MouseDoubleClick" 
                  HorizontalContentAlignment="Stretch"
@@ -214,7 +220,7 @@
             </ListBox>
         </GroupBox>
 
-        <StatusBar Grid.Row="2" Grid.ColumnSpan="2" Padding="3" MouseDoubleClick="StatusBar_MouseDoubleClick">
+        <StatusBar Grid.Row="3" Grid.ColumnSpan="2" Padding="3" MouseDoubleClick="StatusBar_MouseDoubleClick">
             <TextBlock Text="{Binding StatusMessage}"/>
         </StatusBar>
 

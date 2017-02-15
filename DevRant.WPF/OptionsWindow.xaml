@@ -60,10 +60,10 @@
                 </Grid.RowDefinitions>
 
                 <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource GridField}">Username:</Label>
-                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Username}"/>
+                <TextBox Name="UsernameText" Grid.Row="0" Grid.Column="1" Text="{Binding Username}"/>
 
                 <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource GridField}">Password:</Label>
-                <PasswordBox Grid.Row="1" Grid.Column="1" PasswordChanged="PasswordBox_PasswordChanged"
+                <PasswordBox Name="PasswordText" Grid.Row="1" Grid.Column="1" PasswordChanged="PasswordBox_PasswordChanged"
                              Margin="5 0" Padding="3" />
 
             </Grid>
