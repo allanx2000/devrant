@@ -68,6 +68,8 @@ namespace DevRant.WPF
                 if (loginInfo != null)
                 {
                     await api.Login(loginInfo.Username, loginInfo.Password);
+
+                    var notifs = await api.GetNotificationsAsync();
                 }
             }
             catch (Exception e)

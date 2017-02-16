@@ -33,8 +33,7 @@ namespace DevRant.WPF
             
             Posts = new ObservableCollection<Rant>();
         }
-
-
+        
         public delegate void OnUpdatedHandler(UpdateArgs args);
         public event OnUpdatedHandler OnUpdate;
 
@@ -71,62 +70,21 @@ namespace DevRant.WPF
             public string Error { get; internal set; }
         }
 
-        private Timer timer;
-        private int startTries = 0;
-
         private void SafeStart(object paramz)
         {
-            lock (luk)
-            {
-                if (!IsRunning())
-                {
-                    latestVersion++;
-
-                    int v = latestVersion;
-                    checkerThread = new Thread(() => RunChecker(v));
-                    checkerThread.Start();
-                    StopTimer();
-                }
-                else
-                {
-                    startTries += 1;
-                    if (startTries > 5)
-                    {
-                        StopTimer();
-                    }
-                }
-            }
         }
 
-        private bool IsRunning()
-        {
-            var running = checkerThread != null && checkerThread.ThreadState == ThreadState.Running;
-            return running;
-        }
-
-        private void StopTimer()
-        {
-            if (timer != null)
-            {
-                timer.Change(Timeout.Infinite, Timeout.Infinite);
-                timer = null;
-                startTries = 0;
-            }
-        }
-
-        private object luk = new object();
         private int latestVersion = 0;
 
         public void Start()
         {
-            if (timer != null)
-                return;
+            latestVersion++;
 
-            timer = new Timer(SafeStart);
-            timer.Change(1000, 2000);
+            int v = latestVersion;
+            checkerThread = new Thread(() => RunChecker(v));
+            checkerThread.Start();
         }
 
-        [SecurityPermissionAttribute(SecurityAction.Demand, ControlThread = true)]
         public void Stop()
         {
             checkerThread.Abort();
@@ -140,17 +98,6 @@ namespace DevRant.WPF
         {
             try
             {
-                /*
-                lock (luk)
-                {
-                    if (isRunning)
-                        return;
-                    else
-                        isRunning = true;
-                }
-                */
-
-
                 while (true)
                 {
                     if (!IsLatest(version))
@@ -202,21 +149,10 @@ namespace DevRant.WPF
                     Thread.Sleep(millis);
                 }
             }
-            catch (ThreadAbortException ex)
-            {
-                SendUpdate(UpdateType.Error, error: "Aborted");
-            }
             catch (Exception ex)
             {
                 SendUpdate(UpdateType.Error, error: ex.Message);
             }
-
-            /*
-            lock (luk)
-            {
-                isRunning = false;
-            }
-            */
         }
 
         private void RemoveRead()

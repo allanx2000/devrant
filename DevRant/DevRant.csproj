@@ -58,9 +58,13 @@
   <ItemGroup>
     <Compile Include="Dtos\AccessInfo.cs" />
     <Compile Include="DevRantClient.cs" />
+    <Compile Include="Dtos\CollabInfo.cs" />
     <Compile Include="Dtos\ImageInfo.cs" />
     <Compile Include="Dtos\Profile.cs" />
+    <Compile Include="Dtos\CommentInfo.cs" />
+    <Compile Include="Dtos\BaseInfo.cs" />
     <Compile Include="Dtos\RantInfo.cs" />
+    <Compile Include="Dtos\VoteState.cs" />
     <Compile Include="Dtos\RantSort.cs" />
     <Compile Include="Dtos\NotificationInfo.cs" />
     <Compile Include="IDevRantClient.cs" />

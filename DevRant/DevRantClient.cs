@@ -41,7 +41,30 @@ namespace DevRant
             var response = await client.GetAsync($"/api/users/me/notif-feed?app={appVersion}&user_id={token.UserID}&token_id={token.ID}&token_key={token.Key}");
             var responseText = await response.Content.ReadAsStringAsync();
 
-            return null;
+            JObject obj = JObject.Parse(responseText);
+
+            if (Success(obj))
+            {
+                var notifs = obj["data"]["items"].AsJEnumerable();
+                Dictionary<long, string> users = GetUsernameMap(obj["data"]["username_map"]);
+
+                List<NotificationInfo> list = new List<NotificationInfo>();
+                foreach (JObject n in notifs)
+                {
+                    var notif = n.ToObject<NotificationInfo>();
+
+                    if (notif.ActionUser != null)
+                    {
+                        notif.ActionUsername = users[notif.ActionUser.Value];
+                    }
+
+                    list.Add(notif);
+                }
+
+                return list;
+            }
+            else
+                return null;
          
             /*
             JObject obj = JObject.Parse(responseText);
@@ -66,6 +89,26 @@ namespace DevRant
 
             return profile;
             */
+        }
+
+        private Dictionary<long, string> GetUsernameMap(JToken jToken)
+        {
+            Dictionary<long, string> map = new Dictionary<long, string>();
+
+            foreach (JProperty child in jToken)
+            {
+                long id = Convert.ToInt64(child.Name);
+                string userId = child.Value.ToString();
+
+                map.Add(id, userId);
+            }
+
+            return map;
+        }
+
+        private bool Success(JObject obj)
+        {
+            return obj["success"].ToObject<bool>();
         }
 
         /// <summary>
