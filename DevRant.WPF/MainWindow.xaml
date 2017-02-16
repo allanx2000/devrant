@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DevRant.WPF"
         xmlns:converters="clr-namespace:DevRant.WPF.Converters"
+        xmlns:ctrl="clr-namespace:DevRant.WPF.Controls"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="devRant" Height="800" Width="800" IsEnabled="{Binding !IsLoading}"
-        Closed="Window_Closed">
+        Closed="Window_Closed" x:Name="mainWindow">
 
     <Window.Resources>
         <converters:VisibilityConverter x:Key="VisibilityConverter"/>
@@ -55,6 +56,9 @@
                         <Setter Property="FontSize" Value="13"/>
                     </Style>
                 </ListBox.Resources>
+
+                <ListBoxItem>
+                </ListBoxItem>
 
                 <ListBoxItem Name="GeneralFeed" IsSelected="True">General</ListBoxItem>
                 <ListBoxItem Style="{StaticResource SubSection}" Name="GeneralAlgo">Algo</ListBoxItem>
@@ -123,10 +127,7 @@
 
                                 <!-- Left Column -->
                                 <StackPanel Orientation="Vertical" Grid.Column="0" Grid.RowSpan="4">
-                                    <Label FontSize="20" 
-                                           VerticalAlignment="Top" HorizontalAlignment="Center"
-                                    Content="{Binding VotesString}"/>
-
+                                    <ctrl:VoteControl VotesString="{Binding VotesString}"  IsLoggedIn="{Binding DataContext.LoggedIn, ElementName=mainWindow }"/>
                                     <Label HorizontalAlignment="Center" 
                                            Visibility="{Binding ElementName=FeedListBox, Path=DataContext.DateVisibility}">
                                         <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="{Binding CreateTime}"/>

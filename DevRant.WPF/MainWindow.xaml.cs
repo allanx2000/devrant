@@ -68,6 +68,10 @@ namespace DevRant.WPF
         {
             vm.ShowStatusHistory();
         }
-        
+
+        private void VoteButton_Clicked(object sender, Controls.VoteButton.ButtonType type)
+        {
+
+        }
     }
 }

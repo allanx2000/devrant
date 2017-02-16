@@ -47,7 +47,7 @@ namespace DevRant.WPF
             feedView.Source = feeds;
 
             //Initialize the properties
-            checker = new FollowedUserChecker(ds, api);
+            checker = new FollowedUserChecker(ds, api, history);
             checker.OnUpdate += UpdateFollowedPosts;
             checker.Start();
 

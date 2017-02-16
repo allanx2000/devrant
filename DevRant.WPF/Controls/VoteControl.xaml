@@ -1,0 +1,17 @@
+﻿<local:MyUserControl x:Class="DevRant.WPF.Controls.VoteControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DevRant.WPF.Controls"
+             mc:Ignorable="d" 
+             d:DesignWidth="80">
+    <StackPanel Orientation="Vertical" DataContext="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}">
+        <local:VoteButton Type="Up" Clicked="VoteButton_Clicked" Visibility="{Binding VotingVisibility}"/>
+        <Label FontSize="18" 
+            VerticalAlignment="Top" HorizontalAlignment="Center"
+            Content="{Binding VotesString, FallbackValue='1,000'}"/>
+        <local:VoteButton Type="Down" Clicked="VoteButton_Clicked" Visibility="{Binding VotingVisibility}"/>
+        
+    </StackPanel>
+</local:MyUserControl>

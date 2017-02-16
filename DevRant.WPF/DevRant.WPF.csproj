@@ -97,6 +97,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\MyUserControl.cs" />
+    <Compile Include="Controls\RantControl.xaml.cs">
+      <DependentUpon>RantControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\VoteButton.xaml.cs">
+      <DependentUpon>VoteButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\VoteControl.xaml.cs">
+      <DependentUpon>VoteControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="DataStore\HistoryStore.cs" />
     <Compile Include="DataStore\IHistoryStore.cs" />
@@ -115,6 +125,18 @@
     <Compile Include="ViewModels\Notification.cs" />
     <Compile Include="ViewModels\FeedItem.cs" />
     <Compile Include="ViewModels\Rant.cs" />
+    <Page Include="Controls\RantControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\VoteButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\VoteControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

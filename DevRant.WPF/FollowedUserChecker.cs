@@ -23,6 +23,8 @@ namespace DevRant.WPF
 
         public ObservableCollection<Rant> Posts { get; private set; }
 
+        private volatile bool isRunning;
+
         public FollowedUserChecker(IDataStore ds, IDevRantClient api, IHistoryStore history)
         {
             this.ds = ds;
@@ -67,10 +69,23 @@ namespace DevRant.WPF
             public string Users { get; private set; }
         }
 
+        private Timer timer;
+
         public void Start()
-        {            
-            thread = new Thread(RunChecker);
-            thread.Start();            
+        {
+            timer = new Timer((obj) =>
+            {
+                if (!isRunning)
+                {
+                    thread = new Thread(RunChecker);
+                    thread.Start();
+
+                    timer.Change(Timeout.Infinite, Timeout.Infinite);
+                    timer = null;
+                }
+            });
+
+            timer.Change(1000, 2000);         
         }
 
         public void Stop()
@@ -80,6 +95,8 @@ namespace DevRant.WPF
 
         private async void RunChecker()
         {
+            isRunning = true;
+
             while (true)
             {
                 try
@@ -124,8 +141,11 @@ namespace DevRant.WPF
                 catch (Exception e)
                 {
                     var ex = e.StackTrace;
+                    break;
                 }
             }
+
+            isRunning = false;
         }
 
         private void RemoveRead()
@@ -150,6 +170,7 @@ namespace DevRant.WPF
         public void Restart()
         {
             Stop();
+            
             Start();
         }
 
