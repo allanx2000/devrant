@@ -226,7 +226,7 @@
             </ListBox>
         </GroupBox>
 
-        <StatusBar Grid.Row="3" Grid.ColumnSpan="2" Padding="3" MouseDoubleClick="StatusBar_MouseDoubleClick">
+        <StatusBar Cursor="Hand" Grid.Row="3" Grid.ColumnSpan="2" Padding="3" MouseDoubleClick="StatusBar_MouseDoubleClick">
             <TextBlock Text="{Binding StatusMessage}"/>
         </StatusBar>
 

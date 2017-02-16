@@ -32,6 +32,16 @@ namespace DevRant.WPF.Controls
         public delegate void OnClick(object sender, ButtonType type);
         public event OnClick Clicked;
         
+        public Visibility PlusPlusVisibility
+        {
+            get { return Type == ButtonType.Up ? Visibility.Visible : Visibility.Collapsed; }
+        }
+
+        public Visibility MinusMinusVisibility
+        {
+            get { return Type == ButtonType.Down ? Visibility.Visible : Visibility.Collapsed; }
+        }
+
         public ButtonType Type
         {
             get
@@ -44,8 +54,8 @@ namespace DevRant.WPF.Controls
             }
         }
 
-        private static SolidColorBrush Red = new SolidColorBrush(Colors.Red);
-        private static SolidColorBrush Gray = new SolidColorBrush(Colors.Gray);
+        private static SolidColorBrush Red = new SolidColorBrush(Color.FromRgb(213, 81, 97));
+        private static SolidColorBrush Gray = new SolidColorBrush(Color.FromRgb(170,170,184));
 
         public SolidColorBrush BackgroundColor
         {

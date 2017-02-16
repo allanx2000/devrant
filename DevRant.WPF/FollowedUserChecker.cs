@@ -5,15 +5,17 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.Permissions;
 using System.Threading;
 
 namespace DevRant.WPF
 {
     internal class FollowedUserChecker
     {
+        private Thread checkerThread;
+
         private IDevRantClient api;
         private IDataStore ds;
-        private Thread thread;
         private IHistoryStore history;
 
         public UpdateArgs GetFeedUpdate()
@@ -23,26 +25,25 @@ namespace DevRant.WPF
 
         public ObservableCollection<Rant> Posts { get; private set; }
 
-        private volatile bool isRunning;
-
         public FollowedUserChecker(IDataStore ds, IDevRantClient api, IHistoryStore history)
         {
             this.ds = ds;
             this.api = api;
             this.history = history;
-
+            
             Posts = new ObservableCollection<Rant>();
         }
 
 
         public delegate void OnUpdatedHandler(UpdateArgs args);
         public event OnUpdatedHandler OnUpdate;
-        
+
         public enum UpdateType
         {
             GetAllForUser,
             UpdatesCheck,
-            UpdateFeed
+            UpdateFeed,
+            Error
         }
 
         public class UpdateArgs
@@ -61,61 +62,105 @@ namespace DevRant.WPF
                 if (users != null)
                     Users = users;
             }
-            
+
             public UpdateType Type { get; private set; }
             public int Total { get; private set; }
             public int TotalUnread { get; private set; }
             public int Added { get; private set; }
             public string Users { get; private set; }
+            public string Error { get; internal set; }
         }
 
         private Timer timer;
+        private int startTries = 0;
 
         private void SafeStart(object paramz)
         {
-            if (!isRunning)
+            lock (luk)
             {
-                thread = new Thread(RunChecker);
-                thread.Start();
+                if (!IsRunning())
+                {
+                    latestVersion++;
 
-                timer.Change(Timeout.Infinite, Timeout.Infinite);
-                timer = null;
+                    int v = latestVersion;
+                    checkerThread = new Thread(() => RunChecker(v));
+                    checkerThread.Start();
+                    StopTimer();
+                }
+                else
+                {
+                    startTries += 1;
+                    if (startTries > 5)
+                    {
+                        StopTimer();
+                    }
+                }
             }
         }
 
+        private bool IsRunning()
+        {
+            var running = checkerThread != null && checkerThread.ThreadState == ThreadState.Running;
+            return running;
+        }
+
+        private void StopTimer()
+        {
+            if (timer != null)
+            {
+                timer.Change(Timeout.Infinite, Timeout.Infinite);
+                timer = null;
+                startTries = 0;
+            }
+        }
 
         private object luk = new object();
+        private int latestVersion = 0;
 
         public void Start()
         {
-            lock (luk)
-            {
-                if (timer != null)
-                    return;
+            if (timer != null)
+                return;
 
-                timer = new Timer(SafeStart);
-                timer.Change(1000, 2000);
-            }         
+            timer = new Timer(SafeStart);
+            timer.Change(1000, 2000);
         }
 
+        [SecurityPermissionAttribute(SecurityAction.Demand, ControlThread = true)]
         public void Stop()
         {
-            thread.Abort();
+            checkerThread.Abort();
         }
 
-        private async void RunChecker()
-        {   
-            isRunning = true;
-
-            while (true)
+        private bool IsLatest(int version)
+        {
+            return version == latestVersion;
+        }
+        private async void RunChecker(int version)
+        {
+            try
             {
-                try
+                /*
+                lock (luk)
                 {
+                    if (isRunning)
+                        return;
+                    else
+                        isRunning = true;
+                }
+                */
+
+
+                while (true)
+                {
+                    if (!IsLatest(version))
+                        break;
+
                     RemoveRead();
 
                     long lastTime = ds.FollowedUsersLastChecked;
 
-                    List<RantInfo> added = new List<RantInfo>();
+                    List<Rant> added = new List<Rant>();
 
                     var users = ds.FollowedUsers.ToList(); //Can be modified while checking
 
@@ -130,16 +175,24 @@ namespace DevRant.WPF
                                 if (!history.IsRead(rant.Id))
                                 {
                                     Rant r = new Rant(rant);
-                                    Posts.Add(r);
-                                    added.Add(rant);
+                                    added.Add(r);
                                 }
                             }
                         }
                     }
 
+                    if (!IsLatest(version))
+                        break;
+
                     if (added.Count > 0)
                     {
-                        long latest = added.Max(x => x.CreatedTime);
+                        long latest = added.Max(x => x.RawCreateTime);
+
+                        foreach (var r in added)
+                        {
+                            Posts.Add(r);
+                        }
+
                         ds.FollowedUsersLastChecked = latest;
                     }
 
@@ -148,14 +201,22 @@ namespace DevRant.WPF
                     int millis = ds.FollowedUsersUpdateInterval * 60 * 1000;
                     Thread.Sleep(millis);
                 }
-                catch (Exception e)
-                {
-                    var ex = e.StackTrace;
-                    break;
-                }
+            }
+            catch (ThreadAbortException ex)
+            {
+                SendUpdate(UpdateType.Error, error: "Aborted");
+            }
+            catch (Exception ex)
+            {
+                SendUpdate(UpdateType.Error, error: ex.Message);
             }
 
-            isRunning = false;
+            /*
+            lock (luk)
+            {
+                isRunning = false;
+            }
+            */
         }
 
         private void RemoveRead()
@@ -166,12 +227,12 @@ namespace DevRant.WPF
                 Posts.Remove(r);
         }
 
-        internal void SendUpdate(UpdateType type, int added = 0, string users = null)
+        internal void SendUpdate(UpdateType type, int added = 0, string users = null, string error = null)
         {
             if (OnUpdate != null)
             {
                 var update = new UpdateArgs(type, added, users, Posts);
-
+                update.Error = error;
 
                 OnUpdate.Invoke(update);
             }
@@ -180,7 +241,7 @@ namespace DevRant.WPF
         public void Restart()
         {
             Stop();
-            
+
             Start();
         }
 
@@ -192,7 +253,7 @@ namespace DevRant.WPF
         }
 
         public void GetAll(IEnumerable<string> users)
-        {   
+        {
             Thread th = new Thread(() => GetAllForUsers(users));
             th.Start();
         }

@@ -5,24 +5,51 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DevRant.WPF.Controls"
              mc:Ignorable="d" 
-             Height="45" Width="45">
-    <Button DataContext="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}"
+             >
+
+    <UserControl.Resources>
+        <Canvas x:Key="PlusPlus" Width="26" Height="32" ClipToBounds="True" 
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                >
+            <Path Fill="{Binding BackgroundColor, FallbackValue=#FFAAAAB8}">
+                <Path.Data>
+                    <PathGeometry FillRule="Nonzero" Figures="M13.026,29.002C5.849,29.002 0,23.202 0,15.976 0,8.75 5.849,2.95 13.026,2.95 20.203,2.95 26.052,8.799 26.052,15.976 26.052,23.153 20.203,29.002 13.026,29.002z M12.289,15.73C12.289,15.189,11.847,14.747,11.306,14.747L9.34,14.747 9.34,12.781C9.34,12.24,8.898,11.798,8.357,11.798L7.865,11.798C7.324,11.798,6.882,12.24,6.882,12.781L6.882,14.747 4.916,14.747C4.375,14.747,3.933,15.189,3.933,15.73L3.933,16.222C3.933,16.763,4.375,17.205,4.916,17.205L6.882,17.205 6.882,19.171C6.882,19.712,7.324,20.154,7.865,20.154L8.357,20.154C8.898,20.154,9.34,19.712,9.34,19.171L9.34,17.205 11.306,17.205C11.847,17.205,12.289,16.763,12.289,16.222L12.289,15.73z M22.12,15.73C22.12,15.189,21.678,14.747,21.137,14.747L19.171,14.747 19.171,12.781C19.171,12.24,18.729,11.798,18.188,11.798L17.696,11.798C17.155,11.798,16.713,12.24,16.713,12.781L16.713,14.747 14.747,14.747C14.206,14.747,13.764,15.189,13.764,15.73L13.764,16.222C13.764,16.763,14.206,17.205,14.747,17.205L16.713,17.205 16.713,19.171C16.713,19.712,17.155,20.154,17.696,20.154L18.188,20.154C18.729,20.154,19.171,19.712,19.171,19.171L19.171,17.205 21.137,17.205C21.678,17.205,22.12,16.763,22.12,16.222L22.12,15.73z" />
+                </Path.Data>
+            </Path>
+        </Canvas>
+
+        <Canvas x:Key="MinusMinus" Width="26" Height="32" ClipToBounds="True" 
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+            <Path Fill="{Binding BackgroundColor, FallbackValue=#FFAAAAB8}">
+                <Path.Data>
+                    <PathGeometry FillRule="Nonzero" Figures="M13.026,29.002C5.849,29.002 0,23.202 0,15.976 0,8.75 5.849,2.95 13.026,2.95 20.203,2.95 26.052,8.799 26.052,15.976 26.052,23.153 20.203,29.002 13.026,29.002z M12.289,15.73C12.289,15.189,11.847,14.747,11.306,14.747L5.899,14.747C5.358,14.747,4.916,15.189,4.916,15.73L4.916,16.713C4.916,17.254,5.358,17.696,5.899,17.696L11.306,17.696C11.847,17.696,12.289,17.254,12.289,16.713L12.289,15.73z M21.137,15.73C21.137,15.189,20.695,14.747,20.154,14.747L14.747,14.747C14.206,14.747,13.764,15.189,13.764,15.73L13.764,16.713C13.764,17.254,14.206,17.696,14.747,17.696L20.154,17.696C20.695,17.696,21.137,17.254,21.137,16.713L21.137,15.73z" />
+                </Path.Data>
+            </Path>
+        </Canvas>
+    </UserControl.Resources>
+    
+    <Button DataContext="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}" 
+            Margin="0" Padding="0"
+            Background="White"
             MouseEnter="voteButton_MouseEnter"
             MouseLeave="voteButton_MouseLeave"
             VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-            FontFamily="Comic Sans MS"
-            FontSize="14"
-            FontWeight="ExtraBold"
-            Foreground="White"
             HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
             Content="{Binding ButtonText, FallbackValue=NA}" x:Name="voteButton">
         <Button.Template>
             <ControlTemplate TargetType="Button">
                 <Grid>
-                    <Ellipse Fill="{Binding BackgroundColor, FallbackValue=Gray}"/>
-                    <ContentPresenter HorizontalAlignment="Center"
-                                  VerticalAlignment="Center"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Label Content="{StaticResource PlusPlus}" Visibility="{Binding PlusPlusVisibility, FallbackValue=Collapsed}"></Label>
+                    <Label Content="{StaticResource MinusMinus}" Visibility="{Binding MinusMinusVisibility, FallbackValue=Visible}"></Label>
                 </Grid>
+                
             </ControlTemplate>
 
         </Button.Template>

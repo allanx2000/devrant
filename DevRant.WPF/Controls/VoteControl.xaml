@@ -7,11 +7,11 @@
              mc:Ignorable="d" 
              d:DesignWidth="80">
     <StackPanel Orientation="Vertical" DataContext="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}">
-        <local:VoteButton Type="Up" Clicked="VoteButton_Clicked" Visibility="{Binding VotingVisibility}"/>
-        <Label FontSize="18" 
+        <local:VoteButton HorizontalAlignment="Center" Type="Up" Clicked="VoteButton_Clicked" Visibility="{Binding VotingVisibility}"/>
+        <Label FontSize="14" 
             VerticalAlignment="Top" HorizontalAlignment="Center"
             Content="{Binding VotesString, FallbackValue='1,000'}"/>
-        <local:VoteButton Type="Down" Clicked="VoteButton_Clicked" Visibility="{Binding VotingVisibility}"/>
+        <local:VoteButton HorizontalAlignment="Center" Type="Down" Clicked="VoteButton_Clicked" Visibility="{Binding VotingVisibility}"/>
         
     </StackPanel>
 </local:MyUserControl>

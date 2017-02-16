@@ -1,0 +1,40 @@
+﻿<Window x:Class="DevRant.WPF.RantViewerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DevRant.WPF"
+        xmlns:ctrl="clr-namespace:DevRant.WPF.Controls"
+        SizeToContent="Height"
+        WindowStyle="ToolWindow"
+        mc:Ignorable="d"
+        Title="RantViewerWindow" Width="450" 
+        x:Name="rantWindow" WindowStartupLocation="CenterOwner">
+    <ScrollViewer MaxHeight="700" VerticalScrollBarVisibility="Auto">
+    <Grid Margin="5" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ctrl:RantControl 
+            Grid.Row="0" 
+            UsernameVisibility="Visible"
+            DateVisibility="Visible"
+            DataContext="{Binding DataContext.Rant, ElementName=rantWindow}"
+            LoggedIn="{Binding DataContext.LoggedIn, ElementName=rantWindow}"/>
+
+        <!--
+        <ctrl:RantControl Grid.Row="0" DataContext="{Binding DataContext.Rant}"/>
+        -->
+        
+        <ItemsControl Margin="3 10" ItemsSource="{Binding Comments}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Label>Comment</Label>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+    </ScrollViewer>
+</Window>

@@ -27,7 +27,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <TargetCulture>en</TargetCulture>
     <ProductName>DevRant</ProductName>
-    <ApplicationRevision>20</ApplicationRevision>
+    <ApplicationRevision>23</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -117,6 +117,10 @@
       <DependentUpon>OptionsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="OptionsWindowViewModel.cs" />
+    <Compile Include="RantViewerViewModel.cs" />
+    <Compile Include="RantViewerWindow.xaml.cs">
+      <DependentUpon>RantViewerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="StatusViewerWindow.xaml.cs">
       <DependentUpon>StatusViewerWindow.xaml</DependentUpon>
     </Compile>
@@ -152,6 +156,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="OptionsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RantViewerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

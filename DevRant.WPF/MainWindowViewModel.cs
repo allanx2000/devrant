@@ -231,7 +231,15 @@ namespace DevRant.WPF
             if (SelectedPost == null)
                 return;
             else if (SelectedPost is Rant)
+            {
+                /*
+                var dlg = new RantViewerWindow((Rant)SelectedPost, api);
+                dlg.Owner = window;
+                dlg.ShowDialog();
+                */
+
                 Process.Start(((Rant)SelectedPost).PostURL);
+            }
             //TODO: Add For Notification
         }
 
@@ -444,11 +452,20 @@ namespace DevRant.WPF
 
         #endregion
 
+        /// <summary>
+        /// Updates the Update label in the Sections list
+        /// </summary>
+        /// <param name="args"></param>
         private void UpdateFollowedPosts(FollowedUserChecker.UpdateArgs args)
         {
             UpdateFollowedPosts(args, true);
         }
 
+        /// <summary>
+        /// Updates the Update label in the Sections list
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="updateStatus">Whether to send a status</param>
         private void UpdateFollowedPosts(FollowedUserChecker.UpdateArgs args, bool updateStatus)
         {
             StringBuilder labelBuilder = new StringBuilder();
@@ -477,6 +494,9 @@ namespace DevRant.WPF
                         break;
                     case FollowedUserChecker.UpdateType.GetAllForUser:
                         message = "Got rants for user: " + args.Users;
+                        break;
+                    case FollowedUserChecker.UpdateType.Error:
+                        message = args.Error;
                         break;
                 }
 
