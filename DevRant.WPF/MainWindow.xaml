@@ -57,8 +57,6 @@
                     </Style>
                 </ListBox.Resources>
 
-                <ListBoxItem>
-                </ListBoxItem>
 
                 <ListBoxItem Name="GeneralFeed" IsSelected="True">General</ListBoxItem>
                 <ListBoxItem Style="{StaticResource SubSection}" Name="GeneralAlgo">Algo</ListBoxItem>
@@ -102,6 +100,13 @@
                     <DataTemplate>
                         <StackPanel Orientation="Vertical">
                             <!-- General Feed-->
+
+                            <ctrl:RantControl 
+                                UsernameVisibility="{Binding DataContext.UsernameVisibility, ElementName=mainWindow}"
+                                DateVisibility="{Binding DataContext.DateVisibility, ElementName=mainWindow}"
+                                LoggedIn="{Binding DataContext.LoggedIn, ElementName=mainWindow}"/>
+
+                            <!--
                             <Grid>
                                 <Grid.Style>
                                     <Style TargetType="Grid">
@@ -125,7 +130,6 @@
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
-                                <!-- Left Column -->
                                 <StackPanel Orientation="Vertical" Grid.Column="0" Grid.RowSpan="4">
                                     <ctrl:VoteControl VotesString="{Binding VotesString}"  IsLoggedIn="{Binding DataContext.LoggedIn, ElementName=mainWindow }"/>
                                     <Label HorizontalAlignment="Center" 
@@ -134,7 +138,6 @@
                                     </Label>
                                 </StackPanel>
                                 
-                                <!-- Right -->
                                 <StackPanel Orientation="Horizontal" 
                                             Visibility="{Binding ElementName=FeedListBox, Path=DataContext.UsernameVisibility}" 
                                             Grid.Column="1" Grid.Row="0" Margin="0 5 0 0">
@@ -198,6 +201,8 @@
                                 </DockPanel>
                             </Grid>
 
+                            -->
+                            
                             <!-- Notifications-->
                             <StackPanel Orientation="Horizontal">
                                 <StackPanel.Style>

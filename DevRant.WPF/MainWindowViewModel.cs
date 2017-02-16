@@ -146,6 +146,11 @@ namespace DevRant.WPF
             }
         }
 
+        public bool DateVisible
+        {
+            get { return ds.ShowCreateTime; }
+        }
+
         public Visibility DateVisibility
         {
             get
@@ -153,6 +158,7 @@ namespace DevRant.WPF
                 return ds.ShowCreateTime ? Visibility.Visible : Visibility.Collapsed;
             }
         }
+        
         public Visibility UsernameVisibility
         {
             get {
@@ -341,7 +347,7 @@ namespace DevRant.WPF
 
                 RaisePropertyChanged("UsernameVisibility");
                 RaisePropertyChanged("DateVisibility");
-
+                
                 if (dlg.LoginChanged)
                 {
                         await api.Logout();

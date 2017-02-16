@@ -9,7 +9,7 @@ using System.Windows.Controls;
 
 namespace DevRant.WPF.Controls
 {
-    public abstract class MyUserControl : UserControl, INotifyPropertyChanged
+    public class MyUserControl : UserControl, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         
