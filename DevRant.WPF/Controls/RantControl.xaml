@@ -14,80 +14,78 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Left Column -->
-        <StackPanel Orientation="Vertical" Grid.Column="0" Grid.RowSpan="4">
+        <StackPanel Orientation="Vertical" Grid.Column="0">
             <local:VoteControl VotesString="{Binding VotesString}"  IsLoggedIn="{Binding LoggedIn, ElementName=control}"/>
             <Label HorizontalAlignment="Center" Visibility="{Binding DateVisibility, ElementName=control}">
                 <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="{Binding CreateTime}"/>
             </Label>
         </StackPanel>
 
-        <!-- Right -->
-        <StackPanel Orientation="Horizontal" 
+        <StackPanel Grid.Column="1" VerticalAlignment="Center" Orientation="Vertical">
+            <StackPanel Orientation="Horizontal" 
                            Visibility="{Binding UsernameVisibility, ElementName=control}" 
-                            Grid.Column="1" Grid.Row="0" Margin="0 5 0 0">
-            <Label FontWeight="Bold" FontSize="14">
-                <Label.Style>
-                    <Style TargetType="{x:Type Label}">
-                        <Setter Property="Foreground" Value="Black"/>
+                           Margin="0 5 0 0">
+                <Label FontWeight="Bold" FontSize="14">
+                    <Label.Style>
+                        <Style TargetType="{x:Type Label}">
+                            <Setter Property="Foreground" Value="Black"/>
 
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Followed}" Value="True">
-                                <Setter Property="Foreground" Value="Green"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Label.Style>
-                <TextBlock Text="{Binding Username}"/>
-            </Label>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Followed}" Value="True">
+                                    <Setter Property="Foreground" Value="Green"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Label.Style>
+                    <TextBlock Text="{Binding Username}"/>
+                </Label>
 
-            <Label Width="20"/>
+                <Label Width="20"/>
 
-            <Label MinWidth="30" HorizontalContentAlignment="Center" Background="Gray" Foreground="White" FontWeight="Bold" 
+                <Label MinWidth="30" HorizontalContentAlignment="Center" Background="Gray" Foreground="White" FontWeight="Bold" 
                                            Content="{Binding UserScoreString}">
-                <Label.Style>
-                    <Style TargetType="{x:Type Label}">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type Label}">
-                                    <Border BorderBrush="{TemplateBinding BorderBrush}" 
+                    <Label.Style>
+                        <Style TargetType="{x:Type Label}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Label}">
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}" 
                                                             BorderThickness="{TemplateBinding BorderThickness}" 
                                                             Background="{TemplateBinding Background}" 
                                                             Padding="{TemplateBinding Padding}" 
                                                             SnapsToDevicePixels="true" 
                                                             CornerRadius="7">
-                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </Label.Style>
+                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Label.Style>
+                </Label>
+            </StackPanel>
+
+            <Label Margin="0 5">
+                <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
             </Label>
+
+            <Image Source="{Binding Picture}" Grid.Row="2" Grid.Column="1"/>
+
+            <DockPanel>
+
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                    <Label FontWeight="Bold">Comments:</Label>
+                    <Label Content="{Binding CommentsCount}"/>
+                </StackPanel>
+
+                <StackPanel Visibility="{Binding TagsVisibility}" DockPanel.Dock="Left" Orientation="Horizontal">
+                    <Label FontWeight="Bold">Tags:</Label>
+                    <Label Content="{Binding TagsString}"/>
+                </StackPanel>
+            </DockPanel>
         </StackPanel>
-
-        <Label Grid.Column="1" Grid.Row="1">
-            <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
-        </Label>
-
-        <Image Source="{Binding Picture}" Grid.Row="2" Grid.Column="1"/>
-
-        <DockPanel Grid.Row="3" Grid.Column="1">
-
-            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
-                <Label FontWeight="Bold">Comments:</Label>
-                <Label Content="{Binding CommentsCount}"/>
-            </StackPanel>
-
-            <StackPanel Visibility="{Binding TagsVisibility}" DockPanel.Dock="Left" Orientation="Horizontal">
-                <Label FontWeight="Bold">Tags:</Label>
-                <Label Content="{Binding TagsString}"/>
-            </StackPanel>
-        </DockPanel>
     </Grid>
 </local:MyUserControl>
