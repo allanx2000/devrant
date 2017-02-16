@@ -71,21 +71,31 @@ namespace DevRant.WPF
 
         private Timer timer;
 
+        private void SafeStart(object paramz)
+        {
+            if (!isRunning)
+            {
+                thread = new Thread(RunChecker);
+                thread.Start();
+
+                timer.Change(Timeout.Infinite, Timeout.Infinite);
+                timer = null;
+            }
+        }
+
+
+        private object luk = new object();
+
         public void Start()
         {
-            timer = new Timer((obj) =>
+            lock (luk)
             {
-                if (!isRunning)
-                {
-                    thread = new Thread(RunChecker);
-                    thread.Start();
+                if (timer != null)
+                    return;
 
-                    timer.Change(Timeout.Infinite, Timeout.Infinite);
-                    timer = null;
-                }
-            });
-
-            timer.Change(1000, 2000);         
+                timer = new Timer(SafeStart);
+                timer.Change(1000, 2000);
+            }         
         }
 
         public void Stop()
@@ -94,7 +104,7 @@ namespace DevRant.WPF
         }
 
         private async void RunChecker()
-        {
+        {   
             isRunning = true;
 
             while (true)
