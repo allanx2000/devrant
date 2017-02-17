@@ -1,5 +1,6 @@
 ﻿using DevRant.Dtos;
 using DevRant.Dtos;
+using DevRant.Exceptions;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -32,18 +33,17 @@ namespace DevRant
         /// 
         /// </summary>
         /// <returns></returns>
-        public async         Task<List<NotificationInfo>> GetNotificationsAsync()
+        public async Task<List<NotificationInfo>> GetNotificationsAsync()
         {
             if (!LoggedIn)
                 throw new Exception("User not logged in.");
             
-
             var response = await client.GetAsync($"/api/users/me/notif-feed?app={appVersion}&user_id={token.UserID}&token_id={token.ID}&token_key={token.Key}");
             var responseText = await response.Content.ReadAsStringAsync();
 
             JObject obj = JObject.Parse(responseText);
 
-            if (Success(obj))
+            if (CheckSuccess(obj))
             {
                 var notifs = obj["data"]["items"].AsJEnumerable();
                 Dictionary<long, string> users = GetUsernameMap(obj["data"]["username_map"]);
@@ -106,9 +106,29 @@ namespace DevRant
             return map;
         }
 
-        private bool Success(JObject obj)
+        private const string InvalidCredentials = "Invalid user credentials.";
+
+        /// <summary>
+        /// Check if the response is a success, otherwise throws and exception
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        private bool CheckSuccess(JObject obj)
         {
-            return obj["success"].ToObject<bool>();
+            bool success = obj["success"].ToObject<bool>();
+            if (!success)
+            {
+                string reason = obj["error"].ToString();
+
+                if (reason == InvalidCredentials)
+                {
+                    throw new InvalidCredentialsException();
+                }
+                else
+                    throw new Exception(reason);
+            }
+            else
+                return true;
         }
 
         /// <summary>
@@ -229,7 +249,7 @@ namespace DevRant
 
             JObject obj = JObject.Parse(responseText);
 
-            if (obj["success"].Value<bool>())
+            if (CheckSuccess(obj))
             {
                 token = ParseProperty<AccessInfo>(responseText, "auth_token");
                 token.Username = username;
@@ -261,7 +281,6 @@ namespace DevRant
         {
             if (LoggedIn)
             {
-                //TODO: Logout
                 token = null;
             }
         }

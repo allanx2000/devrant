@@ -129,7 +129,7 @@
                                     </Style>
                                 </StackPanel.Style>
 
-                                <Label>
+                                <Label FontWeight="{Binding TextWeight}">
                                     <TextBlock Text="{Binding Text}"/>
                                 </Label>
                             </StackPanel>

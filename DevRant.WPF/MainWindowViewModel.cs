@@ -16,6 +16,7 @@ using System.Diagnostics;
 using DevRant.WPF.Converters;
 using DevRant.Dtos;
 using DevRant.WPF.DataStore;
+using DevRant.Exceptions;
 
 namespace DevRant.WPF
 {
@@ -52,6 +53,7 @@ namespace DevRant.WPF
             fchecker.Start();
 
             UpdateFollowedPosts(fchecker.GetFeedUpdate());
+            UpdateNotifications(new NotificationsChecker.UpdateArgs(0, 0));
 
             nchecker = new NotificationsChecker(ds, api);
             nchecker.OnUpdate += UpdateNotifications;
@@ -62,7 +64,7 @@ namespace DevRant.WPF
             //Test();
         }
 
-        private void UpdateNotifications(NotificationsChecker.UpdateArgs args)
+        private async void UpdateNotifications(NotificationsChecker.UpdateArgs args)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Notifications");
@@ -71,6 +73,11 @@ namespace DevRant.WPF
             {
                 sb.Append(" (" + args.TotalUnread + ")");
                 NotificationsWeight = FontWeights.Bold;
+
+                if (currentSection == FeedType.Notifications)
+                {
+                    LoadNotifications();
+                }
             }
             else
             {
@@ -79,7 +86,21 @@ namespace DevRant.WPF
 
             NotificationsLabel = sb.ToString();
 
-            string msg = string.Format("Checker found {0} new notifications", args.TotalUnread);
+            string msg;
+
+            if (args.Error != null)
+            {
+                msg = args.Error.Message;
+
+                if (args.Error is InvalidCredentialsException)
+                {
+                    await Login();
+                    nchecker.Check();
+                }
+            }
+            else
+                msg = string.Format("Checker found {0} new notifications", args.TotalUnread);
+
             UpdateStatus(msg);
         }
 
@@ -108,7 +129,7 @@ namespace DevRant.WPF
         private async void TestLogin()
         {
             //await api.Login();
-            await api.GetNotificationsAsync();
+            //await api.GetNotificationsAsync();
         }
 
 
@@ -293,7 +314,14 @@ namespace DevRant.WPF
 
                 Process.Start(((Rant)SelectedPost).PostURL);
             }
-            //TODO: Add For Notification
+            else if (SelectedPost is Notification)
+            {
+                Notification notif = SelectedPost as Notification;
+                Process.Start(notif.URL);
+
+                nchecker.Check();
+            }
+            
         }
 
         #region Sections
@@ -571,6 +599,8 @@ namespace DevRant.WPF
 
             UpdateFollowedInRants();
             currentSection = FeedType.Updates;
+
+            feedView.SortDescriptions.Clear();
         }
 
         /*
@@ -600,6 +630,10 @@ namespace DevRant.WPF
             }
             
             currentSection = FeedType.Notifications;
+            
+            feedView.SortDescriptions.Clear();
+            feedView.SortDescriptions.Add(new SortDescription("CreateTime", ListSortDirection.Ascending));
+            feedView.SortDescriptions.Add(new SortDescription("Read", ListSortDirection.Ascending));
         }
 
         private async Task LoadFeed(FeedType type, RantSort sort = RantSort.Algo, StoryRange range = StoryRange.Day, bool filter = false)
@@ -647,6 +681,8 @@ namespace DevRant.WPF
             }
 
             UpdateFollowedInRants();
+
+            feedView.SortDescriptions.Clear();
 
             currentSection = type;
             UpdateStatus("Loaded " + rants.Count + " rants");

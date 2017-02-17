@@ -1,5 +1,6 @@
 ﻿using System;
 using DevRant.Dtos;
+using System.Windows;
 
 namespace DevRant.WPF.ViewModels
 {
@@ -12,10 +13,15 @@ namespace DevRant.WPF.ViewModels
             NA
         }
 
+        public FontWeight TextWeight
+        {
+            get { return notif.IsRead ? FontWeights.Normal : FontWeights.Bold; }
+        }
+
         public Type NotificationType {get; private set;}
         public string URL { get
             {
-                return null;
+                return Utilities.BaseURL + "/rants/" + notif.RantId;
             }
         }
 
@@ -29,12 +35,33 @@ namespace DevRant.WPF.ViewModels
         public Notification(NotificationInfo notif) : base(FeedItemType.Notification)
         {
             this.notif = notif;
-            
+
+            SetText();
         }
 
         private void SetText()
         {
-            throw new NotImplementedException();
+            switch (notif.NotificationType)
+            {
+                case "content_vote":
+                    Text = notif.ActionUsername + " +1'd your rant!";
+                    break;
+                case "comment_vote":
+                    Text = notif.ActionUsername + " +1'd your comment!";
+                    break;
+                case "comment_content":
+                    Text = notif.ActionUsername + " commented on your rant!";
+                    break;
+                case "comment_discuss":
+                    Text = "New comment on a rant you commented on!";
+                    break;
+                case "comment_mention":
+                    Text = notif.ActionUsername + " mentioned you in a comment!";
+                    break;
+                default:
+                    Text = notif.NotificationType;
+                    break;
+            }
         }
     }
 }

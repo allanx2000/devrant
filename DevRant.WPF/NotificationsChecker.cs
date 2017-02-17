@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Permissions;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace DevRant.WPF
 {
@@ -41,7 +42,7 @@ namespace DevRant.WPF
 
             public int Total { get; private set; }
             public int TotalUnread { get; private set; }
-            public string Error { get; internal set; }
+            public Exception Error { get; internal set; }
         }
         
         private int latestVersion = 0;
@@ -74,21 +75,7 @@ namespace DevRant.WPF
                 {
                     if (!IsLatest(version))
                         break;
-
-                    var notifs = await api.GetNotificationsAsync();
-                    var sorted = (from n in notifs orderby n.CreateTime descending, n.Read ascending select n);
-
-                    Notifications.Clear();
-                    
-                    foreach (var notif in sorted)
-                    {
-                        var vm = new Notification(notif);
-                        Notifications.Add(vm);        
-                    }
-
-                    int unread = Notifications.Count(x => x.Read == false);
-
-                    SendUpdate(unread, Notifications.Count);
+                    await Check();
 
                     int millis = SleepTime;
                     Thread.Sleep(millis);
@@ -96,11 +83,29 @@ namespace DevRant.WPF
             }
             catch (Exception ex)
             {
-                SendUpdate(error: ex.Message);
+                SendUpdate(error: ex);
             }
         }
 
-        internal void SendUpdate(int unread = 0, int total = 0, string error = null)
+        public async Task Check()
+        {
+            var notifs = await api.GetNotificationsAsync();
+            //var sorted = (from n in notifs orderby n.CreateTime descending, n.Read ascending select n);
+
+            Notifications.Clear();
+
+            foreach (var notif in notifs)
+            {
+                var vm = new Notification(notif);
+                Notifications.Add(vm);
+            }
+
+            int unread = Notifications.Count(x => x.Read == false);
+
+            SendUpdate(unread, Notifications.Count);
+        }
+
+        internal void SendUpdate(int unread = 0, int total = 0, Exception error = null)
         {
             if (OnUpdate != null)
             {
