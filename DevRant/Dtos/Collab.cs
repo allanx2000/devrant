@@ -1,12 +1,14 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace DevRant.Dtos
 {
     /// <summary>
-    /// Represents a comment.
+    /// Represents a Collab.
     /// </summary>
-    public class Comment : BaseInfo
+    public class Collab : ContentObject
     {
+        
     }
 }

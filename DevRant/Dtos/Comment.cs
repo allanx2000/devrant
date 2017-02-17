@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace DevRant.Dtos
 {
     /// <summary>
-    /// Represents a Collab.
+    /// Represents a comment.
     /// </summary>
-    public class Collab : BaseInfo
+    public class Comment : ContentObject
     {
     }
 }

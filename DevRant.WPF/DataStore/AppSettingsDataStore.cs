@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DevRant.Dtos;
+using DevRant.Enums;
 
 namespace DevRant.WPF.DataStore
 {

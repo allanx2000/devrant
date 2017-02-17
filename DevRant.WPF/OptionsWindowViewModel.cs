@@ -1,4 +1,5 @@
 ﻿using DevRant.Dtos;
+using DevRant.Enums;
 using DevRant.WPF.DataStore;
 using Innouvous.Utils;
 using Innouvous.Utils.Merged45.MVVM45;

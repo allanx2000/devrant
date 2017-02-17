@@ -1,29 +1,40 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace DevRant.Dtos
 {
     /// <summary>
     /// 
     /// </summary>
-    public class NotificationInfo
+    public class Notification : DataObject
     {
-        /// <summary>
-        /// Create Time
-        /// </summary>
-        [JsonProperty("created_time")]
-        public long CreateTime { get; set; }
         
         /// <summary>
         /// Type of notification
         /// </summary>
         [JsonProperty("type")]
-        public string NotificationType { get; set; }
+        public string NotificationType { get { return Get<string>("type");  } }
+
+        /// <summary>
+        /// RantId
+        /// </summary>
+        public long RantId { get {
+
+                object i = Get("rant_id");
+                return 1;
+            }
+        }
+
 
         /// <summary>
         /// If Read, it will be 1
         /// </summary>
         [JsonProperty("read")]
-        public int Read { get; set; }
+        public int Read
+        {
+            get { return Get<int>("read"); }
+            set { base.Set("read", 1); }
+        }
 
         /// <summary>
         /// Whether this is read or not
@@ -35,18 +46,22 @@ namespace DevRant.Dtos
                 return Read == 1;
             }
         }
-
-        /// <summary>
-        /// The ID of the rant this notification is for
-        /// </summary>
-        [JsonProperty("rant_id")]
-        public long RantId { get; set; }
-
+        
         /// <summary>
         /// The User ID of the user that performed the action that created this notification
         /// </summary>
         [JsonProperty("uid")]
-        public long? ActionUser { get; set; }
+        public long? ActionUser //Should be int
+        {
+            get {
+                object i = Get("uid");
+
+                if (i == null)
+                    return null;
+                else
+                   return Convert.ToInt32(i);
+            }
+        }
 
         /// <summary>
         /// Action username, needs to be populated manually by API

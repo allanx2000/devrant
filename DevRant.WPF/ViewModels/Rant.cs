@@ -12,7 +12,7 @@ namespace DevRant.WPF.ViewModels
     public class Rant : FeedItem
     {
 
-        private RantInfo rant;
+        private Dtos.Rant rant;
         
         public string Text { get { return rant.Text; } }
         public int Votes {
@@ -78,14 +78,17 @@ namespace DevRant.WPF.ViewModels
 
         public long RawCreateTime { get { return rant.CreatedTime; } }
 
-        public Rant(RantInfo rant) : base(FeedItemType.Post)
+        public Rant(Dtos.Rant rant) : base(FeedItemType.Post)
         {
             this.rant = rant;
             DateTime dt = Utilities.FromUnixTime(rant.CreatedTime);
             CreateTime = dt.ToLocalTime().ToString("M/d/yyyy h:mm tt");
 
-            Thread th = new Thread(() => LoadImage());
-            th.Start();
+            if (rant.Image != null)
+            {
+                Thread th = new Thread(() => LoadImage());
+                th.Start();
+            }
         }
 
         private void LoadImage()

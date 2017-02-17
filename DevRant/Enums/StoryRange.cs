@@ -1,4 +1,4 @@
-﻿namespace DevRant.Dtos
+﻿namespace DevRant.Enums
 {
     /// <summary>
     /// StoryRange

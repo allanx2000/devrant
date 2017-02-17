@@ -1,4 +1,4 @@
-﻿namespace DevRant.Dtos
+﻿namespace DevRant.Enums
 {
     /// <summary>
     /// Represents an enum which of how the user votes on a Rant or Comment 

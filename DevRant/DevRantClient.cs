@@ -1,5 +1,6 @@
 ﻿using DevRant.Dtos;
 using DevRant.Dtos;
+using DevRant.Enums;
 using DevRant.Exceptions;
 using Newtonsoft.Json.Linq;
 using System;
@@ -33,7 +34,7 @@ namespace DevRant
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<List<NotificationInfo>> GetNotificationsAsync()
+        public async Task<List<Notification>> GetNotificationsAsync()
         {
             if (!LoggedIn)
                 throw new Exception("User not logged in.");
@@ -48,10 +49,10 @@ namespace DevRant
                 var notifs = obj["data"]["items"].AsJEnumerable();
                 Dictionary<long, string> users = GetUsernameMap(obj["data"]["username_map"]);
 
-                List<NotificationInfo> list = new List<NotificationInfo>();
+                List<Notification> list = new List<Notification>();
                 foreach (JObject n in notifs)
                 {
-                    var notif = n.ToObject<NotificationInfo>();
+                    var notif = ContentObject.Parse<Notification>(n);
 
                     if (notif.ActionUser != null)
                     {
@@ -162,10 +163,10 @@ namespace DevRant
 
             if (rants != null)
             {
-                List<RantInfo> rantsList = new List<RantInfo>();
+                List<Rant> rantsList = new List<Rant>();
                 foreach (var r in rants)
                 {
-                    RantInfo info = r.ToObject<RantInfo>();
+                    Rant info = r.ToObject<Rant>();
                     rantsList.Add(info);
                 }
 
@@ -176,6 +177,8 @@ namespace DevRant
         }
 
 
+
+        private const string UserId = "user_id";
         private const string TokenId = "token_id";
         private const string TokenKey = "token_key";
         
@@ -191,6 +194,7 @@ namespace DevRant
             {
                 paramz.Add(TokenKey, token.Key);
                 paramz.Add(TokenId, token.ID);
+                paramz.Add(UserId, token.UserID);
             }
 
             StringBuilder sb = new StringBuilder();
@@ -206,7 +210,7 @@ namespace DevRant
         /// Requests a collection of stories sorted and selected by the arguments from the rest-api.
         /// </summary>
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<RantInfo>> GetStoriesAsync(RantSort sort = RantSort.Top, StoryRange range = StoryRange.Day, int limit = 50, int skip = 0)
+        public async Task<IReadOnlyCollection<Rant>> GetStoriesAsync(RantSort sort = RantSort.Top, StoryRange range = StoryRange.Day, int limit = 50, int skip = 0)
         {
             var sortText = sort.ToString().ToLower();
             var rangeText = range.ToString().ToLower();
@@ -222,7 +226,22 @@ namespace DevRant
             var response = await client.GetAsync(url);
             var responseText = await response.Content.ReadAsStringAsync();
 
-            return ParseProperty<List<RantInfo>>(responseText, "rants");
+            JObject tmp = JObject.Parse(responseText);
+
+            if (CheckSuccess(tmp))
+            {
+                List<Rant> rants = new List<Rant>();
+
+                foreach (JObject obj in tmp["rants"].Children())
+                {
+                    var r = ContentObject.Parse<Rant>(obj);
+                    rants.Add(r);
+                }
+
+                return rants;
+            }
+            else
+                return null;
         }
 
         /// <summary>
@@ -293,7 +312,7 @@ namespace DevRant
         /// <param name="limit">Maximal rants to return.</param>
         /// <param name="skip">Number of rants to skip.</param>
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<RantInfo>> GetRantsAsync(RantSort sort = RantSort.Algo, int limit = 50, int skip = 0)
+        public async Task<IReadOnlyCollection<Rant>> GetRantsAsync(RantSort sort = RantSort.Algo, int limit = 50, int skip = 0, SettingsCollection settings = null)
         {
             var sortText = sort.ToString().ToLower();
 
@@ -307,7 +326,26 @@ namespace DevRant
             var response = await client.GetAsync(url);
             var responseText = await response.Content.ReadAsStringAsync();
 
-            return ParseProperty<List<RantInfo>>(responseText, "rants");
+            List<Rant> rants = new List<Rant>();
+
+            JObject tmp = JObject.Parse(responseText);
+            foreach (JObject obj in tmp["rants"].Children())
+            {
+                var r = ContentObject.Parse<Rant>(obj);
+                rants.Add(r);
+            }
+            
+            if (settings != null)
+            {
+                var num = tmp["num_notifs"];
+                if (tmp["num_notifs"] != null)
+                {
+                    var notifs = Convert.ToInt32(num.ToString());
+                    settings["num_notifs"] = notifs;
+                }
+            }
+
+            return rants;
         }
 
         /// <summary>

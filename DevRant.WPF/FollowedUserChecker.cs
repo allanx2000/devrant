@@ -23,7 +23,7 @@ namespace DevRant.WPF
             return new UpdateArgs(UpdateType.UpdateFeed, 0, null, Posts);
         }
 
-        public ObservableCollection<Rant> Posts { get; private set; }
+        public ObservableCollection<ViewModels.Rant> Posts { get; private set; }
 
         public FollowedUserChecker(IDataStore ds, IDevRantClient api, IHistoryStore history)
         {
@@ -31,7 +31,7 @@ namespace DevRant.WPF
             this.api = api;
             this.history = history;
             
-            Posts = new ObservableCollection<Rant>();
+            Posts = new ObservableCollection<ViewModels.Rant>();
         }
         
         public delegate void OnUpdatedHandler(UpdateArgs args);
@@ -47,7 +47,7 @@ namespace DevRant.WPF
 
         public class UpdateArgs
         {
-            public UpdateArgs(UpdateType type, int added, string users, ICollection<Rant> posts)
+            public UpdateArgs(UpdateType type, int added, string users, ICollection<ViewModels.Rant> posts)
             {
                 Added = added;
                 Type = type;
@@ -108,7 +108,7 @@ namespace DevRant.WPF
 
                     long lastTime = ds.FollowedUsersLastChecked;
 
-                    List<Rant> added = new List<Rant>();
+                    List<ViewModels.Rant> added = new List<ViewModels.Rant>();
 
                     var users = ds.FollowedUsers.ToList(); //Can be modified while checking
 
@@ -122,7 +122,7 @@ namespace DevRant.WPF
                             {
                                 if (!history.IsRead(rant.Id))
                                 {
-                                    Rant r = new Rant(rant);
+                                    ViewModels.Rant r = new ViewModels.Rant(rant);
                                     added.Add(r);
                                 }
                             }
@@ -197,7 +197,7 @@ namespace DevRant.WPF
 
         private async void GetAllForUsers(IEnumerable<string> users)
         {
-            List<Rant> added = new List<Rant>();
+            List<ViewModels.Rant> added = new List<ViewModels.Rant>();
 
             foreach (string user in users)
             {
@@ -207,7 +207,7 @@ namespace DevRant.WPF
 
                     foreach (var rant in profile.Rants)
                     {
-                        Rant r = new Rant(rant);
+                        ViewModels.Rant r = new ViewModels.Rant(rant);
                         Posts.Add(r);
                         added.Add(r);
                     }

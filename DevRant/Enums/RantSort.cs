@@ -1,4 +1,4 @@
-﻿namespace DevRant.Dtos
+﻿namespace DevRant.Enums
 {
     /// <summary>
     /// Represents an enum which indicates the sorting of the rants list.

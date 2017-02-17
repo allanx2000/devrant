@@ -48,6 +48,6 @@ namespace DevRant.Dtos
         /// Rants
         /// </summary>
         [JsonProperty("content.content.rants")]
-        public List<RantInfo> Rants { get; set; }
+        public List<Rant> Rants { get; set; }
     }
 }

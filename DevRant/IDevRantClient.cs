@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using DevRant.Dtos;
+using DevRant.Enums;
 
 namespace DevRant
 {
@@ -45,7 +46,8 @@ namespace DevRant
         /// <param name="sort">Sorting of the rant collection.</param>
         /// <param name="limit">Maximal rants to return.</param>
         /// <param name="skip">Number of rants to skip.</param>
-        Task<IReadOnlyCollection<RantInfo>> GetRantsAsync(RantSort sort = RantSort.Algo, int limit = 50, int skip = 0);
+        /// <param name="settings">If passed, will hold the values of settings that may be returned in the response</param>
+        Task<IReadOnlyCollection<Rant>> GetRantsAsync(RantSort sort = RantSort.Algo, int limit = 50, int skip = 0, SettingsCollection settings = null);
         /// <summary>
         /// Requests a collection of stories 
         /// </summary>
@@ -54,7 +56,7 @@ namespace DevRant
         /// <param name="limit">Maximal rants to return.</param>
         /// <param name="skip">Number of rants to skip.</param>
         /// <returns></returns>
-        Task<IReadOnlyCollection<RantInfo>> GetStoriesAsync(RantSort sort = RantSort.Top, StoryRange range = StoryRange.Day, int limit = 50, int skip = 0);
+        Task<IReadOnlyCollection<Rant>> GetStoriesAsync(RantSort sort = RantSort.Top, StoryRange range = StoryRange.Day, int limit = 50, int skip = 0);
 
         /// <summary>
         /// Login
@@ -67,7 +69,7 @@ namespace DevRant
         /// 
         /// </summary>
         /// <returns></returns>
-        Task<List<Dtos.NotificationInfo>> GetNotificationsAsync();
+        Task<List<Dtos.Notification>> GetNotificationsAsync();
         
         /// <summary>
         /// 

@@ -17,6 +17,7 @@ using DevRant.WPF.Converters;
 using DevRant.Dtos;
 using DevRant.WPF.DataStore;
 using DevRant.Exceptions;
+using DevRant.Enums;
 
 namespace DevRant.WPF
 {
@@ -53,7 +54,7 @@ namespace DevRant.WPF
             fchecker.Start();
 
             UpdateFollowedPosts(fchecker.GetFeedUpdate());
-            UpdateNotifications(new NotificationsChecker.UpdateArgs(0, 0));
+            UpdateNotifications(new NotificationsChecker.UpdateArgs(0, 0), true);
 
             nchecker = new NotificationsChecker(ds, api);
             nchecker.OnUpdate += UpdateNotifications;
@@ -65,6 +66,10 @@ namespace DevRant.WPF
         }
 
         private async void UpdateNotifications(NotificationsChecker.UpdateArgs args)
+        {
+            UpdateNotifications(args, false);
+        }
+        private async void UpdateNotifications(NotificationsChecker.UpdateArgs args, bool forInit)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Notifications");
@@ -85,6 +90,9 @@ namespace DevRant.WPF
             }
 
             NotificationsLabel = sb.ToString();
+
+            if (forInit)
+                return;
 
             string msg;
 
@@ -304,7 +312,7 @@ namespace DevRant.WPF
         {
             if (SelectedPost == null)
                 return;
-            else if (SelectedPost is Rant)
+            else if (SelectedPost is ViewModels.Rant)
             {
                 /*
                 var dlg = new RantViewerWindow((Rant)SelectedPost, api);
@@ -312,12 +320,12 @@ namespace DevRant.WPF
                 dlg.ShowDialog();
                 */
 
-                Process.Start(((Rant)SelectedPost).PostURL);
+                Process.Start(((ViewModels.Rant)SelectedPost).PostURL);
             }
-            else if (SelectedPost is Notification)
+            else if (SelectedPost is ViewModels.Notification)
             {
-                Notification notif = SelectedPost as Notification;
-                foreach (Notification n in feeds)
+                ViewModels.Notification notif = SelectedPost as ViewModels.Notification;
+                foreach (ViewModels.Notification n in feeds)
                 {
                     if (n.RantId == notif.RantId)
                         n.MarkRead();
@@ -361,6 +369,7 @@ namespace DevRant.WPF
         
         public const string SectionFollowed = "FollowedUsers";
         private NotificationsChecker nchecker;
+        private const string NotificationCount = "notif_state";
 
         public async Task LoadSection(string section)
         {
@@ -425,6 +434,7 @@ namespace DevRant.WPF
         {
             UpdateStatus("Checking for updates...");
             fchecker.Restart();
+            nchecker.Check();
         }
 
         public ICommand OpenOptionsCommand
@@ -505,7 +515,7 @@ namespace DevRant.WPF
             if (SelectedPost == null)
                 return;
 
-            Process.Start(((Rant)SelectedPost).ProfileURL);
+            Process.Start(((ViewModels.Rant)SelectedPost).ProfileURL);
         }
 
         public ICommand ViewNotificationsCommand
@@ -654,12 +664,14 @@ namespace DevRant.WPF
 
         private async Task LoadFeed(FeedType type, RantSort sort = RantSort.Algo, StoryRange range = StoryRange.Day, bool filter = false)
         {
-            Func<int, Task<IReadOnlyCollection<RantInfo>>> getter;
+            Func<int, Task<IReadOnlyCollection<Dtos.Rant>>> getter;
+
+            SettingsCollection collection = new SettingsCollection();
 
             switch (type)
             {
                 case FeedType.General:
-                    getter = async (skip) => await api.GetRantsAsync(sort: sort, skip: skip);
+                    getter = async (skip) => await api.GetRantsAsync(sort: sort, skip: skip, settings: collection);
                     break;
                 case FeedType.Stories:
                     getter = async (skip) => await api.GetStoriesAsync(range: range, sort: sort, skip: skip);
@@ -668,7 +680,7 @@ namespace DevRant.WPF
                     return;
             }
 
-            List<RantInfo> rants = new List<RantInfo>();
+            List<Dtos.Rant> rants = new List<Dtos.Rant>();
 
             int page = 0;
             while (rants.Count < Limit)
@@ -692,13 +704,19 @@ namespace DevRant.WPF
 
             foreach (var rant in rants)
             {
-                Rant r = new Rant(rant);
+                ViewModels.Rant r = new ViewModels.Rant(rant);
                 feeds.Add(r);
             }
 
             UpdateFollowedInRants();
 
             feedView.SortDescriptions.Clear();
+
+            if (collection.Count > 0 && collection.ContainsKey(NotificationCount))
+            {
+                int count = Convert.ToInt32(collection[NotificationCount]);
+                UpdateNotifications(new NotificationsChecker.UpdateArgs(count, count));
+            }
 
             currentSection = type;
             UpdateStatus("Loaded " + rants.Count + " rants");
@@ -711,7 +729,7 @@ namespace DevRant.WPF
         {
             var followed = ds.FollowedUsers;
 
-            foreach (Rant rant in feeds)
+            foreach (ViewModels.Rant rant in feeds)
             {
                 if (followed.Contains(rant.Username))
                     rant.Followed = true;

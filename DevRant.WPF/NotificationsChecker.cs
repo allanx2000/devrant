@@ -17,16 +17,15 @@ namespace DevRant.WPF
 
         private IDevRantClient api;
         private IDataStore ds;
-        private IHistoryStore history;
         
-        public ObservableCollection<Notification> Notifications { get; private set; }
+        public ObservableCollection<ViewModels.Notification> Notifications { get; private set; }
 
         public NotificationsChecker(IDataStore ds, IDevRantClient api)
         {
             this.ds = ds;
             this.api = api;
 
-            Notifications = new ObservableCollection<Notification>();
+            Notifications = new ObservableCollection<ViewModels.Notification>();
         }
         
         public delegate void OnUpdatedHandler(UpdateArgs args);
@@ -96,7 +95,7 @@ namespace DevRant.WPF
 
             foreach (var notif in notifs)
             {
-                var vm = new Notification(notif);
+                var vm = new ViewModels.Notification(notif);
                 Notifications.Add(vm);
             }
 

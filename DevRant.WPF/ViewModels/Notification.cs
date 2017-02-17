@@ -6,7 +6,7 @@ namespace DevRant.WPF.ViewModels
 {
     public class Notification : FeedItem
     {
-        private NotificationInfo notif;
+        private Dtos.Notification notif;
         
         public long RantId { get { return notif.RantId; } }
       
@@ -21,6 +21,8 @@ namespace DevRant.WPF.ViewModels
                 return Utilities.BaseURL + "/rants/" + notif.RantId;
             }
         }
+
+
         
         public override bool Read
         {
@@ -37,13 +39,13 @@ namespace DevRant.WPF.ViewModels
         public string Text { get; private set; }
         public string CreateTime { get; private set; }
 
-        public long CreateTimeRaw { get { return notif.CreateTime; } }
+        public long CreateTimeRaw { get { return notif.CreatedTime; } }
 
-        public Notification(NotificationInfo notif) : base(FeedItemType.Notification)
+        public Notification(Dtos.Notification notif) : base(FeedItemType.Notification)
         {
             this.notif = notif;
 
-            DateTime dt = Utilities.FromUnixTime(notif.CreateTime);
+            DateTime dt = Utilities.FromUnixTime(notif.CreatedTime);
             CreateTime = dt.ToLocalTime().ToString("M/d/yyyy h:mm tt");
 
 

@@ -35,7 +35,9 @@
             <MenuItem Header="Options" Command="{Binding OpenOptionsCommand}"/>
             <MenuItem Header="Check For Updates" Command="{Binding CheckUpdatesCommand}"/>
             <MenuItem Header="Refresh Feed" Click="RefreshFeed"/>
+            <!--
             <MenuItem Header="View Notifications" Command="{Binding ViewNotificationsCommand }"/>
+            -->
         </Menu>
 
         <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
@@ -71,11 +73,11 @@
 
                 <ListBoxItem Name="CollabFeed">Collab</ListBoxItem>
 
+                <ListBoxItem Name="FollowedUsers" Content="{Binding FollowedUsersLabel, FallbackValue='Updates'}" FontWeight="{Binding FollowedUsersWeight}"/>
+
                 <ListBoxItem Name="MyNotifications" Content="{Binding NotificationsLabel, FallbackValue='Notifications'}" 
                              Visibility="{Binding NotificationsVisibility, FallbackValue=Collapsed}" 
                              FontWeight="{Binding NotificationsWeight}"/>
-                
-                <ListBoxItem Name="FollowedUsers" Content="{Binding FollowedUsersLabel, FallbackValue='Updates'}" FontWeight="{Binding FollowedUsersWeight}"/>
             </ListBox>
         </GroupBox>
 
