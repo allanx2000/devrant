@@ -31,17 +31,17 @@ namespace DevRant.Dtos
 
             switch (t.Name)
             {
-                case "RantInfo":
+                case "Rant":
                     obj = new Rant();
                     break;
-                case "CollabInfo":
+                case "Collab":
                     obj = new Collab();
                     break;
-                case "NotificationInfo":
+                case "Notification":
                     obj = new Notification();
                     break;
                 default:
-                    return default(T);
+                    throw new Exception(t.Name + " cannot be parsed.");
             }
 
             obj.AddValues(data);

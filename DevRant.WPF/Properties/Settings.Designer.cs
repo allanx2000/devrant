@@ -108,9 +108,9 @@ namespace DevRant.WPF.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Week")]
-        public global::DevRant.Dtos.StoryRange StoryRange {
+        public global::DevRant.Enums.StoryRange StoryRange {
             get {
-                return ((global::DevRant.Dtos.StoryRange)(this["StoryRange"]));
+                return ((global::DevRant.Enums.StoryRange)(this["StoryRange"]));
             }
             set {
                 this["StoryRange"] = value;
@@ -120,9 +120,9 @@ namespace DevRant.WPF.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Algo")]
-        public global::DevRant.Dtos.RantSort StorySort {
+        public global::DevRant.Enums.RantSort StorySort {
             get {
-                return ((global::DevRant.Dtos.RantSort)(this["StorySort"]));
+                return ((global::DevRant.Enums.RantSort)(this["StorySort"]));
             }
             set {
                 this["StorySort"] = value;
