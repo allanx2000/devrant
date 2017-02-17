@@ -67,7 +67,7 @@ namespace DevRant.WPF
             public int TotalUnread { get; private set; }
             public int Added { get; private set; }
             public string Users { get; private set; }
-            public string Error { get; internal set; }
+            public Exception Error { get; internal set; }
         }
 
         private void SafeStart(object paramz)
@@ -152,7 +152,7 @@ namespace DevRant.WPF
             }
             catch (Exception ex)
             {
-                SendUpdate(UpdateType.Error, error: ex.Message);
+                SendUpdate(UpdateType.Error, error: ex);
             }
         }
 
@@ -164,7 +164,7 @@ namespace DevRant.WPF
                 Posts.Remove(r);
         }
 
-        internal void SendUpdate(UpdateType type, int added = 0, string users = null, string error = null)
+        internal void SendUpdate(UpdateType type, int added = 0, string users = null, Exception error = null)
         {
             if (OnUpdate != null)
             {

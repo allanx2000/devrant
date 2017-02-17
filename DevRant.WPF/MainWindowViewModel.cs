@@ -99,7 +99,7 @@ namespace DevRant.WPF
                 }
             }
             else
-                msg = string.Format("Checker found {0} new notifications", args.TotalUnread);
+                msg = string.Format("Found {0} new notifications", args.TotalUnread);
 
             UpdateStatus(msg);
         }
@@ -317,9 +317,18 @@ namespace DevRant.WPF
             else if (SelectedPost is Notification)
             {
                 Notification notif = SelectedPost as Notification;
+                foreach (Notification n in feeds)
+                {
+                    if (n.RantId == notif.RantId)
+                        n.MarkRead();
+                }
+
+                UpdateNotifications(new NotificationsChecker.UpdateArgs(feeds.Where(x => !x.Read).Count(), feeds.Count));
+                FeedView.Refresh();
+
                 Process.Start(notif.URL);
 
-                nchecker.Check();
+                //nchecker.Check();
             }
             
         }
@@ -572,13 +581,19 @@ namespace DevRant.WPF
                 switch (args.Type)
                 {
                     case FollowedUserChecker.UpdateType.UpdatesCheck:
-                        message = string.Format("Checker found {0} new posts.", args.Added);
+                        message = string.Format("Found {0} new posts", args.Added);
                         break;
                     case FollowedUserChecker.UpdateType.GetAllForUser:
                         message = "Got rants for user: " + args.Users;
                         break;
                     case FollowedUserChecker.UpdateType.Error:
-                        message = args.Error;
+
+                        if (args.Error is InvalidCredentialsException)
+                        {
+                            Login();
+                        }
+
+                        message = args.Error.Message;
                         break;
                 }
 
@@ -632,8 +647,9 @@ namespace DevRant.WPF
             currentSection = FeedType.Notifications;
             
             feedView.SortDescriptions.Clear();
-            feedView.SortDescriptions.Add(new SortDescription("CreateTime", ListSortDirection.Ascending));
+            
             feedView.SortDescriptions.Add(new SortDescription("Read", ListSortDirection.Ascending));
+            feedView.SortDescriptions.Add(new SortDescription("CreateTimeRaw", ListSortDirection.Descending));
         }
 
         private async Task LoadFeed(FeedType type, RantSort sort = RantSort.Algo, StoryRange range = StoryRange.Day, bool filter = false)

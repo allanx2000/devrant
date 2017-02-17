@@ -7,12 +7,9 @@ namespace DevRant.WPF.ViewModels
     public class Notification : FeedItem
     {
         private NotificationInfo notif;
-
-        public enum Type
-        {
-            NA
-        }
-
+        
+        public long RantId { get { return notif.RantId; } }
+      
         public FontWeight TextWeight
         {
             get { return notif.IsRead ? FontWeights.Normal : FontWeights.Bold; }
@@ -24,17 +21,31 @@ namespace DevRant.WPF.ViewModels
                 return Utilities.BaseURL + "/rants/" + notif.RantId;
             }
         }
-
-        public bool Read
+        
+        public override bool Read
         {
             get { return notif.IsRead; }
         }
 
+        public void MarkRead()
+        {
+            notif.Read = 1;
+            RaisePropertyChanged("Read");
+            RaisePropertyChanged("TextWeight");
+        }
+
         public string Text { get; private set; }
-        
+        public string CreateTime { get; private set; }
+
+        public long CreateTimeRaw { get { return notif.CreateTime; } }
+
         public Notification(NotificationInfo notif) : base(FeedItemType.Notification)
         {
             this.notif = notif;
+
+            DateTime dt = Utilities.FromUnixTime(notif.CreateTime);
+            CreateTime = dt.ToLocalTime().ToString("M/d/yyyy h:mm tt");
+
 
             SetText();
         }
