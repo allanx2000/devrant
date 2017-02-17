@@ -1,13 +1,40 @@
-﻿namespace DevRant.WPF.ViewModels
-{
-    public class Notification: FeedItem
-    {
-        public string NotificationURL { get; set; }
-        public string Text { get; set; }
+﻿using System;
+using DevRant.Dtos;
 
-        public Notification() : base(FeedItemType.Notification)
+namespace DevRant.WPF.ViewModels
+{
+    public class Notification : FeedItem
+    {
+        private NotificationInfo notif;
+
+        public enum Type
         {
-            Text = "test";
+            NA
+        }
+
+        public Type NotificationType {get; private set;}
+        public string URL { get
+            {
+                return null;
+            }
+        }
+
+        public bool Read
+        {
+            get { return notif.IsRead; }
+        }
+
+        public string Text { get; private set; }
+        
+        public Notification(NotificationInfo notif) : base(FeedItemType.Notification)
+        {
+            this.notif = notif;
+            
+        }
+
+        private void SetText()
+        {
+            throw new NotImplementedException();
         }
     }
 }

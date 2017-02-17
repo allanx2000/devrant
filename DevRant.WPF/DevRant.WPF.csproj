@@ -110,6 +110,7 @@
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="DataStore\HistoryStore.cs" />
     <Compile Include="DataStore\IHistoryStore.cs" />
+    <Compile Include="NotificationsChecker.cs" />
     <Compile Include="FollowedUserChecker.cs" />
     <Compile Include="DataStore\LoginInfo.cs" />
     <Compile Include="MessageCollection.cs" />

@@ -88,6 +88,7 @@ namespace DevRant.WPF
         public void Stop()
         {
             checkerThread.Abort();
+            latestVersion++;
         }
 
         private bool IsLatest(int version)

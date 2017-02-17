@@ -27,7 +27,7 @@ namespace DevRant.WPF
         private IDevRantClient api;
         private IHistoryStore history;
 
-        private FollowedUserChecker checker;
+        private FollowedUserChecker fchecker;
 
         private FeedType currentSection;
         private ObservableCollection<FeedItem> feeds = new ObservableCollection<FeedItem>();
@@ -47,16 +47,40 @@ namespace DevRant.WPF
             feedView.Source = feeds;
 
             //Initialize the properties
-            checker = new FollowedUserChecker(ds, api, history);
-            checker.OnUpdate += UpdateFollowedPosts;
-            checker.Start();
+            fchecker = new FollowedUserChecker(ds, api, history);
+            fchecker.OnUpdate += UpdateFollowedPosts;
+            fchecker.Start();
 
-            UpdateFollowedPosts(checker.GetFeedUpdate());
+            UpdateFollowedPosts(fchecker.GetFeedUpdate());
 
+            nchecker = new NotificationsChecker(ds, api);
+            nchecker.OnUpdate += UpdateNotifications;
+        
             Login();
                 
             //TestLogin();
             //Test();
+        }
+
+        private void UpdateNotifications(NotificationsChecker.UpdateArgs args)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Notifications");
+
+            if (args.TotalUnread > 0)
+            {
+                sb.Append(" (" + args.TotalUnread + ")");
+                NotificationsWeight = FontWeights.Bold;
+            }
+            else
+            {
+                NotificationsWeight = FontWeights.Normal;
+            }
+
+            NotificationsLabel = sb.ToString();
+
+            string msg = string.Format("Checker found {0} new notifications", args.TotalUnread);
+            UpdateStatus(msg);
         }
 
         private async Task Login()
@@ -68,15 +92,15 @@ namespace DevRant.WPF
                 if (loginInfo != null)
                 {
                     await api.Login(loginInfo.Username, loginInfo.Password);
-
-                    var notifs = await api.GetNotificationsAsync();
+                    nchecker.Start();
                 }
             }
             catch (Exception e)
             {
                 UpdateStatus("Failed to login, error: " + e.Message);
             }
-            
+
+            RaisePropertyChanged("NotificationsVisibility");
             RaisePropertyChanged("LoggedInUser");
             RaisePropertyChanged("LoggedIn");
         }
@@ -125,6 +149,33 @@ namespace DevRant.WPF
         #endregion
 
         #region Properties
+
+        public Visibility NotificationsVisibility { get { return LoggedIn ? Visibility.Visible : Visibility.Collapsed; } }
+        public string NotificationsLabel
+        {
+            get
+            {
+                return Get<string>();
+            }
+            set
+            {
+                Set(value);
+                RaisePropertyChanged();
+            }
+        }
+
+        public FontWeight NotificationsWeight
+        {
+            get
+            {
+                return Get<FontWeight>();
+            }
+            set
+            {
+                Set(value);
+                RaisePropertyChanged();
+            }
+        }
 
         public string LoggedInUser
         {
@@ -215,7 +266,7 @@ namespace DevRant.WPF
 
                     if (currentSection == FeedType.Updates)
                     {                        
-                        UpdateFollowedPosts(checker.GetFeedUpdate());
+                        UpdateFollowedPosts(fchecker.GetFeedUpdate());
                     }
                 }
 
@@ -252,7 +303,8 @@ namespace DevRant.WPF
             Stories,
             General,
             Collab,
-            Updates
+            Updates,
+            Notifications
         }
 
         public const string SectionGeneral = "GeneralFeed";
@@ -271,7 +323,8 @@ namespace DevRant.WPF
         public const string SectionNotifications = "MyNotifications";
         
         public const string SectionFollowed = "FollowedUsers";
-        
+        private NotificationsChecker nchecker;
+
         public async Task LoadSection(string section)
         {
             IsLoading = true;
@@ -309,12 +362,10 @@ namespace DevRant.WPF
                     await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.All);
                     break;
 
-                /*
                 case SectionNotifications:
                     await LoadNotifications();
                     break;
-                */
-
+                
                 case SectionFollowed:
                     LoadFollowed();
                     break;
@@ -322,6 +373,7 @@ namespace DevRant.WPF
 
             IsLoading = false;
         }
+
 
         #endregion
         #endregion
@@ -335,7 +387,7 @@ namespace DevRant.WPF
         private void CheckForUpdates()
         {
             UpdateStatus("Checking for updates...");
-            checker.Restart();
+            fchecker.Restart();
         }
 
         public ICommand OpenOptionsCommand
@@ -353,7 +405,7 @@ namespace DevRant.WPF
             if (!dlg.Cancelled)
             {
                 if (dlg.AddedUsers.Count > 0)
-                    checker.GetAll(dlg.AddedUsers);
+                    fchecker.GetAll(dlg.AddedUsers);
 
                 RaisePropertyChanged("UsernameVisibility");
                 RaisePropertyChanged("DateVisibility");
@@ -403,7 +455,7 @@ namespace DevRant.WPF
             ds.Follow(username);
 
             UpdateFollowedInRants();
-            checker.GetAll(username);
+            fchecker.GetAll(username);
         }
 
         public ICommand ViewProfileCommand
@@ -511,7 +563,7 @@ namespace DevRant.WPF
         {
             feeds.Clear();
 
-            foreach (var rant in checker.Posts)
+            foreach (var rant in fchecker.Posts)
             {
                 if (!rant.Read)
                     feeds.Add(rant);
@@ -535,7 +587,21 @@ namespace DevRant.WPF
             feeds.Add(new Notification());
         }
         */
-        
+
+
+        private async Task LoadNotifications()
+        {
+            var notifs = nchecker.Notifications;
+            feeds.Clear();
+
+            foreach (var notif in notifs)
+            {
+                feeds.Add(notif);
+            }
+            
+            currentSection = FeedType.Notifications;
+        }
+
         private async Task LoadFeed(FeedType type, RantSort sort = RantSort.Algo, StoryRange range = StoryRange.Day, bool filter = false)
         {
             Func<int, Task<IReadOnlyCollection<RantInfo>>> getter;

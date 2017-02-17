@@ -32,7 +32,7 @@ namespace DevRant
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<List<NotificationInfo>> GetNotificationsAsync()
+        public async         Task<List<NotificationInfo>> GetNotificationsAsync()
         {
             if (!LoggedIn)
                 throw new Exception("User not logged in.");

@@ -71,10 +71,10 @@
 
                 <ListBoxItem Name="CollabFeed">Collab</ListBoxItem>
 
-                <!--
-                <ListBoxItem Name="MyNotifications" Content="{Binding NotificationsLabel, FallbackValue='Notifications'}" FontWeight="{Binding NotificationsWeight}"/>
-                -->
-
+                <ListBoxItem Name="MyNotifications" Content="{Binding NotificationsLabel, FallbackValue='Notifications'}" 
+                             Visibility="{Binding NotificationsVisibility, FallbackValue=Collapsed}" 
+                             FontWeight="{Binding NotificationsWeight}"/>
+                
                 <ListBoxItem Name="FollowedUsers" Content="{Binding FollowedUsersLabel, FallbackValue='Updates'}" FontWeight="{Binding FollowedUsersWeight}"/>
             </ListBox>
         </GroupBox>
@@ -99,109 +99,22 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Vertical">
+                            <StackPanel.Resources>
+                                <Style TargetType="ctrl:RantControl">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Type}" Value="Post">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Resources>
+                            
                             <!-- General Feed-->
-
                             <ctrl:RantControl 
                                 UsernameVisibility="{Binding DataContext.UsernameVisibility, ElementName=mainWindow}"
                                 DateVisibility="{Binding DataContext.DateVisibility, ElementName=mainWindow}"
                                 LoggedIn="{Binding DataContext.LoggedIn, ElementName=mainWindow}"/>
-
-                            <!--
-                            <Grid>
-                                <Grid.Style>
-                                    <Style TargetType="Grid">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Type}" Value="Post">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Grid.Style>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="80"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-
-                                <StackPanel Orientation="Vertical" Grid.Column="0" Grid.RowSpan="4">
-                                    <ctrl:VoteControl VotesString="{Binding VotesString}"  IsLoggedIn="{Binding DataContext.LoggedIn, ElementName=mainWindow }"/>
-                                    <Label HorizontalAlignment="Center" 
-                                           Visibility="{Binding ElementName=FeedListBox, Path=DataContext.DateVisibility}">
-                                        <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="{Binding CreateTime}"/>
-                                    </Label>
-                                </StackPanel>
-                                
-                                <StackPanel Orientation="Horizontal" 
-                                            Visibility="{Binding ElementName=FeedListBox, Path=DataContext.UsernameVisibility}" 
-                                            Grid.Column="1" Grid.Row="0" Margin="0 5 0 0">
-                                    <Label FontWeight="Bold" FontSize="14">
-                                        <Label.Style>
-                                            <Style TargetType="{x:Type Label}">
-                                                <Setter Property="Foreground" Value="Black"/>
-
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Followed}" Value="True">
-                                                        <Setter Property="Foreground" Value="Green"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Label.Style>
-                                        <TextBlock Text="{Binding Username}"/>
-                                    </Label>
-
-                                    <Label Width="20"/>
-
-                                    <Label MinWidth="30" HorizontalContentAlignment="Center" Background="Gray" Foreground="White" FontWeight="Bold" 
-                                           Content="{Binding UserScoreString}">
-                                        <Label.Style>
-                                            <Style TargetType="{x:Type Label}">
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="{x:Type Label}">
-                                                            <Border BorderBrush="{TemplateBinding BorderBrush}" 
-                                                            BorderThickness="{TemplateBinding BorderThickness}" 
-                                                            Background="{TemplateBinding Background}" 
-                                                            Padding="{TemplateBinding Padding}" 
-                                                            SnapsToDevicePixels="true" 
-                                                            CornerRadius="7">
-                                                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                                                            </Border>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </Label.Style>
-                                    </Label>
-                                </StackPanel>
-
-                                <Label Grid.Column="1" Grid.Row="1">
-                                    <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
-                                </Label>
-
-                                <Image Source="{Binding Picture}" Grid.Row="2" Grid.Column="1"/>
-
-                                <DockPanel Grid.Row="3" Grid.Column="1">
-
-                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
-                                        <Label FontWeight="Bold">Comments:</Label>
-                                        <Label Content="{Binding CommentsCount}"/>
-                                    </StackPanel>
-
-                                    <StackPanel Visibility="{Binding TagsVisibility}" DockPanel.Dock="Left" Orientation="Horizontal">
-                                        <Label FontWeight="Bold">Tags:</Label>
-                                        <Label Content="{Binding TagsString}"/>
-                                    </StackPanel>
-                                </DockPanel>
-                            </Grid>
-
-                            -->
                             
                             <!-- Notifications-->
                             <StackPanel Orientation="Horizontal">
