@@ -21,7 +21,7 @@ namespace DevRant.Dtos
         public long RantId { get {
 
                 object i = Get("rant_id");
-                return 1;
+                return Convert.ToInt64(i);
             }
         }
 
