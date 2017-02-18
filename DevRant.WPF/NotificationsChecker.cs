@@ -114,6 +114,7 @@ namespace DevRant.WPF
                 update.Error = error;
 
                 OnUpdate.Invoke(update);
+                
             }
         }
 

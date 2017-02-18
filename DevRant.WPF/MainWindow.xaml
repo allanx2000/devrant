@@ -24,9 +24,13 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="180"/>
             <ColumnDefinition Width="*"/>
+            <!--
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            -->
         </Grid.ColumnDefinitions>
 
-        <Menu Grid.Row="0" Grid.ColumnSpan="2">
+        <Menu Grid.Row="0" Grid.ColumnSpan="4">
             <Menu.Resources>
                 <Style TargetType="MenuItem">
                     <Setter Property="Padding" Value="5"/>
@@ -135,11 +139,35 @@
                                     <TextBlock Text="{Binding Text}"/>
                                 </Label>
                             </StackPanel>
+
+                            <!-- Notifications-->
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Type}" Value="Collab">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+
+                                <Label FontWeight="{Binding TextWeight}">
+                                    <TextBlock Text="{Binding Text, FallbackValue=Collab}"/>
+                                </Label>
+                            </StackPanel>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </GroupBox>
+
+        <!--
+        <GridSplitter Grid.Column="2" Grid.Row="2" Width="5"  HorizontalAlignment="Center"
+                        VerticalAlignment="Stretch"/>
+        <TextBox Grid.Column="3" Grid.Row="2">Test</TextBox>
+        -->
 
         <StatusBar Cursor="Hand" Grid.Row="3" Grid.ColumnSpan="2" Padding="3" MouseDoubleClick="StatusBar_MouseDoubleClick">
             <TextBlock Text="{Binding StatusMessage}"/>

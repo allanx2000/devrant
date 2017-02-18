@@ -66,30 +66,6 @@ namespace DevRant
             }
             else
                 return null;
-         
-            /*
-            JObject obj = JObject.Parse(responseText);
-            Profile profile = obj["profile"].ToObject<Profile>();
-
-            //Add Rants
-            JObject content = obj["profile"]["content"]["content"] as JObject;
-
-            JArray rants = content["rants"] as JArray;
-
-            if (rants != null)
-            {
-                List<RantInfo> rantsList = new List<RantInfo>();
-                foreach (var r in rants)
-                {
-                    RantInfo info = r.ToObject<RantInfo>();
-                    rantsList.Add(info);
-                }
-
-                profile.Rants = rantsList;
-            }
-
-            return profile;
-            */
         }
 
         private Dictionary<long, string> GetUsernameMap(JToken jToken)
@@ -239,6 +215,42 @@ namespace DevRant
                 }
 
                 return rants;
+            }
+            else
+                return null;
+        }
+
+
+        /// <summary>
+        /// Returns a list of Collabs
+        /// </summary>
+        /// <param name="limit"></param>
+        /// <param name="skip"></param>
+        /// <returns></returns>
+        public async Task<IReadOnlyCollection<Collab>> GetCollabsAsync(int limit = 50, int skip = 0)
+        {
+            string url = MakeUrl("/api/devrant/collabs", new Parameters()
+            {
+                {"limit", limit.ToString()},
+                {"skip", skip.ToString()},
+            });
+
+            var response = await client.GetAsync(url);
+            var responseText = await response.Content.ReadAsStringAsync();
+
+            JObject tmp = JObject.Parse(responseText);
+
+            if (CheckSuccess(tmp))
+            {
+                List<Collab> results = new List<Collab>();
+
+                foreach (JObject obj in tmp["rants"].Children())
+                {
+                    var r = ContentObject.Parse<Collab>(obj);
+                    results.Add(r);
+                }
+
+                return results;
             }
             else
                 return null;

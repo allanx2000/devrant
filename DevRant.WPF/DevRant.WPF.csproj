@@ -98,6 +98,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\MyUserControl.cs" />
+    <Compile Include="Controls\CollabControl.xaml.cs">
+      <DependentUpon>CollabControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\RantControl.xaml.cs">
       <DependentUpon>RantControl.xaml</DependentUpon>
     </Compile>
@@ -110,6 +113,7 @@
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="DataStore\HistoryStore.cs" />
     <Compile Include="DataStore\IHistoryStore.cs" />
+    <Compile Include="DevRant\WPF\ViewModels\Collab.cs" />
     <Compile Include="NotificationsChecker.cs" />
     <Compile Include="FollowedUserChecker.cs" />
     <Compile Include="DataStore\LoginInfo.cs" />
@@ -130,6 +134,10 @@
     <Compile Include="ViewModels\Notification.cs" />
     <Compile Include="ViewModels\FeedItem.cs" />
     <Compile Include="ViewModels\Rant.cs" />
+    <Page Include="Controls\CollabControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\RantControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

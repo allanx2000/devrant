@@ -53,16 +53,31 @@ namespace DevRant.WPF
             fchecker.OnUpdate += UpdateFollowedPosts;
             fchecker.Start();
 
-            UpdateFollowedPosts(fchecker.GetFeedUpdate());
-            UpdateNotifications(new NotificationsChecker.UpdateArgs(0, 0), true);
-
             nchecker = new NotificationsChecker(ds, api);
             nchecker.OnUpdate += UpdateNotifications;
-        
-            Login();
-                
+
+            Startup();
+            
             //TestLogin();
             //Test();
+        }
+
+        private async void Startup()
+        {
+            try
+            {
+               if (await Login())
+                {
+                    LoadFeed(currentSection);
+                }
+            }
+            catch (Exception e)
+            {
+                statusMessages.AddMessage(e.Message);
+            }
+
+            UpdateFollowedPosts(fchecker.GetFeedUpdate());
+            UpdateNotifications(new NotificationsChecker.UpdateArgs(0, 0), true);
         }
 
         private async void UpdateNotifications(NotificationsChecker.UpdateArgs args)
@@ -112,8 +127,10 @@ namespace DevRant.WPF
             UpdateStatus(msg);
         }
 
-        private async Task Login()
+        private async Task<bool> Login()
         {
+            bool loggedIn = false;
+
             try
             {
                 var loginInfo = ds.GetLoginInfo();
@@ -121,17 +138,21 @@ namespace DevRant.WPF
                 if (loginInfo != null)
                 {
                     await api.Login(loginInfo.Username, loginInfo.Password);
+                    
                     nchecker.Start();
+                    loggedIn = true;
                 }
             }
             catch (Exception e)
             {
                 UpdateStatus("Failed to login, error: " + e.Message);
             }
-
+            
             RaisePropertyChanged("NotificationsVisibility");
             RaisePropertyChanged("LoggedInUser");
             RaisePropertyChanged("LoggedIn");
+
+            return loggedIn;
         }
 
         private async void TestLogin()
@@ -415,9 +436,28 @@ namespace DevRant.WPF
                 case SectionFollowed:
                     LoadFollowed();
                     break;
+
+                case SectionCollab:
+                    await LoadCollabs();
+                    break;
             }
 
             IsLoading = false;
+        }
+
+        private async Task LoadCollabs()
+        {
+            var collabs = await api.GetCollabsAsync();
+            feeds.Clear();
+
+            foreach (var c in collabs)
+            {
+                var collab = new ViewModels.Collab(c);
+                feeds.Add(collab);
+            }
+
+            currentSection = FeedType.Collab;
+            feedView.SortDescriptions.Clear();
         }
 
 

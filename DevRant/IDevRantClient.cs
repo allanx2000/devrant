@@ -34,10 +34,12 @@ namespace DevRant
         Task<bool> IsValidUser(string username);
 
         /// <summary>
-        /// Requests notification details
+        /// Requests a collection of collabs
         /// </summary>
-        /// <param name="username">Username of the profile to request.</param>
-        //Task<Profile> GetNotificationsAsync(string username);
+        /// <param name="limit"></param>
+        /// <param name="skip"></param>
+        /// <returns></returns>
+        Task<IReadOnlyCollection<Collab>> GetCollabsAsync(int limit = 50, int skip = 0);
 
 
         /// <summary>
