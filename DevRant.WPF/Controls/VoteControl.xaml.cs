@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevRant.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,8 @@ namespace DevRant.WPF.Controls
     {
         public static DependencyProperty IsLoggedInProperty = DependencyProperty.Register("IsLoggedIn", typeof(bool), typeof(VoteControl));
         public static DependencyProperty VotesStringProperty = DependencyProperty.Register("VotesString", typeof(string), typeof(VoteControl));
-        
+        public static DependencyProperty VotedProperty = DependencyProperty.Register("Voted", typeof(VoteState), typeof(VoteControl));
+
         public VoteControl()
         {
             InitializeComponent();
@@ -50,6 +52,31 @@ namespace DevRant.WPF.Controls
                 SetValue(VotesStringProperty, value);
                 RaisePropertyChange();
             }
+        }
+
+        public VoteState Voted
+        {
+            get
+            {
+                return (VoteState)GetValue(VotedProperty);
+            }
+            set
+            {
+                SetValue(VotedProperty, value);
+                RaisePropertyChange();
+                RaisePropertyChange("DownSelected");
+                RaisePropertyChange("UpSelected");
+            }
+        }
+
+        public bool DownSelected
+        {
+            get { return Voted == VoteState.Down; }
+        }
+
+        public bool UpSelected
+        {
+            get { return Voted == VoteState.Up; }
         }
 
         public bool IsLoggedIn

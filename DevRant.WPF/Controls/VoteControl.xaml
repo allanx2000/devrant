@@ -5,13 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DevRant.WPF.Controls"
              mc:Ignorable="d" 
-             d:DesignWidth="80">
+             d:DesignWidth="80" x:Name="voteControl">
     <StackPanel Orientation="Vertical" DataContext="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}">
-        <local:VoteButton HorizontalAlignment="Center" Type="Up" Clicked="VoteButton_Clicked" Visibility="{Binding VotingVisibility}"/>
+        <local:VoteButton IsSelected="{Binding UpSelected}"  HorizontalAlignment="Center" Type="Up" Clicked="VoteButton_Clicked" Visibility="{Binding VotingVisibility}"/>
         <Label FontSize="14" 
             VerticalAlignment="Top" HorizontalAlignment="Center"
             Content="{Binding VotesString, FallbackValue='1,000'}"/>
-        <local:VoteButton HorizontalAlignment="Center" Type="Down" Clicked="VoteButton_Clicked" Visibility="{Binding VotingVisibility}"/>
+        <local:VoteButton IsSelected="{Binding DownSelected}" HorizontalAlignment="Center" Type="Down" Clicked="VoteButton_Clicked" Visibility="{Binding VotingVisibility}"/>
         
     </StackPanel>
 </local:MyUserControl>

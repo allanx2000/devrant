@@ -75,6 +75,10 @@ namespace DevRant.Dtos
                 int voted = Get<int>("vote_state");
                 return (VoteState)voted;
             }
+            set
+            {
+                Set("vote_state", (int)value);
+            }
         }
 
         /// <summary>

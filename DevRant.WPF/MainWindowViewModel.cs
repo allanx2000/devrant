@@ -693,7 +693,7 @@ namespace DevRant.WPF
 
                 foreach (var r in tmp)
                 {
-                    if (!history.IsRead(r.Id))
+                    if (!ds.FilterOutRead || !history.IsRead(r.Id))
                         rants.Add(r);
                 }
 

@@ -17,6 +17,10 @@ namespace DevRant.WPF
 
         private IDevRantClient api;
         private IDataStore ds;
+
+        private int latestVersion = 0;
+        private const int SleepTime = CheckInterval * 60 * 1000;
+        private const int CheckInterval = 10; //Minutes
         
         public ObservableCollection<ViewModels.Notification> Notifications { get; private set; }
 
@@ -44,9 +48,7 @@ namespace DevRant.WPF
             public Exception Error { get; internal set; }
         }
         
-        private int latestVersion = 0;
-        private const int SleepTime = 5 * 60 * 1000;
-
+        
         public void Start()
         {
             latestVersion++;

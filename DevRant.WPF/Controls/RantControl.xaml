@@ -18,7 +18,7 @@
 
         <!-- Left Column -->
         <StackPanel Orientation="Vertical" Grid.Column="0">
-            <local:VoteControl VotesString="{Binding VotesString}"  IsLoggedIn="{Binding LoggedIn, ElementName=control}"/>
+            <local:VoteControl Voted="{Binding DataContext.Voted, ElementName=control}" VotesString="{Binding VotesString}"  IsLoggedIn="{Binding LoggedIn, ElementName=control}"/>
             <Label HorizontalAlignment="Center" Visibility="{Binding DateVisibility, ElementName=control}">
                 <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="{Binding CreateTime}"/>
             </Label>

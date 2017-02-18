@@ -6,6 +6,7 @@ using System.Net;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Threading;
+using DevRant.Enums;
 
 namespace DevRant.WPF.ViewModels
 {
@@ -50,6 +51,20 @@ namespace DevRant.WPF.ViewModels
         public int CommentsCount { get { return rant.NrOfComments; } }
 
         public string TagsString { get { return string.Join(", ", rant.Tags);  } }
+
+        public VoteState Voted
+        {
+            get
+            {
+                return rant.Voted;
+            }
+        }
+
+        public void SetVoted(VoteState voted)
+        {
+            rant.Voted = voted;
+            RaisePropertyChanged("Voted");
+        }
 
         public BitmapImage Picture {
             get {

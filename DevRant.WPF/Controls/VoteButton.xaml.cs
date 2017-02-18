@@ -22,6 +22,8 @@ namespace DevRant.WPF.Controls
     /// </summary>
     public partial class VoteButton : MyUserControl
     {
+        public static readonly DependencyProperty TypeProperty = DependencyProperty.Register("Type", typeof(ButtonType), typeof(VoteButton), null);
+        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register("IsSelected", typeof(bool), typeof(VoteButton), null);
         
         public enum ButtonType
         {
@@ -42,6 +44,21 @@ namespace DevRant.WPF.Controls
             get { return Type == ButtonType.Down ? Visibility.Visible : Visibility.Collapsed; }
         }
 
+
+        public bool IsSelected
+        {
+            get
+            {
+                return (bool)GetValue(IsSelectedProperty);
+            }
+            set
+            {
+                SetValue(IsSelectedProperty, value);
+                RaisePropertyChange();
+                RaisePropertyChange("BackgroundColor");
+            }
+        }
+
         public ButtonType Type
         {
             get
@@ -56,12 +73,13 @@ namespace DevRant.WPF.Controls
 
         private static SolidColorBrush Red = new SolidColorBrush(Color.FromRgb(213, 81, 97));
         private static SolidColorBrush Gray = new SolidColorBrush(Color.FromRgb(170,170,184));
+        
 
         public SolidColorBrush BackgroundColor
         {
             get
             {
-                return IsMouseOver ? Red : Gray;
+                return IsSelected || IsMouseOver ? Red : Gray;
             }
         }
             
@@ -70,9 +88,6 @@ namespace DevRant.WPF.Controls
         {
             get { return Type == VoteButton.ButtonType.Up ? "++" : "--"; }
         }
-
-
-        public static readonly DependencyProperty TypeProperty = DependencyProperty.Register("Type", typeof(ButtonType), typeof(VoteButton), null);
         
         public VoteButton()
         {
