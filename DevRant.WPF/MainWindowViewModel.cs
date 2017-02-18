@@ -18,6 +18,7 @@ using DevRant.Dtos;
 using DevRant.WPF.DataStore;
 using DevRant.Exceptions;
 using DevRant.Enums;
+using DevRant.V1;
 
 namespace DevRant.WPF
 {
@@ -137,7 +138,7 @@ namespace DevRant.WPF
 
                 if (loginInfo != null)
                 {
-                    await api.Login(loginInfo.Username, loginInfo.Password);
+                    await api.User.Login(loginInfo.Username, loginInfo.Password);
                     
                     nchecker.Start();
                     loggedIn = true;
@@ -230,13 +231,13 @@ namespace DevRant.WPF
         public string LoggedInUser
         {
             get {
-                return api.LoggedInUser;
+                return api.User.LoggedInUser;
             }
         }
 
         public bool LoggedIn
         {
-            get { return api.LoggedIn; }
+            get { return api.User.LoggedIn; }
         }
 
         public bool IsLoading
@@ -447,7 +448,7 @@ namespace DevRant.WPF
 
         private async Task LoadCollabs()
         {
-            var collabs = await api.GetCollabsAsync();
+            var collabs = await api.Feeds.GetCollabsAsync();
             feeds.Clear();
 
             foreach (var c in collabs)
@@ -499,7 +500,7 @@ namespace DevRant.WPF
                 
                 if (dlg.LoginChanged)
                 {
-                        await api.Logout();
+                        await api.User.Logout();
 
                         await Login();
                     
@@ -711,10 +712,10 @@ namespace DevRant.WPF
             switch (type)
             {
                 case FeedType.General:
-                    getter = async (skip) => await api.GetRantsAsync(sort: sort, skip: skip, settings: collection);
+                    getter = async (skip) => await api.Feeds.GetRantsAsync(sort: sort, skip: skip, settings: collection);
                     break;
                 case FeedType.Stories:
-                    getter = async (skip) => await api.GetStoriesAsync(range: range, sort: sort, skip: skip);
+                    getter = async (skip) => await api.Feeds.GetStoriesAsync(range: range, sort: sort, skip: skip);
                     break;
                 default:
                     return;

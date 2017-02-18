@@ -90,7 +90,7 @@ namespace DevRant.WPF
 
         public async Task Check()
         {
-            var notifs = await api.GetNotificationsAsync();
+            var notifs = await api.User.GetNotificationsAsync();
             //var sorted = (from n in notifs orderby n.CreateTime descending, n.Read ascending select n);
 
             Notifications.Clear();

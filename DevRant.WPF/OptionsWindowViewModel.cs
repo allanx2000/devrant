@@ -221,7 +221,7 @@ namespace DevRant.WPF
                 ds.SetUpdatesInterval(UpdateCheckInterval);
 
                 if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
-                    api.Login(Username, Password);
+                    api.User.Login(Username, Password);
 
                 ds.SetHideUsername(!ShowUsername);
                 ds.SetShowCreateTime(ShowCreateTime);

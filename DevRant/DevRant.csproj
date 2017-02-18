@@ -57,7 +57,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dtos\AccessInfo.cs" />
-    <Compile Include="DevRantClient.cs" />
+    <Compile Include="V1\Constants.cs" />
+    <Compile Include="V1\DevRantClient.cs" />
     <Compile Include="Dtos\Collab.cs" />
     <Compile Include="Dtos\DataObject.cs" />
     <Compile Include="Dtos\ImageInfo.cs" />
@@ -75,6 +76,8 @@
     <Compile Include="KeyValueList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Enums\StoryRange.cs" />
+    <Compile Include="V1\FeedCommands.cs" />
+    <Compile Include="V1\UserCommands.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
