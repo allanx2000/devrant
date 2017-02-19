@@ -27,7 +27,7 @@ namespace DevRant.WPF
             if (item is Rant)
                 dt = elemnt.FindResource("RantTemplate") as DataTemplate;
             else if (item is Notification)
-                dt = elemnt.FindResource("RantTemplate") as DataTemplate;
+                dt = elemnt.FindResource("NotificationTemplate") as DataTemplate;
             else if (item is Collab)
                 dt = elemnt.FindResource("CollabTemplate") as DataTemplate;
 
