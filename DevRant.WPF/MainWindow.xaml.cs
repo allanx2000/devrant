@@ -14,8 +14,8 @@ namespace DevRant.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private MainWindowViewModel vm;
-
+        private static MainWindowViewModel vm;
+        
         public MainWindow()
         {
             vm = new MainWindowViewModel(this);

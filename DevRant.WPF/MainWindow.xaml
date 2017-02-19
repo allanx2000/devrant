@@ -13,6 +13,28 @@
 
     <Window.Resources>
         <converters:VisibilityConverter x:Key="VisibilityConverter"/>
+        <local:FeedListItemTemplateSelector x:Key="feedListTemplateSelector"/>
+
+        <DataTemplate x:Key="RantTemplate">
+            <ctrl:RantControl 
+                                UsernameVisibility="{Binding DataContext.UsernameVisibility, ElementName=mainWindow}"
+                                DateVisibility="{Binding DataContext.DateVisibility, ElementName=mainWindow}"
+                                LoggedIn="{Binding DataContext.LoggedIn, ElementName=mainWindow}"/>
+
+        </DataTemplate>
+
+        <DataTemplate x:Key="NotificationTemplate">
+            <Label FontWeight="{Binding TextWeight}">
+                <TextBlock Text="{Binding Text}"/>
+            </Label>
+        </DataTemplate>
+
+        <DataTemplate x:Key="CollabTemplate">
+            <Label FontWeight="{Binding TextWeight}">
+                <TextBlock Text="{Binding Text, FallbackValue=Collab}"/>
+            </Label>
+        </DataTemplate>
+
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -39,13 +61,10 @@
             <MenuItem Header="Options" Command="{Binding OpenOptionsCommand}"/>
             <MenuItem Header="Check For Updates" Command="{Binding CheckUpdatesCommand}"/>
             <MenuItem Header="Refresh Feed" Click="RefreshFeed"/>
-            <!--
-            <MenuItem Header="View Notifications" Command="{Binding ViewNotificationsCommand }"/>
-            -->
         </Menu>
 
         <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
-            <Label FontWeight="Bold">Logged In As: </Label>
+            <Label FontWeight="Bold">Logged In As:</Label>
             <Label Content="{Binding LoggedInUser}"/>
         </StackPanel>
 
@@ -90,7 +109,9 @@
             <ListBox Name="FeedListBox" MouseDoubleClick="FeedListBox_MouseDoubleClick" 
                  HorizontalContentAlignment="Stretch"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 ItemsSource="{Binding FeedView}"  SelectedItem="{Binding SelectedPost}" Margin="0,5,0,-5" Grid.RowSpan="2">
+                 ItemsSource="{Binding FeedView}"  SelectedItem="{Binding SelectedPost}" 
+                 ItemTemplateSelector="{StaticResource feedListTemplateSelector}"
+                     Margin="0,5,0,-5">
 
                 <ListBox.ContextMenu>
                     <ContextMenu>
@@ -101,65 +122,6 @@
                         <MenuItem Header="Unfollow User"  Command="{Binding UnfollowUserCommand}"  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=Unfollow}"/>
                     </ContextMenu>
                 </ListBox.ContextMenu>
-
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical">
-                            <StackPanel.Resources>
-                                <Style TargetType="ctrl:RantControl">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Type}" Value="Post">
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </StackPanel.Resources>
-                            
-                            <!-- General Feed-->
-                            <ctrl:RantControl 
-                                UsernameVisibility="{Binding DataContext.UsernameVisibility, ElementName=mainWindow}"
-                                DateVisibility="{Binding DataContext.DateVisibility, ElementName=mainWindow}"
-                                LoggedIn="{Binding DataContext.LoggedIn, ElementName=mainWindow}"/>
-                            
-                            <!-- Notifications-->
-                            <StackPanel Orientation="Horizontal">
-                                <StackPanel.Style>
-                                    <Style TargetType="StackPanel">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Type}" Value="Notification">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </StackPanel.Style>
-
-                                <Label FontWeight="{Binding TextWeight}">
-                                    <TextBlock Text="{Binding Text}"/>
-                                </Label>
-                            </StackPanel>
-
-                            <!-- Notifications-->
-                            <StackPanel Orientation="Horizontal">
-                                <StackPanel.Style>
-                                    <Style TargetType="StackPanel">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Type}" Value="Collab">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </StackPanel.Style>
-
-                                <Label FontWeight="{Binding TextWeight}">
-                                    <TextBlock Text="{Binding Text, FallbackValue=Collab}"/>
-                                </Label>
-                            </StackPanel>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
             </ListBox>
         </GroupBox>
 
