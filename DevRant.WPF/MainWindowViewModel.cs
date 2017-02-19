@@ -19,6 +19,7 @@ using DevRant.WPF.DataStore;
 using DevRant.Exceptions;
 using DevRant.Enums;
 using DevRant.V1;
+using DevRant.WPF.Checkers;
 
 namespace DevRant.WPF
 {

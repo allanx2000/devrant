@@ -8,7 +8,7 @@ using System.Linq;
 using System.Security.Permissions;
 using System.Threading;
 
-namespace DevRant.WPF
+namespace DevRant.WPF.Checkers
 {
     internal class FollowedUserChecker
     {

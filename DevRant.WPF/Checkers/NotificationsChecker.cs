@@ -9,7 +9,7 @@ using System.Security.Permissions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DevRant.WPF
+namespace DevRant.WPF.Checkers
 {
     internal class NotificationsChecker
     {

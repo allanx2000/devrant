@@ -25,6 +25,8 @@ namespace DevRant.WPF.Controls
         public static DependencyProperty DateVisibilityProperty = DependencyProperty.Register("DateVisibility", typeof(Visibility), typeof(RantControl));
         public static DependencyProperty UsernameVisibilityProperty = DependencyProperty.Register("UsernameVisibility", typeof(Visibility), typeof(RantControl));
 
+        public event VoteButton.OnClick VoteClicked;
+
         public bool LoggedIn
         {
             get
@@ -69,14 +71,22 @@ namespace DevRant.WPF.Controls
         {
             InitializeComponent();
 
-
+            /*
             INotifyPropertyChanged dc = DataContext as INotifyPropertyChanged;
             if (dc != null)
             {
                 dc.PropertyChanged += DataContext_PropertyChanged;
             }
+            */
         }
 
+        private void VoteControl_Clicked(object sender, VoteButton.ButtonType type)
+        {
+            if (VoteClicked != null)
+                VoteClicked.Invoke(sender, type);
+        }
+
+        /*
         private void DataContext_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -86,5 +96,6 @@ namespace DevRant.WPF.Controls
                     break;
             }
         }
+        */
     }
 }

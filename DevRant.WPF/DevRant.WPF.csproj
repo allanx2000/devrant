@@ -27,7 +27,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <TargetCulture>en</TargetCulture>
     <ProductName>DevRant</ProductName>
-    <ApplicationRevision>26</ApplicationRevision>
+    <ApplicationRevision>27</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -113,9 +113,10 @@
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="DataStore\HistoryStore.cs" />
     <Compile Include="DataStore\IHistoryStore.cs" />
-    <Compile Include="DevRant\WPF\ViewModels\Collab.cs" />
-    <Compile Include="NotificationsChecker.cs" />
-    <Compile Include="FollowedUserChecker.cs" />
+    <Compile Include="FeedListItemTemplateSelector.cs" />
+    <Compile Include="ViewModels\Collab.cs" />
+    <Compile Include="Checkers\NotificationsChecker.cs" />
+    <Compile Include="Checkers\FollowedUserChecker.cs" />
     <Compile Include="DataStore\LoginInfo.cs" />
     <Compile Include="MessageCollection.cs" />
     <Compile Include="OptionsWindow.xaml.cs">
@@ -244,6 +245,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

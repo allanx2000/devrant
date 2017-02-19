@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using DevRant.V1;
+using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
 
@@ -45,7 +46,7 @@ namespace DevRant
         [Test, Explicit]
         public async Task GetRantsAsync_WhenCalled_ReturnsValue()
         {
-            var result = await sut.GetRantsAsync();
+            var result = await sut.Feeds.GetRantsAsync();
 
             Assert.That(result, Is.Not.Empty);
         }
