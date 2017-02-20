@@ -29,5 +29,10 @@ namespace DevRant.WPF.ViewModels
         {
             return this as Rant;
         }
+
+        public Collab AsCollab()
+        {
+            return this as Collab;
+        }
     }
 }

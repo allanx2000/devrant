@@ -45,6 +45,7 @@ namespace DevRant.Dtos
             }
 
             obj.AddValues(data);
+            
             return (T)(object)obj;
         }
 

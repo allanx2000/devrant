@@ -15,7 +15,6 @@ namespace DevRant.Dtos
         /// <summary>
         /// Represents the identity of the rant.
         /// </summary>
-        [JsonProperty("id")]
         public int Id { get { return Get<int>("id"); } }
         
         #region User Info
@@ -62,7 +61,6 @@ namespace DevRant.Dtos
         /// <summary>
         /// Represents the text of the object.
         /// </summary>
-        [JsonProperty("text")]
         public string Text { get { return Get<string>("text"); } }
 
         /// <summary>
@@ -84,20 +82,21 @@ namespace DevRant.Dtos
         /// <summary>
         /// Represents the number of upvotes of the rant.
         /// </summary>
-        [JsonProperty("num_upvotes")]
         public int NrOfUpvotes { get { return Get<int>("num_upvotes"); } }
 
         /// <summary>
         /// Represents the number of downvotes of the rant.
         /// </summary>
-        [JsonProperty("num_downvotes")]
         public int NrOfDownvotes { get { return Get<int>("num_downvotes"); } }
 
         /// <summary>
         /// Score
         /// </summary>
-        [JsonProperty("score")]
         public int Score { get { return Get<int>("score"); } }
         
+        /// <summary>
+        /// Edited
+        /// </summary>
+        public bool Edited { get { return Get<bool>("edited"); } }
     }
 }

@@ -31,7 +31,9 @@ namespace DevRant.WPF.Controls
     {
         public static readonly DependencyProperty TypeProperty = DependencyProperty.Register("Type", typeof(ButtonType), typeof(VoteButton), null);
         public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register("IsSelected", typeof(bool), typeof(VoteButton), null);
-        
+
+        private const int WAIT_TIME = 500;
+
         public enum ButtonType
         {
             Up,
@@ -117,18 +119,18 @@ namespace DevRant.WPF.Controls
             {
                 var args = new VoteClickedEventArgs(Type);
                 
-                //args.Callback += UpdateButton;
+                args.Callback += () =>
+                {
+                    Thread th = new Thread((paramz) =>
+                    {
+                        Thread.Sleep(WAIT_TIME);
+                        App.Current.Dispatcher.Invoke(() => UpdateButton());
+                    });
+
+                    th.Start();
+                };
                
                 Clicked.Invoke(sender, args);
-                
-                Thread th = new Thread((paramz) =>
-                {
-                    Thread.Sleep(1000);
-                    App.Current.Dispatcher.Invoke(() => UpdateButton());
-                });
-
-                th.Start();
-                
             }
         }
 

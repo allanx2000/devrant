@@ -74,20 +74,6 @@ namespace DevRant.WPF.Controls
             
         }
         
-        
-
-        private void DataContext_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case "Voted":
-                    break;
-                default:
-                    RaisePropertyChange(e.PropertyName);
-                    break;
-            }
-        }
-
         private void VoteControl_DownClicked(object sender, VoteClickedEventArgs args)
         {
             VoteControl_Clicked(sender, args);

@@ -31,9 +31,11 @@
         </DataTemplate>
 
         <DataTemplate x:Key="CollabTemplate">
-            <Label FontWeight="{Binding TextWeight}">
-                <TextBlock Text="{Binding Text, FallbackValue=Collab}"/>
-            </Label>
+            <ctrl:CollabControl
+                DateVisibility="{Binding DataContext.DateVisibility, ElementName=mainWindow}"
+                LoggedIn="{Binding DataContext.LoggedIn, ElementName=mainWindow}"
+                VoteClicked="VoteButton_Clicked"
+                />
         </DataTemplate>
 
     </Window.Resources>

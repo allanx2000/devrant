@@ -92,6 +92,7 @@ namespace DevRant.WPF
                 Vote vote = null;
 
                 ViewModels.Rant rant = i.AsRant();
+                ViewModels.Collab collab = i.AsCollab();
 
                 if (rant != null)
                 {
@@ -112,6 +113,11 @@ namespace DevRant.WPF
                     Dtos.Rant updated = await api.User.VoteRant(rant.ID, vote);
 
                     rant.Update(updated);
+                    rant.Read = true;
+
+                    if (history != null)
+                        history.MarkRead(rant.ID);
+
                     args.InvokeCallback();
                     
                 }

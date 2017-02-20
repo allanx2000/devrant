@@ -21,9 +21,10 @@ namespace DevRant.WPF.Controls
     /// </summary>
     public partial class CollabControl : MyUserControl
     {
-        public static DependencyProperty LoggedInProperty = DependencyProperty.Register("LoggedIn", typeof(bool), typeof(RantControl));
-        public static DependencyProperty DateVisibilityProperty = DependencyProperty.Register("DateVisibility", typeof(Visibility), typeof(RantControl));
-        public static DependencyProperty UsernameVisibilityProperty = DependencyProperty.Register("UsernameVisibility", typeof(Visibility), typeof(RantControl));
+        public static DependencyProperty LoggedInProperty = DependencyProperty.Register("LoggedIn", typeof(bool), typeof(CollabControl));
+        public static DependencyProperty DateVisibilityProperty = DependencyProperty.Register("DateVisibility", typeof(Visibility), typeof(CollabControl));
+
+        public event VoteButton.OnClick VoteClicked;
 
         public bool LoggedIn
         {
@@ -51,40 +52,28 @@ namespace DevRant.WPF.Controls
             }
         }
 
-        public Visibility UsernameVisibility
-        {
-            get
-            {
-                return (Visibility)GetValue(UsernameVisibilityProperty);
-            }
-            set
-            {
-                SetValue(UsernameVisibilityProperty, value);
-                RaisePropertyChange();
-            }
-        }
-
-
         public CollabControl()
         {
             InitializeComponent();
-
-
-            INotifyPropertyChanged dc = DataContext as INotifyPropertyChanged;
-            if (dc != null)
-            {
-                dc.PropertyChanged += DataContext_PropertyChanged;
-            }
         }
 
-        private void DataContext_PropertyChanged(object sender, PropertyChangedEventArgs e)
+
+        private void VoteControl_DownClicked(object sender, VoteClickedEventArgs args)
         {
-            switch (e.PropertyName)
-            {
-                default:
-                    RaisePropertyChange(e.PropertyName);
-                    break;
-            }
+            VoteControl_Clicked(sender, args);
+        }
+
+        private void VoteControl_Clicked(object sender, VoteClickedEventArgs args)
+        {
+
+            if (VoteClicked != null)
+                VoteClicked.Invoke(sender, args);
+        }
+
+        private void VoteControl_UpClicked(object sender, VoteClickedEventArgs args)
+        {
+
+            VoteControl_Clicked(sender, args);
         }
     }
 }
