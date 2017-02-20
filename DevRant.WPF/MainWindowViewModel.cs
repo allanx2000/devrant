@@ -71,7 +71,7 @@ namespace DevRant.WPF
             {
                if (await Login())
                 {
-                    LoadFeed(currentSection);
+                    LoadFeed(currentSection, ds.DefaultFeed, ds.DefaultRange, ds.FilterOutRead);
                 }
             }
             catch (Exception e)
@@ -444,12 +444,15 @@ namespace DevRant.WPF
         public async Task LoadSection(string section)
         {
             IsLoading = true;
+            bool filter;
 
             switch (section)
             {
                 case SectionGeneral:
+                    filter = ds.DefaultFeed != RantSort.Top ? ds.FilterOutRead : false;
+
                     await LoadFeed(FeedType.General, sort: ds.DefaultFeed, 
-                        filter: ds.DefaultFeed != RantSort.Top? ds.FilterOutRead : false); //TODO: Add params from Settings
+                        filter: filter); //TODO: Add params from Settings
                     break;
                 case SectionGeneralAlgo:
                     await LoadFeed(FeedType.General, sort: RantSort.Algo, filter: ds.FilterOutRead);
@@ -460,10 +463,11 @@ namespace DevRant.WPF
                 case SectionGeneralTop:
                     await LoadFeed(FeedType.General, sort: RantSort.Top);
                     break;
-
                 case SectionStories:
+                    filter = ds.DefaultRange != StoryRange.All ? ds.FilterOutRead : false;
+
                     await LoadFeed(FeedType.Stories, ds.DefaultFeed, ds.DefaultRange,
-                        filter: ds.DefaultRange != StoryRange.All ? ds.FilterOutRead : false);
+                        filter: filter);
                     break;
                 case SectionStoriesDay:
                     await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Day, filter: ds.FilterOutRead);
