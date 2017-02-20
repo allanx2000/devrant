@@ -35,6 +35,8 @@ namespace DevRant.WPF
         private FollowedUserChecker fchecker;
 
         private FeedType currentSection;
+        private string currentSectionName;
+        
         private ObservableCollection<FeedItem> feeds = new ObservableCollection<FeedItem>();
         private CollectionViewSource feedView;
 
@@ -71,7 +73,9 @@ namespace DevRant.WPF
             {
                if (await Login())
                 {
-                    LoadFeed(currentSection, ds.DefaultFeed, ds.DefaultRange, ds.FilterOutRead);
+                    
+                    LoadSection(currentSectionName);
+                    //LoadFeed(currentSection, ds.DefaultFeed, ds.DefaultRange, ds.FilterOutRead);
                 }
             }
             catch (Exception e)
@@ -82,6 +86,7 @@ namespace DevRant.WPF
             UpdateFollowedPosts(fchecker.GetFeedUpdate());
             UpdateNotifications(new NotificationsChecker.UpdateArgs(0, 0), true);
         }
+        
 
         public async void Vote(VoteClickedEventArgs args)
         {
@@ -398,6 +403,16 @@ namespace DevRant.WPF
 
                 Process.Start(((ViewModels.Rant)SelectedPost).PostURL);
             }
+            else if (SelectedPost is ViewModels.Collab)
+            {
+                /*
+                var dlg = new RantViewerWindow((Rant)SelectedPost, api);
+                dlg.Owner = window;
+                dlg.ShowDialog();
+                */
+
+                Process.Start(((ViewModels.Collab) SelectedPost).PostURL);
+            }
             else if (SelectedPost is ViewModels.Notification)
             {
                 ViewModels.Notification notif = SelectedPost as ViewModels.Notification;
@@ -446,7 +461,7 @@ namespace DevRant.WPF
         public const string SectionFollowed = "FollowedUsers";
         private NotificationsChecker nchecker;
         private const string NotificationCount = "notif_state";
-
+        
         public async Task LoadSection(string section)
         {
             IsLoading = true;
@@ -500,6 +515,8 @@ namespace DevRant.WPF
                     await LoadCollabs();
                     break;
             }
+
+            currentSectionName = section;
 
             IsLoading = false;
         }
