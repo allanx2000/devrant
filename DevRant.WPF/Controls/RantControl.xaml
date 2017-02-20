@@ -21,7 +21,8 @@
             <local:VoteControl Voted="{Binding DataContext.Voted, ElementName=control}" 
                                VotesString="{Binding VotesString}"  
                                IsLoggedIn="{Binding LoggedIn, ElementName=control}"
-                               DownClicked="VoteControl_Clicked"
+                               DownClicked="VoteControl_DownClicked"
+                               UpClicked="VoteControl_UpClicked"
                                />
             <Label HorizontalAlignment="Center" Visibility="{Binding DateVisibility, ElementName=control}">
                 <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="{Binding CreateTime}"/>

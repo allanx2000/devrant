@@ -17,9 +17,11 @@
 
         <DataTemplate x:Key="RantTemplate">
             <ctrl:RantControl 
-                                UsernameVisibility="{Binding DataContext.UsernameVisibility, ElementName=mainWindow}"
-                                DateVisibility="{Binding DataContext.DateVisibility, ElementName=mainWindow}"
-                                LoggedIn="{Binding DataContext.LoggedIn, ElementName=mainWindow}"/>
+                UsernameVisibility="{Binding DataContext.UsernameVisibility, ElementName=mainWindow}"
+                DateVisibility="{Binding DataContext.DateVisibility, ElementName=mainWindow}"
+                LoggedIn="{Binding DataContext.LoggedIn, ElementName=mainWindow}"
+                VoteClicked="VoteButton_Clicked"
+                />
         </DataTemplate>
 
         <DataTemplate x:Key="NotificationTemplate">

@@ -1,4 +1,5 @@
 ﻿using DevRant.Dtos;
+using DevRant.Exceptions;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace DevRant.V1
         public async Task<List<Notification>> GetNotificationsAsync()
         {
             if (!LoggedIn)
-                throw new Exception("User not logged in.");
+                throw new NotLoggedInException();
 
             var response = await client.GetAsync($"/api/users/me/notif-feed?app={Constants.AppVersion}&user_id={token.UserID}&token_id={token.ID}&token_key={token.Key}");
             var responseText = await response.Content.ReadAsStringAsync();
@@ -147,5 +148,38 @@ namespace DevRant.V1
             }
         }
 
+        //TODO: Return new score
+        public async Task<Rant> VoteRant(long rantId, Vote vote)
+        {
+            string url = string.Concat(Constants.BaseAddress, "api/devrant/rants/", rantId, "/vote");
+            
+            var paramz = new Parameters();
+            paramz.Add("vote", vote.StateAsString());
+
+            if (vote.State == Enums.VoteState.Down)
+            {
+                paramz.Add("reason", vote.ReasonAsString());
+            }
+
+            var body = owner.CreatePostBody(paramz);
+            
+            var response = await client.PostAsync(url, body);
+            var responseText = await response.Content.ReadAsStringAsync();
+
+            JObject obj = JObject.Parse(responseText);
+
+            if (owner.CheckSuccess(obj))
+            {
+                var rant = DataObject.Parse<Rant>((JObject) obj["rant"]);
+                return rant;
+            }
+            else
+                return null;
+        }
+
+        public Task<Comment> VoteComment(long commentId, Vote vote)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

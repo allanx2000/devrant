@@ -33,6 +33,7 @@
             Background="White"
             MouseEnter="voteButton_MouseEnter"
             MouseLeave="voteButton_MouseLeave"
+            Click="voteButton_Click"
             VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
             Content="{Binding ButtonText, FallbackValue=NA}" x:Name="voteButton">

@@ -128,6 +128,18 @@ namespace DevRant.WPF.ViewModels
                 }
             }
         }
+
+        internal void Update(Dtos.Rant updated)
+        {
+            rant = updated;
+            RaisePropertyChanged("Text");
+            RaisePropertyChanged("Votes");
+            RaisePropertyChanged("VotesString");
+            RaisePropertyChanged("UserScore");
+            RaisePropertyChanged("UserScoreString");
+            RaisePropertyChanged("CommentsCount");
+            RaisePropertyChanged("Voted");
+        }
         
         BitmapImage BitmapToImageSource(Bitmap bitmap)
         {

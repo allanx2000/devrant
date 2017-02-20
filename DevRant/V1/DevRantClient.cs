@@ -162,6 +162,14 @@ namespace DevRant.V1
                 data.Add(kv.Key, kv.Value);
             }
 
+            if (User.LoggedIn)
+            {
+                var token = User.Token;
+                data.Add(Constants.TokenId, token.ID);
+                data.Add(Constants.TokenKey, token.Key);
+                data.Add(Constants.UserId, token.UserID);
+            }
+
             FormUrlEncodedContent content = new FormUrlEncodedContent(data);
             return content;
         }

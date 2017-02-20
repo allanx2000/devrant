@@ -6,7 +6,7 @@ using DevRant.Enums;
 namespace DevRant
 {
     /// <summary>
-    /// 
+    /// API commands to get feeds
     /// </summary>
     public interface IFeeds
     {
@@ -17,8 +17,7 @@ namespace DevRant
         /// <param name="skip"></param>
         /// <returns></returns>
         Task<IReadOnlyCollection<Collab>> GetCollabsAsync(int limit = 50, int skip = 0);
-
-
+        
         /// <summary>
         /// Requests a collection of rants sorted and selected by the arguments from the rest-api.
         /// </summary>
@@ -27,6 +26,7 @@ namespace DevRant
         /// <param name="skip">Number of rants to skip.</param>
         /// <param name="settings">If passed, will hold the values of settings that may be returned in the response</param>
         Task<IReadOnlyCollection<Rant>> GetRantsAsync(RantSort sort = RantSort.Algo, int limit = 50, int skip = 0, SettingsCollection settings = null);
+        
         /// <summary>
         /// Requests a collection of stories 
         /// </summary>
@@ -39,7 +39,7 @@ namespace DevRant
     }
 
     /// <summary>
-    /// 
+    /// API commands to perform actions related to the user
     /// </summary>
     public interface IUserCommands
     {
@@ -49,33 +49,49 @@ namespace DevRant
         AccessInfo Token { get; }
 
         /// <summary>
-        /// 
+        /// Returns the user's notifications
         /// </summary>
         /// <returns></returns>
         Task<List<Dtos.Notification>> GetNotificationsAsync();
 
         /// <summary>
-        /// 
+        /// Whether a user is logged in. Certain methods may throw an NotLoggedInException if authentication is required
         /// </summary>
         bool LoggedIn { get; }
 
         /// <summary>
-        /// 
+        /// The username of the current user
         /// </summary>
         string LoggedInUser { get; }
 
         /// <summary>
-        /// Login
+        /// Tries to login. May throw an exception if failed.
         /// </summary>
         /// <param name="username"></param>
         /// <param name="password"></param>
         Task Login(string username, string password);
 
         /// <summary>
-        /// 
+        /// Logs out the user if he is logged in.
         /// </summary>
         /// <returns></returns>
         Task Logout();
+
+        /// <summary>
+        /// Vote on a rant
+        /// </summary>
+        /// <param name="rantId"></param>
+        /// <param name="vote"></param>
+        /// <returns></returns>
+        Task<Rant> VoteRant(long rantId, Vote vote);
+
+        /// <summary>
+        /// Vote on a comment
+        /// </summary>
+        /// <param name="commentId"></param>
+        /// <param name="vote"></param>
+        /// <returns></returns>
+        Task<Comment> VoteComment(long commentId, Vote vote);
     }
 
     /// <summary>

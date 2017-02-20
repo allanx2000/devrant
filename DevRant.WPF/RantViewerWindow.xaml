@@ -23,10 +23,6 @@
             DateVisibility="Visible"
             DataContext="{Binding DataContext.Rant, ElementName=rantWindow}"
             LoggedIn="{Binding DataContext.LoggedIn, ElementName=rantWindow}"/>
-
-        <!--
-        <ctrl:RantControl Grid.Row="0" DataContext="{Binding DataContext.Rant}"/>
-        -->
         
         <ItemsControl Margin="3 10" ItemsSource="{Binding Comments}">
             <ItemsControl.ItemTemplate>

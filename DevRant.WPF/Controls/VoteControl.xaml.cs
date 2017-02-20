@@ -1,6 +1,8 @@
 ﻿using DevRant.Enums;
+using DevRant.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,14 +27,40 @@ namespace DevRant.WPF.Controls
         public static DependencyProperty VotesStringProperty = DependencyProperty.Register("VotesString", typeof(string), typeof(VoteControl));
         public static DependencyProperty VotedProperty = DependencyProperty.Register("Voted", typeof(VoteState), typeof(VoteControl));
 
-        public VoteControl()
-        {
-            InitializeComponent();
-        }
-
         public event VoteButton.OnClick UpClicked;
         public event VoteButton.OnClick DownClicked;
 
+        public VoteControl()
+        {
+            InitializeComponent();
+
+            //DataContextChanged += ContextChanged;
+        }
+        /*
+        private void ContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            INotifyPropertyChanged dc = DataContext as INotifyPropertyChanged;
+            if (dc != null)
+            {
+                dc.PropertyChanged += DataContext_PropertyChanged;
+            }
+        }
+
+        private void DataContext_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "Voted":
+                    RaisePropertyChange("DownSelected");
+                    RaisePropertyChange("UpSelected");
+                    break;
+                default:
+                    break;
+            }
+        }
+        */
+
+        
         public Visibility VotingVisibility
         {
             get
@@ -64,8 +92,7 @@ namespace DevRant.WPF.Controls
             {
                 SetValue(VotedProperty, value);
                 RaisePropertyChange();
-                RaisePropertyChange("DownSelected");
-                RaisePropertyChange("UpSelected");
+                UpdateSelected();
             }
         }
 
@@ -93,19 +120,29 @@ namespace DevRant.WPF.Controls
             }
         }
 
-        private void VoteButton_Clicked(object sender, VoteButton.ButtonType type)
+        private void VoteButton_Clicked(object sender, VoteClickedEventArgs args)
         {
-            switch (type)
+            args.Callback += UpdateSelected;
+            args.SelectedItem = DataContext as FeedItem;
+
+            switch (args.Type)
             {
                 case VoteButton.ButtonType.Down:
                     if (DownClicked != null)
-                        DownClicked.Invoke(sender, type);
+                        DownClicked.Invoke(sender, args);
                     break;
                 case VoteButton.ButtonType.Up:
                     if (UpClicked != null)
-                        UpClicked.Invoke(sender, type);
+                        UpClicked.Invoke(sender, args);
                     break;
             }
         }
+
+        private void UpdateSelected()
+        {
+            RaisePropertyChange("DownSelected");
+            RaisePropertyChange("UpSelected");
+        }
+        
     }
 }

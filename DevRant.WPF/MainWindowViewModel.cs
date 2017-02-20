@@ -20,6 +20,7 @@ using DevRant.Exceptions;
 using DevRant.Enums;
 using DevRant.V1;
 using DevRant.WPF.Checkers;
+using DevRant.WPF.Controls;
 
 namespace DevRant.WPF
 {
@@ -80,6 +81,52 @@ namespace DevRant.WPF
 
             UpdateFollowedPosts(fchecker.GetFeedUpdate());
             UpdateNotifications(new NotificationsChecker.UpdateArgs(0, 0), true);
+        }
+
+        public async void Vote(VoteClickedEventArgs args)
+        {
+            FeedItem i = args.SelectedItem;
+
+            try
+            {
+                Vote vote = null;
+
+                ViewModels.Rant rant = SelectedPost.AsRant();
+
+                if (rant != null)
+                {
+                    switch (args.Type)
+                    {
+                        case VoteButton.ButtonType.Down:
+                            throw new NotImplementedException();
+                            break;
+                        case VoteButton.ButtonType.Up:
+
+                            if (rant.Voted == VoteState.Up)
+                                vote = Dtos.Vote.ClearVote();
+                            else
+                                vote = Dtos.Vote.UpVote();
+                            break;
+                    }
+
+                    Dtos.Rant updated = await api.User.VoteRant(rant.ID, vote);
+
+                    rant.Update(updated);
+                    args.InvokeCallback();
+                    
+                }
+            }
+            catch (InvalidCredentialsException e)
+            {
+                await Login();
+                Vote(args);
+            }
+            catch (Exception e)
+            {
+                
+                UpdateStatus(e.Message);
+            }
+
         }
 
         private async void UpdateNotifications(NotificationsChecker.UpdateArgs args)

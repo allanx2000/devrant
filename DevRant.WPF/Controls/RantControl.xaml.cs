@@ -70,32 +70,38 @@ namespace DevRant.WPF.Controls
         public RantControl()
         {
             InitializeComponent();
-
-            /*
-            INotifyPropertyChanged dc = DataContext as INotifyPropertyChanged;
-            if (dc != null)
-            {
-                dc.PropertyChanged += DataContext_PropertyChanged;
-            }
-            */
+            
         }
+        
+        
 
-        private void VoteControl_Clicked(object sender, VoteButton.ButtonType type)
-        {
-            if (VoteClicked != null)
-                VoteClicked.Invoke(sender, type);
-        }
-
-        /*
         private void DataContext_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
+                case "Voted":
+                    break;
                 default:
                     RaisePropertyChange(e.PropertyName);
                     break;
             }
         }
-        */
+
+        private void VoteControl_DownClicked(object sender, VoteClickedEventArgs args)
+        {
+            VoteControl_Clicked(sender, args);
+        }
+
+        private void VoteControl_Clicked(object sender, VoteClickedEventArgs args)
+        {
+            if (VoteClicked != null)
+                VoteClicked.Invoke(sender, args);
+        }
+
+        private void VoteControl_UpClicked(object sender, VoteClickedEventArgs args)
+        {
+
+            VoteControl_Clicked(sender, args);
+        }
     }
 }

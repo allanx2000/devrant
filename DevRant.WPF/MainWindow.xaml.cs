@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevRant.WPF.Controls;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -69,9 +70,9 @@ namespace DevRant.WPF
             vm.ShowStatusHistory();
         }
 
-        private void VoteButton_Clicked(object sender, Controls.VoteButton.ButtonType type)
+        private void VoteButton_Clicked(object sender, VoteClickedEventArgs args)
         {
-
+            vm.Vote(args);
         }
     }
 }

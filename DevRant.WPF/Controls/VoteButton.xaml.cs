@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,6 +18,12 @@ using System.Windows.Shapes;
 
 namespace DevRant.WPF.Controls
 {
+    /**
+     * Note On DP:
+     * DP changes do not call the Setter of the property, cannot raise PropertyChanged on other properties.
+     * Need to pass a callback or something 
+     **/
+
     /// <summary>
     /// Interaction logic for VoteButton.xaml
     /// </summary>
@@ -31,7 +38,7 @@ namespace DevRant.WPF.Controls
             Down
         }
 
-        public delegate void OnClick(object sender, ButtonType type);
+        public delegate void OnClick(object sender, VoteClickedEventArgs args);
         public event OnClick Clicked;
         
         public Visibility PlusPlusVisibility
@@ -102,6 +109,32 @@ namespace DevRant.WPF.Controls
         private void voteButton_MouseLeave(object sender, MouseEventArgs e)
         {
             RaisePropertyChange("BackgroundColor");
+        }
+
+        private void voteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Clicked != null)
+            {
+                var args = new VoteClickedEventArgs(Type);
+                //args.Callback += UpdateButton;
+               
+                Clicked.Invoke(sender, args);
+                
+                Thread th = new Thread((paramz) =>
+                {
+                    Thread.Sleep(1000);
+                    App.Current.Dispatcher.Invoke(() => UpdateButton());
+                });
+
+                th.Start();
+                
+            }
+        }
+
+        private void UpdateButton()
+        {
+            RaisePropertyChange("BackgroundColor");
+            RaisePropertyChange("IsSelected");
         }
     }
 }
