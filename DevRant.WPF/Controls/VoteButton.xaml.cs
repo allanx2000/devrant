@@ -116,6 +116,7 @@ namespace DevRant.WPF.Controls
             if (Clicked != null)
             {
                 var args = new VoteClickedEventArgs(Type);
+                
                 //args.Callback += UpdateButton;
                
                 Clicked.Invoke(sender, args);

@@ -91,7 +91,7 @@ namespace DevRant.WPF
             {
                 Vote vote = null;
 
-                ViewModels.Rant rant = SelectedPost.AsRant();
+                ViewModels.Rant rant = i.AsRant();
 
                 if (rant != null)
                 {

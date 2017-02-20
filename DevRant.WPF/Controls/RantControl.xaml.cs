@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevRant.WPF.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -94,6 +95,7 @@ namespace DevRant.WPF.Controls
 
         private void VoteControl_Clicked(object sender, VoteClickedEventArgs args)
         {
+            
             if (VoteClicked != null)
                 VoteClicked.Invoke(sender, args);
         }
