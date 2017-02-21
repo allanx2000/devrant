@@ -88,9 +88,9 @@ namespace DevRant.V1
             if (rants != null)
             {
                 List<Rant> rantsList = new List<Rant>();
-                foreach (var r in rants)
+                foreach (JObject r in rants)
                 {
-                    Rant info = r.ToObject<Rant>();
+                    Rant info = DataObject.Parse<Rant>(r);
                     rantsList.Add(info);
                 }
 
