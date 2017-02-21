@@ -90,7 +90,16 @@ namespace DevRant
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        Task UploadRant(PostContent data);
+        Task PostRant(PostContent data);
+        
+        /// <summary>
+        /// Upload a comment to a rant
+        /// </summary>
+        /// <param name="rantId"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        Task PostComment(long rantId, PostContent data);
+
 
         /// <summary>
         /// Vote on a comment

@@ -54,7 +54,13 @@ namespace DevRant.WPF
 
         public int Remaining
         {
-            get { return MaxCharacters - (Text == null ? 0 : Text.Length); }
+            get {
+                if (Text == null)
+                    return MaxCharacters;
+
+                int adjusted = Text.Replace(Environment.NewLine, " ").Length;
+                return MaxCharacters - adjusted;
+            }
         }
 
         public int MaxCharacters
@@ -162,11 +168,11 @@ namespace DevRant.WPF
             try
             {
                 if (string.IsNullOrEmpty(Text) || Text.Length < 5)
-                    throw new Exception("Rant must be more than 5 characters long.");
+                    throw new Exception("Rant or comment must be more than 5 characters long.");
                 
                 PostContent data = new PostContent(Text);
 
-                if (!string.IsNullOrEmpty(TagsString))
+                if (type == EditPostWindow.Type.Rant && !string.IsNullOrEmpty(TagsString))
                     data.SetTag(TagsString);
 
                 if (!string.IsNullOrEmpty(ImagePath))
@@ -175,7 +181,14 @@ namespace DevRant.WPF
                     data.AddImage(bytes, ImagePath);
                 }
 
-                await api.User.UploadRant(data);
+                if (type == EditPostWindow.Type.Rant)
+                {
+                    await api.User.PostRant(data);
+                }
+                else if (type == EditPostWindow.Type.Comment)
+                {
+                    await api.User.PostComment(parent.RantId, data);
+                }
 
                 Cancelled = false;
                 window.Close();

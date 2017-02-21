@@ -182,17 +182,47 @@ namespace DevRant.V1
             throw new NotImplementedException();
         }
 
-        public async Task UploadRant(PostContent post)
-        {
-            string url = string.Concat(Constants.BaseAddress, "api/devrant/rants");
 
+        private MultipartFormDataContent CreateAuthenticatedMultipart()
+        {
             MultipartFormDataContent data = new MultipartFormDataContent();
             data.Add(new StringContent(token.ID), Constants.TokenId);
             data.Add(new StringContent(token.Key), Constants.TokenKey);
             data.Add(new StringContent(token.UserID), Constants.UserId);
-            data.Add(new StringContent(post.Text), "rant");
             data.Add(new StringContent(Constants.AppVersion), "app");
             data.Add(new StringContent(Constants.PlatformVersion), "plat");
+
+            return data;
+        }
+        public async Task PostRant(PostContent post)
+        {
+            string url = string.Concat(Constants.BaseAddress, "api/devrant/rants");
+
+            MultipartFormDataContent data = CreateAuthenticatedMultipart();
+            data.Add(new StringContent(post.Text), "rant");
+
+            if (post.Image != null)
+                data.Add(new ByteArrayContent(post.Image), "image", post.GenerateImageName());
+
+            if (!string.IsNullOrEmpty(post.Tag))
+                data.Add(new StringContent(post.Tag), "tags");
+
+            var response = await client.PostAsync(url, data);
+            var responseText = await response.Content.ReadAsStringAsync();
+
+            JObject obj = JObject.Parse(responseText);
+
+            if (owner.CheckSuccess(obj))
+            {
+            }
+        }
+
+        public async Task PostComment(long rantId, PostContent post)
+        {
+            string url = string.Concat(Constants.BaseAddress, "api/devrant/rants/", rantId, "/comments");
+
+            MultipartFormDataContent data = CreateAuthenticatedMultipart();
+            data.Add(new StringContent(post.Text), "comment");
 
             if (post.Image != null)
                 data.Add(new ByteArrayContent(post.Image), "image", post.GenerateImageName());
