@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dtos\AccessInfo.cs" />
+    <Compile Include="Dtos\PostContent.cs" />
     <Compile Include="Dtos\Vote.cs" />
     <Compile Include="Enums\VoteParam.cs" />
     <Compile Include="Exceptions\NotLoggedInException.cs" />

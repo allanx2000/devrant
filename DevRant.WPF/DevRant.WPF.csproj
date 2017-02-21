@@ -27,7 +27,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <TargetCulture>en</TargetCulture>
     <ProductName>DevRant</ProductName>
-    <ApplicationRevision>33</ApplicationRevision>
+    <ApplicationRevision>34</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -111,6 +111,10 @@
       <DependentUpon>VoteControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\VisibilityConverter.cs" />
+    <Compile Include="CreateRantWindow.xaml.cs">
+      <DependentUpon>CreateRantWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CreateRantWindowViewModel.cs" />
     <Compile Include="DataStore\HistoryStore.cs" />
     <Compile Include="DataStore\IHistoryStore.cs" />
     <Compile Include="FeedListItemTemplateSelector.cs" />
@@ -149,6 +153,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\VoteControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CreateRantWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

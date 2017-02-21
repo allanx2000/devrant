@@ -55,16 +55,24 @@
             -->
         </Grid.ColumnDefinitions>
 
-        <Menu Grid.Row="0" Grid.ColumnSpan="4">
-            <Menu.Resources>
+        <DockPanel Grid.Row="0" Grid.ColumnSpan="4" LastChildFill="True">
+            <DockPanel.Resources>
                 <Style TargetType="MenuItem">
                     <Setter Property="Padding" Value="5"/>
                 </Style>
-            </Menu.Resources>
-            <MenuItem Header="Options" Command="{Binding OpenOptionsCommand}"/>
-            <MenuItem Header="Check For Updates" Command="{Binding CheckUpdatesCommand}"/>
-            <MenuItem Header="Refresh Feed" Click="RefreshFeed"/>
-        </Menu>
+            </DockPanel.Resources>
+            <Menu DockPanel.Dock="Left">
+                <MenuItem Header="Options" Command="{Binding OpenOptionsCommand}"/>
+                <MenuItem Header="Check For Updates" Command="{Binding CheckUpdatesCommand}"/>
+                <MenuItem Header="Refresh Feed" Click="RefreshFeed"/>
+            </Menu>
+
+            <Menu DockPanel.Dock="Right" IsEnabled="{Binding LoggedIn}">
+                <MenuItem Header="Post a New Rant" Command="{Binding PostCommand}"/>
+            </Menu>
+
+            <Menu/>
+        </DockPanel>
 
         <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
             <Label FontWeight="Bold">Logged In As:</Label>

@@ -86,6 +86,13 @@ namespace DevRant
         Task<Rant> VoteRant(long rantId, Vote vote);
 
         /// <summary>
+        /// Uploads a rant
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        Task UploadRant(PostContent data);
+
+        /// <summary>
         /// Vote on a comment
         /// </summary>
         /// <param name="commentId"></param>

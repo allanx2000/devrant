@@ -542,6 +542,20 @@ namespace DevRant.WPF
 
         #region Commands
 
+        public ICommand PostCommand
+        {
+            get { return new mvvm.CommandHelper(MakePost); }
+        }
+
+        private void MakePost()
+        {
+            var dlg = new CreateRantWindow(api);
+            dlg.Owner = window;
+
+            dlg.ShowDialog();
+            
+        }
+
         public ICommand CheckUpdatesCommand
         {
             get { return new mvvm.CommandHelper(CheckForUpdates); }
