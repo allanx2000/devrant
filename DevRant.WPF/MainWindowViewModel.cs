@@ -568,17 +568,19 @@ namespace DevRant.WPF
 
         private void AddComment()
         {
-            if (!(SelectedPost is Commentable))
+            if (SelectedPost == null)
                 return;
 
-            var dlg = EditPostWindow.CreateForComment(api, SelectedPost as Commentable);
+            Commentable post = SelectedPost as Commentable;
+
+            var dlg = EditPostWindow.CreateForComment(api, post);
             dlg.Owner = window;
 
             dlg.ShowDialog();
 
             if (!dlg.Cancelled)
             {
-                //TODO: Refresh Selected post
+                post.IncrementComments();
             }
         }
 

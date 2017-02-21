@@ -12,7 +12,10 @@ namespace DevRant.Dtos
         /// <summary>
         /// Number of Comments
         /// </summary>
-        public int NrOfComments { get { return Get<int>("num_comments"); } }
+        public int NrOfComments {
+            get { return Get<int>("num_comments"); }
+            set { Set("num_comments", value); }
+        }
 
         private TagsCollection tags = null;
         private bool tagsLoaded;

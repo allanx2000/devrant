@@ -159,6 +159,10 @@ namespace DevRant.WPF.ViewModels
             }
         }
 
-       
+        public void IncrementComments()
+        {
+            rant.NrOfComments+=1;
+            RaisePropertyChanged("CommentsCount");
+        }
     }
 }

@@ -76,5 +76,10 @@ namespace DevRant.WPF.ViewModels
                     break;
             }
         }
+
+        //Not needed as not displayed
+        public void IncrementComments()
+        {
+        }
     }
 }

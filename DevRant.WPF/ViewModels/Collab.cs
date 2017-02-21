@@ -168,5 +168,11 @@ namespace DevRant.WPF.ViewModels
                 return bitmapimage;
             }
         }
+
+        public void IncrementComments()
+        {
+            collab.NrOfComments += 1;
+            RaisePropertyChanged("CommentsCount");
+        }
     }
 }
