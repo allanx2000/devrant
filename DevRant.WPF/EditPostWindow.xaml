@@ -1,11 +1,11 @@
-﻿<Window x:Class="DevRant.WPF.CreateRantWindow"
+﻿<Window x:Class="DevRant.WPF.EditPostWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DevRant.WPF"
         mc:Ignorable="d"
-        Title="Post Rant" Height="400" Width="600"
+        Title="{Binding WindowTitle}" Height="400" Width="600"
         WindowStartupLocation="CenterOwner"
         WindowStyle="ToolWindow">
     <Grid>
@@ -16,16 +16,16 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <GroupBox Header="Rant">
+        <GroupBox Header="{Binding TextType, FallbackValue=Bad}">
             <TextBox AcceptsReturn="True" VerticalAlignment="Stretch" VerticalContentAlignment="Top" 
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                      ScrollViewer.VerticalScrollBarVisibility="Auto" 
                      Text="{Binding Text}"
-                     MaxLength="500" />
+                     MaxLength="{Binding MaxCharacters}" />
         </GroupBox>
 
-        <DockPanel LastChildFill="True" Grid.Row="1">
-            <Label FontWeight="Bold" DockPanel.Dock="Left">Tags: </Label>
+        <DockPanel Visibility="{Binding TagsVisibility}" LastChildFill="True" Grid.Row="1">
+            <Label FontWeight="Bold" DockPanel.Dock="Left">Tags:</Label>
             <TextBox Text="{Binding TagsString}" MaxLength="50"/>
         </DockPanel>
 
@@ -40,8 +40,9 @@
 
         <StackPanel Grid.Row="3" HorizontalAlignment="Center" Orientation="Horizontal">
             <Button Command="{Binding PostCommand}">Post</Button>
+            <Button Command="{Binding SaveDraftCommand}" Visibility="{Binding SaveDraftVisibility}">Save Draft</Button>
             <Button Command="{Binding CancelCommand}">Cancel</Button>
         </StackPanel>
     </Grid>
-    
+
 </Window>

@@ -7,23 +7,84 @@ using Innouvous.Utils;
 using DevRant.Dtos;
 using System.Linq;
 using System.IO;
+using DevRant.WPF.DataStore;
+using DevRant.WPF.ViewModels;
+using System.Text;
 
 namespace DevRant.WPF
 {
-    internal class CreateRantWindowViewModel : ViewModel
+    internal class EditPostWindowViewModel : ViewModel
     {
-        private IDevRantClient api;
         private Window window;
-        
-        public CreateRantWindowViewModel(Window window, IDevRantClient api)
+        private EditPostWindow.Type type;
+
+        private IDevRantClient api;
+        private IPersistentDataStore db;
+        private Draft existing;
+        private Commentable parent;
+
+        public EditPostWindowViewModel(Window window, EditPostWindow.Type type, IDevRantClient api, IPersistentDataStore db = null, Draft existing = null, Commentable parent = null)
         {
             this.window = window;
             this.api = api;
+            this.type = type;
+            this.db = db;
+            this.existing = existing;
+            this.parent = parent;
 
             Cancelled = true;
         }
 
         public bool Cancelled { get; private set; }
+
+        public Visibility TagsVisibility
+        {
+            get { return type == EditPostWindow.Type.Rant ? Visibility.Visible : Visibility.Collapsed; }
+        }
+
+        public Visibility SaveDraftVisibility
+        {
+            get { return type == EditPostWindow.Type.Rant && db != null ? Visibility.Visible : Visibility.Collapsed; }
+        }
+
+        public string TextType
+        {
+            get { return type.ToString(); }
+        }
+
+        public int MaxCharacters
+        {
+            get
+            {
+                //TODO: Different for rants and comments?
+                return 500;
+            }
+        }
+
+        public string WindowTitle
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+
+                if (type == EditPostWindow.Type.Rant)
+                {
+                    if (existing != null)
+                        sb.Append("Edit ");
+                    else 
+                        sb.Append("Create New");
+
+                    sb.Append(" Rant");
+                }
+                else if (type == EditPostWindow.Type.Comment)
+                {
+                    sb.AppendLine("Add a Comment");
+                }
+
+                string str = sb.ToString();
+                return str;
+            }
+        }
 
         public string Text
         {

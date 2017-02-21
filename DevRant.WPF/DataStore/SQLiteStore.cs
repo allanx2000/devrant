@@ -8,27 +8,27 @@ using System.Threading.Tasks;
 
 namespace DevRant.WPF.DataStore
 {
-    public class HistoryStore : SQLiteClient, IHistoryStore
+    public class SQLiteStore : SQLiteClient, IPersistentDataStore
     {
         private const string Filename = "history.db";
 
-        private static HistoryStore instance;
+        private static SQLiteStore instance;
 
-        public static HistoryStore Instance
+        public static SQLiteStore Instance
         {
             get
             {
                 if (instance == null)
                 {
                     bool exists = File.Exists(Filename);
-                    instance = new HistoryStore(exists);
+                    instance = new SQLiteStore(exists);
                 }
 
                 return instance;
             }
         }
 
-        public HistoryStore(bool exists) : base(Filename, !exists)
+        public SQLiteStore(bool exists) : base(Filename, !exists)
         {
             CreateQueries();
 

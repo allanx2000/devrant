@@ -21,7 +21,14 @@ namespace DevRant.WPF.Converters
             public bool Following { get { return SelectedItem is Rant ? SelectedItem.AsRant().Followed : false; }}
             public bool IsRant { get { return SelectedItem != null && SelectedItem.Type == FeedItem.FeedItemType.Post; } }
             public bool IsNotification { get { return SelectedItem != null && SelectedItem.Type == FeedItem.FeedItemType.Notification; } }
-            
+
+            public bool IsCommentable {
+                get {
+                    return SelectedItem != null && SelectedItem is Commentable;
+                }
+            }
+
+
             public void SetSelectedItem(FeedItem value)
             {
                 SelectedItem = value;
@@ -38,6 +45,8 @@ namespace DevRant.WPF.Converters
             {
                 switch ((string) parameter)
                 {
+                    case "IsCommentable":
+                        return State.IsCommentable ? Visibility.Visible : Visibility.Collapsed;
                     case "Follow":
                         return State.IsRant && !State.Following? Visibility.Visible : Visibility.Collapsed;
                     case "Unfollow":

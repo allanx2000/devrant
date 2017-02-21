@@ -28,7 +28,7 @@
     <TargetCulture>en</TargetCulture>
     <ProductName>devRant++ %28an unofficial client%29</ProductName>
     <PublisherName>innouvous</PublisherName>
-    <ApplicationRevision>35</ApplicationRevision>
+    <ApplicationRevision>36</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -98,6 +98,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\Commentable.cs" />
     <Compile Include="Controls\MyUserControl.cs" />
     <Compile Include="Controls\CollabControl.xaml.cs">
       <DependentUpon>CollabControl.xaml</DependentUpon>
@@ -112,12 +113,12 @@
       <DependentUpon>VoteControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\VisibilityConverter.cs" />
-    <Compile Include="CreateRantWindow.xaml.cs">
-      <DependentUpon>CreateRantWindow.xaml</DependentUpon>
+    <Compile Include="EditPostWindow.xaml.cs">
+      <DependentUpon>EditPostWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CreateRantWindowViewModel.cs" />
-    <Compile Include="DataStore\HistoryStore.cs" />
-    <Compile Include="DataStore\IHistoryStore.cs" />
+    <Compile Include="EditPostWindowViewModel.cs" />
+    <Compile Include="DataStore\SQLiteStore.cs" />
+    <Compile Include="DataStore\IPersistentDataStore.cs" />
     <Compile Include="FeedListItemTemplateSelector.cs" />
     <Compile Include="ViewModels\Collab.cs" />
     <Compile Include="Checkers\NotificationsChecker.cs" />
@@ -137,6 +138,7 @@
     </Compile>
     <Compile Include="StatusViewerWindowViewModel.cs" />
     <Compile Include="Utilities.cs" />
+    <Compile Include="ViewModels\Draft.cs" />
     <Compile Include="ViewModels\Notification.cs" />
     <Compile Include="ViewModels\FeedItem.cs" />
     <Compile Include="ViewModels\Rant.cs" />
@@ -157,7 +159,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="CreateRantWindow.xaml">
+    <Page Include="EditPostWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

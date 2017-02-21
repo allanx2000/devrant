@@ -16,7 +16,7 @@ namespace DevRant.WPF.Checkers
 
         private IDevRantClient api;
         private IDataStore ds;
-        private IHistoryStore history;
+        private IPersistentDataStore history;
 
         public UpdateArgs GetFeedUpdate()
         {
@@ -25,7 +25,7 @@ namespace DevRant.WPF.Checkers
 
         public ObservableCollection<ViewModels.Rant> Posts { get; private set; }
 
-        public FollowedUserChecker(IDataStore ds, IDevRantClient api, IHistoryStore history)
+        public FollowedUserChecker(IDataStore ds, IDevRantClient api, IPersistentDataStore history)
         {
             this.ds = ds;
             this.api = api;

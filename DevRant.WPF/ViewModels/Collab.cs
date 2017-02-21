@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 namespace DevRant.WPF.ViewModels
 {
-    public class Collab : FeedItem
+    public class Collab : FeedItem, Commentable
     {
         private Dtos.Collab collab;
 
@@ -28,6 +28,9 @@ namespace DevRant.WPF.ViewModels
             }
 
         }
+
+
+        public long RantId { get { return collab.Id; } }
 
         public string Text { get { return collab.Text; } }
         public int Votes

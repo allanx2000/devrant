@@ -10,11 +10,13 @@ using DevRant.Enums;
 
 namespace DevRant.WPF.ViewModels
 {
-    public class Rant : FeedItem
+    public class Rant : FeedItem, Commentable
     {
 
         private Dtos.Rant rant;
         
+
+        public long RantId { get { return rant.Id; } }
         public string Text { get { return rant.Text; } }
         public int Votes {
             get {

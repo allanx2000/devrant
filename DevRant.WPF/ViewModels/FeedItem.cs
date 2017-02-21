@@ -15,6 +15,7 @@ namespace DevRant.WPF.ViewModels
             Post,
             Notification,
             Collab,
+            Draft,
         }
 
         public FeedItemType Type { get; private set; }

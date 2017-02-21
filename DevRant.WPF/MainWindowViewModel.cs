@@ -30,7 +30,7 @@ namespace DevRant.WPF
 
         private IDataStore ds;
         private IDevRantClient api;
-        private IHistoryStore history;
+        private IPersistentDataStore db;
 
         private FollowedUserChecker fchecker;
 
@@ -45,7 +45,7 @@ namespace DevRant.WPF
             this.window = window;
             ds = new AppSettingsDataStore();
             api = new DevRantClient();
-            history = HistoryStore.Instance;
+            db = SQLiteStore.Instance;
 
             statusMessages = new MessageCollection();
             statusMessages.Changed += StatusChanged;
@@ -54,7 +54,7 @@ namespace DevRant.WPF
             feedView.Source = feeds;
 
             //Initialize the properties
-            fchecker = new FollowedUserChecker(ds, api, history);
+            fchecker = new FollowedUserChecker(ds, api, db);
             fchecker.OnUpdate += UpdateFollowedPosts;
             fchecker.Start();
 
@@ -120,8 +120,8 @@ namespace DevRant.WPF
                     rant.Update(updated);
                     rant.Read = true;
 
-                    if (history != null)
-                        history.MarkRead(rant.ID);
+                    if (db != null)
+                        db.MarkRead(rant.ID);
 
                     args.InvokeCallback();
                     
@@ -371,7 +371,7 @@ namespace DevRant.WPF
                     
                     if (value.Type == FeedItem.FeedItemType.Post)
                     {
-                        history.MarkRead(value.AsRant().ID);
+                        db.MarkRead(value.AsRant().ID);
                     }
 
                     if (currentSection == FeedType.Updates)
@@ -549,11 +549,37 @@ namespace DevRant.WPF
 
         private void MakePost()
         {
-            var dlg = new CreateRantWindow(api);
+            var dlg = EditPostWindow.CreateForRant(api, db);
             dlg.Owner = window;
 
             dlg.ShowDialog();
-            
+
+            if (!dlg.Cancelled)
+            {
+                //TODO: Add if buffered ...
+            }
+        }
+
+        public ICommand AddCommentCommand
+        {
+            get { return new mvvm.CommandHelper(AddComment); }
+
+        }
+
+        private void AddComment()
+        {
+            if (!(SelectedPost is Commentable))
+                return;
+
+            var dlg = EditPostWindow.CreateForComment(api, SelectedPost as Commentable);
+            dlg.Owner = window;
+
+            dlg.ShowDialog();
+
+            if (!dlg.Cancelled)
+            {
+                //TODO: Refresh Selected post
+            }
         }
 
         public ICommand CheckUpdatesCommand
@@ -823,7 +849,7 @@ namespace DevRant.WPF
 
                 foreach (var r in tmp)
                 {
-                    if (!ds.FilterOutRead || !history.IsRead(r.Id))
+                    if (!ds.FilterOutRead || !db.IsRead(r.Id))
                         rants.Add(r);
                 }
 

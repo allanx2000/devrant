@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DevRant.WPF.DataStore
 {
-    public interface IHistoryStore
+    public interface IPersistentDataStore
     {
         void MarkRead(int postId);
         bool IsRead(int postId);

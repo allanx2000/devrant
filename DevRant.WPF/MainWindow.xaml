@@ -126,11 +126,18 @@
 
                 <ListBox.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Open Post" Command="{Binding OpenPostCommand}"/>
+                        <MenuItem Header="Open" Command="{Binding OpenPostCommand}"/>
+                        <MenuItem Header="Comment..." Command="{Binding AddCommentCommand}"
+                                  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=IsCommentable}"/>
+                        
                         <Separator Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=IsRant}"/>
-                        <MenuItem Header="View Profile"  Command="{Binding ViewProfileCommand}"  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=IsRant}"/>
-                        <MenuItem Header="Follow User"  Command="{Binding FollowUserCommand}"  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=Follow}"/>
-                        <MenuItem Header="Unfollow User"  Command="{Binding UnfollowUserCommand}"  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=Unfollow}"/>
+                        
+                        <MenuItem Header="View Profile"  Command="{Binding ViewProfileCommand}"  
+                                  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=IsRant}"/>
+                        <MenuItem Header="Follow User"  Command="{Binding FollowUserCommand}"  
+                                  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=Follow}"/>
+                        <MenuItem Header="Unfollow User"  Command="{Binding UnfollowUserCommand}"  
+                                  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=Unfollow}"/>
                     </ContextMenu>
                 </ListBox.ContextMenu>
             </ListBox>
