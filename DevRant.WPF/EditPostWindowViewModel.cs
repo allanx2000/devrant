@@ -177,7 +177,7 @@ namespace DevRant.WPF
 
                 if (!string.IsNullOrEmpty(ImagePath))
                 {
-                    byte[] bytes = System.IO.File.ReadAllBytes(ImagePath);
+                    byte[] bytes = File.ReadAllBytes(ImagePath);
                     data.AddImage(bytes, ImagePath);
                 }
 

@@ -25,6 +25,7 @@
 
                 <TextBox
                      AcceptsReturn="True" VerticalAlignment="Stretch" VerticalContentAlignment="Top" 
+                     TextWrapping="Wrap"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                      ScrollViewer.VerticalScrollBarVisibility="Auto" 
                      Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"

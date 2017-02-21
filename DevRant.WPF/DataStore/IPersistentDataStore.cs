@@ -10,5 +10,12 @@ namespace DevRant.WPF.DataStore
     {
         void MarkRead(int postId);
         bool IsRead(int postId);
+
+        void RemoveDraft(long id);
+        void AddDraft(SavedPostContent pc);
+        int GetNumberOfDrafts();
+        List<SavedPostContent> GetDrafts();
+        SavedPostContent GetDraft(long id);
+
     }
 }
