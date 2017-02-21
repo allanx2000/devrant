@@ -26,8 +26,9 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <TargetCulture>en</TargetCulture>
-    <ProductName>DevRant</ProductName>
-    <ApplicationRevision>34</ApplicationRevision>
+    <ProductName>devRant++ %28an unofficial client%29</ProductName>
+    <PublisherName>innouvous</PublisherName>
+    <ApplicationRevision>35</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>

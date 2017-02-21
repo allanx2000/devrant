@@ -197,6 +197,9 @@ namespace DevRant.V1
             if (post.Image != null)
                 data.Add(new ByteArrayContent(post.Image), "image", post.GenerateImageName());
 
+            if (!string.IsNullOrEmpty(post.Tag))
+                data.Add(new StringContent(post.Tag), "tags");
+
             var response = await client.PostAsync(url, data);
             var responseText = await response.Content.ReadAsStringAsync();
 

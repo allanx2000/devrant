@@ -83,7 +83,7 @@ namespace DevRant.WPF
         {
             get { return new mvvm.CommandHelper(Post); }
         }
-        private void Post()
+        private async void Post()
         {
             try
             {
@@ -101,7 +101,7 @@ namespace DevRant.WPF
                     data.AddImage(bytes, ImagePath);
                 }
 
-                api.User.UploadRant(data);
+                await api.User.UploadRant(data);
 
                 Cancelled = false;
                 window.Close();

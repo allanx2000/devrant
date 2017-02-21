@@ -8,7 +8,7 @@
         xmlns:ctrl="clr-namespace:DevRant.WPF.Controls"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="devRant" Height="800" Width="800" IsEnabled="{Binding !IsLoading}"
+        Title="devRant++" Height="800" Width="800" IsEnabled="{Binding !IsLoading}"
         Closed="Window_Closed" x:Name="mainWindow">
 
     <Window.Resources>
