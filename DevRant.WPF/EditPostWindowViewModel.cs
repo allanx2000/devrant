@@ -52,12 +52,24 @@ namespace DevRant.WPF
             get { return type.ToString(); }
         }
 
+        public int Remaining
+        {
+            get { return MaxCharacters - (Text == null ? 0 : Text.Length); }
+        }
+
         public int MaxCharacters
         {
             get
             {
-                //TODO: Different for rants and comments?
-                return 500;
+                switch (type)
+                {
+                    case EditPostWindow.Type.Comment:
+                        return 1000;
+                    case EditPostWindow.Type.Rant:
+                        return 5000;
+                    default:
+                        throw new NotImplementedException();
+                }
             }
         }
 
@@ -93,6 +105,7 @@ namespace DevRant.WPF
             {
                 Set(value);
                 RaisePropertyChanged();
+                RaisePropertyChanged("Remaining");
             }
         }
 

@@ -838,8 +838,11 @@ namespace DevRant.WPF
 
             List<Dtos.Rant> rants = new List<Dtos.Rant>();
 
+            //Remove duplicates
+            List<long> ids = new List<long>();
+
             int page = 0;
-            while (rants.Count < Limit)
+            while (rants.Count < Limit && page < 5)
             {
                 int skip = page * Limit;
 
@@ -850,23 +853,25 @@ namespace DevRant.WPF
                 foreach (var r in tmp)
                 {
                     if (!ds.FilterOutRead || !db.IsRead(r.Id))
-                        rants.Add(r);
+                    {
+                        if (!ids.Contains(r.Id))
+                        {
+                            rants.Add(r);
+                            ids.Add(r.Id);
+                        }
+                    }
                 }
 
                 page++;
             }
 
             feeds.Clear();
-
+            
             foreach (var rant in rants)
             {
                 ViewModels.Rant r = new ViewModels.Rant(rant);
                 feeds.Add(r);
             }
-
-            UpdateFollowedInRants();
-
-            feedView.SortDescriptions.Clear();
 
             if (collection.Count > 0 && collection.ContainsKey(NotificationCount))
             {
@@ -874,7 +879,12 @@ namespace DevRant.WPF
                 UpdateNotifications(new NotificationsChecker.UpdateArgs(count, count));
             }
 
+            UpdateFollowedInRants();
+
+            feedView.SortDescriptions.Clear();
+            
             currentSection = type;
+
             UpdateStatus("Loaded " + rants.Count + " rants");
         }
         

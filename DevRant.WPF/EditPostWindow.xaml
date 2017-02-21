@@ -17,11 +17,20 @@
         </Grid.RowDefinitions>
 
         <GroupBox Header="{Binding TextType, FallbackValue=Bad}">
-            <TextBox AcceptsReturn="True" VerticalAlignment="Stretch" VerticalContentAlignment="Top" 
+            <DockPanel LastChildFill="True">
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
+                    <Label>Remaining:</Label>
+                    <Label Content="{Binding Remaining, FallbackValue=NA}"/>
+                </StackPanel>
+
+                <TextBox
+                     AcceptsReturn="True" VerticalAlignment="Stretch" VerticalContentAlignment="Top" 
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                      ScrollViewer.VerticalScrollBarVisibility="Auto" 
-                     Text="{Binding Text}"
+                     Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
                      MaxLength="{Binding MaxCharacters}" />
+
+            </DockPanel>
         </GroupBox>
 
         <DockPanel Visibility="{Binding TagsVisibility}" LastChildFill="True" Grid.Row="1">
