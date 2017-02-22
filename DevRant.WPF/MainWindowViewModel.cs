@@ -154,9 +154,9 @@ namespace DevRant.WPF
 
         private async void UpdateNotifications(NotificationsChecker.UpdateArgs args)
         {
-            UpdateNotifications(args, false);
+            await UpdateNotifications(args, false);
         }
-        private async void UpdateNotifications(NotificationsChecker.UpdateArgs args, bool forInit)
+        private async Task UpdateNotifications(NotificationsChecker.UpdateArgs args, bool forInit)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Notifications");
@@ -168,7 +168,7 @@ namespace DevRant.WPF
 
                 if (currentSection == FeedType.Notifications)
                 {
-                    LoadNotifications();
+                   LoadNotifications();
                 }
             }
             else
@@ -516,7 +516,7 @@ namespace DevRant.WPF
                     break;
 
                 case SectionNotifications:
-                    await LoadNotifications();
+                    LoadNotifications();
                     break;
                 
                 case SectionFollowed:
@@ -814,7 +814,7 @@ namespace DevRant.WPF
         */
 
 
-        private async Task LoadNotifications()
+        private void LoadNotifications()
         {
             var notifs = nchecker.Notifications;
             feeds.Clear();
