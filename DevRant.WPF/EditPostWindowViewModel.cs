@@ -33,6 +33,13 @@ namespace DevRant.WPF
             this.parent = parent;
 
             Cancelled = true;
+
+            if (existing != null)
+            {
+                Text = existing.Text;
+                TagsString = existing.Tags;
+                ImagePath = existing.ImagePath;
+            }
         }
 
         public bool Cancelled { get; private set; }
@@ -181,10 +188,17 @@ namespace DevRant.WPF
                     data.ImagePath = ImagePath;
                 }
 
-                db.AddDraft(data);
-                
-                AddedDraft = data;
+                if (existing == null)
+                {
+                    db.AddDraft(data);
+                    AddedDraft = data;
 
+                }
+                else
+                {
+                    data.SetId(existing.ID.Value);
+                    db.UpdateDraft(data);
+                }
                 Cancelled = false;
                 window.Close();
             }

@@ -41,6 +41,8 @@ namespace DevRant.WPF.ViewModels
             get { return draft.ImagePath; }
         }
 
+        public long? ID { get { return draft.ID; } }
+
         public Draft() : base(FeedItemType.Draft)
         {
         }

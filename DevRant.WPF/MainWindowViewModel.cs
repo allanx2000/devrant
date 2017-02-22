@@ -495,6 +495,19 @@ namespace DevRant.WPF
 
                 //nchecker.Check();
             }
+            else if (SelectedPost is Draft)
+            {
+                var dlg = EditPostWindow.CreateForRant(api, db, SelectedPost as Draft);
+                dlg.Owner = window;
+
+                dlg.ShowDialog();
+
+                if (!dlg.Cancelled)
+                {
+                    UpdateDrafts(db.GetNumberOfDrafts());
+                    LoadDrafts();
+                }
+            }
             
         }
 
@@ -630,6 +643,23 @@ namespace DevRant.WPF
         #endregion
 
         #region Commands
+        
+        public ICommand DeleteDraftCommand
+        {
+            get { return new mvvm.CommandHelper(DeleteDraft); }
+        }
+
+        private void DeleteDraft()
+        {
+            Draft draft = SelectedPost as Draft;
+
+            if (draft == null)
+                return;
+
+            db.RemoveDraft(draft.ID.Value);
+            UpdateDrafts(db.GetNumberOfDrafts());
+            LoadDrafts();
+        }
 
         public ICommand PostCommand
         {

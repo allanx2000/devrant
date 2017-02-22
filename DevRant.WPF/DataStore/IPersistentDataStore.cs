@@ -16,6 +16,6 @@ namespace DevRant.WPF.DataStore
         int GetNumberOfDrafts();
         List<SavedPostContent> GetDrafts();
         SavedPostContent GetDraft(long id);
-
+        void UpdateDraft(SavedPostContent data);
     }
 }

@@ -181,7 +181,7 @@
                         <MenuItem Header="Unfollow User"  Command="{Binding UnfollowUserCommand}"  
                                   Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=Unfollow}"/>
 
-                        <MenuItem Header="Post"  Command="{Binding PostDraftCommand}"  
+                        <MenuItem Header="Delete"  Command="{Binding DeleteDraftCommand}"  
                                   Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=IsDraft}"/>
                     </ContextMenu>
                 </ListBox.ContextMenu>

@@ -81,6 +81,7 @@ namespace DevRant.WPF.DataStore
             FindReadQuery = "SELECT COUNT(*) FROM {0} WHERE PostID = {1}";
 
             InsertDraftQuery = "INSERT INTO {0} VALUES(NULL,'{1}',{2},{3})";
+            UpdateDraftQuery = "UPDATE {0} SET TextString = '{2}', ImagePath={3}, TagString={4} WHERE ID = {1}";
         }
 
         private void CreateAllTables()
@@ -115,10 +116,11 @@ namespace DevRant.WPF.DataStore
 
         #region Drafts
         private string InsertDraftQuery;
-        
+        private string UpdateDraftQuery;
+
         public void RemoveDraft(long id)
         {
-            string cmd = "DELETE * FROM {0} WHERE ID = {1}";
+            string cmd = "DELETE FROM {0} WHERE ID = {1}";
             cmd = string.Format(cmd, TableDrafts, id);
 
             ExecuteNonQuery(cmd);
@@ -126,12 +128,9 @@ namespace DevRant.WPF.DataStore
 
         public void AddDraft(SavedPostContent pc)
         {
-            string tags = SQLUtils.SQLEncode(pc.Tags);
-            string image = SQLUtils.SQLEncode(pc.ImagePath);
+            string tags = SQLUtils.SQLEncode(pc.Tags, true, true);
+            string image = SQLUtils.SQLEncode(pc.ImagePath, true, true);
 
-            tags = tags == null ? "NULL" : "'" + tags + "'";
-            image = image == null ? "NULL" : "'" + image + "'";
-            
             string cmd = string.Format(InsertDraftQuery,
                 TableDrafts,
                 SQLUtils.SQLEncode(pc.Text),
@@ -204,6 +203,22 @@ namespace DevRant.WPF.DataStore
 
             SavedPostContent pc = new SavedPostContent(text, id, tag, img);
             return pc;
+        }
+
+        public void UpdateDraft(SavedPostContent data)
+        {
+            string tags = SQLUtils.SQLEncode(data.Tags, true, true);
+            string image = SQLUtils.SQLEncode(data.ImagePath, true, true);
+            
+            string cmd = string.Format(UpdateDraftQuery,
+                TableDrafts,
+                data.ID,
+                SQLUtils.SQLEncode(data.Text),
+                image,
+                tags
+            );
+
+            ExecuteNonQuery(cmd);
         }
 
         #endregion

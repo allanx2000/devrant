@@ -79,5 +79,6 @@ namespace DevRant.WPF.DataStore
         {
             ID = id;
         }
+        
     }
 }
