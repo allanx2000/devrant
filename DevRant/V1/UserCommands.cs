@@ -177,6 +177,34 @@ namespace DevRant.V1
                 return null;
         }
 
+        public async Task<Collab> VoteCollab(long rantId, Vote vote)
+        {
+            string url = string.Concat(Constants.BaseAddress, "api/devrant/rants/", rantId, "/vote");
+
+            var paramz = new Parameters();
+            paramz.Add("vote", vote.StateAsString());
+
+            if (vote.State == Enums.VoteState.Down)
+            {
+                paramz.Add("reason", vote.ReasonAsString());
+            }
+
+            var body = owner.CreatePostBody(paramz);
+
+            var response = await client.PostAsync(url, body);
+            var responseText = await response.Content.ReadAsStringAsync();
+
+            JObject obj = JObject.Parse(responseText);
+
+            if (owner.CheckSuccess(obj))
+            {
+                var collab = DataObject.Parse<Collab>((JObject)obj["rant"]);
+                return collab;
+            }
+            else
+                return null;
+        }
+
         public Task<Comment> VoteComment(long commentId, Vote vote)
         {
             throw new NotImplementedException();

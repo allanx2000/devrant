@@ -90,16 +90,13 @@ namespace DevRant.WPF
 
         public async void Vote(VoteClickedEventArgs args)
         {
-            FeedItem i = args.SelectedItem;
-
             try
             {
                 Vote vote = null;
 
-                ViewModels.Rant rant = i.AsRant();
-                ViewModels.Collab collab = i.AsCollab();
+                Votable votable = args.SelectedItem as Votable;
 
-                if (rant != null)
+                if (votable != null)
                 {
                     switch (args.Type)
                     {
@@ -108,23 +105,38 @@ namespace DevRant.WPF
                             break;
                         case VoteButton.ButtonType.Up:
 
-                            if (rant.Voted == VoteState.Up)
+                            if (votable.Voted == VoteState.Up)
                                 vote = Dtos.Vote.ClearVote();
                             else
                                 vote = Dtos.Vote.UpVote();
                             break;
                     }
-
-                    Dtos.Rant updated = await api.User.VoteRant(rant.ID, vote);
-
-                    rant.Update(updated);
-                    rant.Read = true;
-
-                    if (db != null)
-                        db.MarkRead(rant.ID);
-
-                    args.InvokeCallback();
                     
+                    FeedItem item = args.SelectedItem as FeedItem;
+                    
+                    switch (args.SelectedItem.Type)
+                    {
+                            case FeedItem.FeedItemType.Post:
+                            var rant = item.AsRant();
+
+                            var r1 = await api.User.VoteRant(rant.ID, vote);
+
+                            rant.Update(r1);
+                            rant.Read = true;
+
+                            if (db != null)
+                                db.MarkRead(rant.ID);
+
+                            break;
+                        case FeedItem.FeedItemType.Collab:
+                            var collab = item.AsCollab();
+
+                            var r2 = await api.User.VoteCollab(collab.ID, vote);
+                            collab.Update(r2);
+                            break;
+                    }
+                    
+                    args.InvokeCallback();
                 }
             }
             catch (InvalidCredentialsException e)

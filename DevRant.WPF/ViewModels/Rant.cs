@@ -10,7 +10,7 @@ using DevRant.Enums;
 
 namespace DevRant.WPF.ViewModels
 {
-    public class Rant : FeedItem, Commentable
+    public class Rant : FeedItem, Commentable, Votable
     {
 
         private Dtos.Rant rant;

@@ -86,6 +86,15 @@ namespace DevRant
         Task<Rant> VoteRant(long rantId, Vote vote);
 
         /// <summary>
+        /// Vote on a rant
+        /// </summary>
+        /// <param name="collabId"></param>
+        /// <param name="vote"></param>
+        /// <returns></returns>
+        Task<Collab> VoteCollab(long collabId, Vote vote);
+
+
+        /// <summary>
         /// Uploads a rant
         /// </summary>
         /// <param name="data"></param>

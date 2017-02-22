@@ -145,6 +145,7 @@
     <Compile Include="ViewModels\FeedItem.cs" />
     <Compile Include="ViewModels\Rant.cs" />
     <Compile Include="Controls\VoteClickedEventArgs.cs" />
+    <Compile Include="ViewModels\Votable.cs" />
     <Page Include="Controls\CollabControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
