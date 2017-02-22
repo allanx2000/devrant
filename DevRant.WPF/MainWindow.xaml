@@ -94,6 +94,7 @@
                 </ListBox.Resources>
 
 
+                <!-- Names need to match the Section consts in MainWindowViewModel -->
                 <ListBoxItem Name="GeneralFeed" IsSelected="True">General</ListBoxItem>
                 <ListBoxItem Style="{StaticResource SubSection}" Name="GeneralAlgo">Algo</ListBoxItem>
                 <ListBoxItem Style="{StaticResource SubSection}" Name="GeneralTop">Top</ListBoxItem>
@@ -112,6 +113,10 @@
                 <ListBoxItem Name="MyNotifications" Content="{Binding NotificationsLabel, FallbackValue='Notifications'}" 
                              Visibility="{Binding NotificationsVisibility, FallbackValue=Collapsed}" 
                              FontWeight="{Binding NotificationsWeight}"/>
+
+                <ListBoxItem Name="RantDrafts" Content="{Binding DraftsLabel, FallbackValue='Drafts'}" 
+                             Visibility="{Binding DraftsVisibility, FallbackValue=Collapsed}" 
+                             FontWeight="{Binding DraftsWeight}"/>
             </ListBox>
         </GroupBox>
 

@@ -72,11 +72,9 @@ namespace DevRant.WPF
             try
             {
                if (await Login())
-                {
-                    
-                    LoadSection(currentSectionName);
-                    //LoadFeed(currentSection, ds.DefaultFeed, ds.DefaultRange, ds.FilterOutRead);
-                }
+               {
+                    await LoadSection(currentSectionName);
+               }
             }
             catch (Exception e)
             {
@@ -85,6 +83,7 @@ namespace DevRant.WPF
 
             UpdateFollowedPosts(fchecker.GetFeedUpdate());
             UpdateNotifications(new NotificationsChecker.UpdateArgs(0, 0), true);
+            UpdateDrafts(0);
         }
         
 
@@ -152,6 +151,8 @@ namespace DevRant.WPF
 
         }
 
+
+
         private async void UpdateNotifications(NotificationsChecker.UpdateArgs args)
         {
             await UpdateNotifications(args, false);
@@ -166,7 +167,7 @@ namespace DevRant.WPF
                 sb.Append(" (" + args.TotalUnread + ")");
                 NotificationsWeight = FontWeights.Bold;
 
-                if (currentSection == FeedType.Notifications)
+                if (currentSection == FeedType.Drafts)
                 {
                    LoadNotifications();
                 }
@@ -199,6 +200,30 @@ namespace DevRant.WPF
             UpdateStatus(msg);
         }
 
+        private void UpdateDrafts(int drafts)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Drafts");
+
+            if (drafts > 0)
+            {
+                sb.Append(" (" + drafts + ")");
+                DraftsWeight = FontWeights.Bold;
+
+                if (currentSection == FeedType.Drafts)
+                {
+                    LoadDrafts();
+                }
+            }
+            else
+            {
+                DraftsWeight = FontWeights.Normal;
+            }
+
+            DraftsLabel = sb.ToString();
+            
+        }
+
         private async Task<bool> Login()
         {
             bool loggedIn = false;
@@ -219,7 +244,8 @@ namespace DevRant.WPF
             {
                 UpdateStatus("Failed to login, error: " + e.Message);
             }
-            
+
+            RaisePropertyChanged("DraftsVisibility");
             RaisePropertyChanged("NotificationsVisibility");
             RaisePropertyChanged("LoggedInUser");
             RaisePropertyChanged("LoggedIn");
@@ -271,6 +297,34 @@ namespace DevRant.WPF
         #endregion
 
         #region Properties
+
+
+        public Visibility DraftsVisibility { get { return LoggedIn ? Visibility.Visible : Visibility.Collapsed; } }
+        public string DraftsLabel
+        {
+            get
+            {
+                return Get<string>();
+            }
+            set
+            {
+                Set(value);
+                RaisePropertyChanged();
+            }
+        }
+
+        public FontWeight DraftsWeight
+        {
+            get
+            {
+                return Get<FontWeight>();
+            }
+            set
+            {
+                Set(value);
+                RaisePropertyChanged();
+            }
+        }
 
         public Visibility NotificationsVisibility { get { return LoggedIn ? Visibility.Visible : Visibility.Collapsed; } }
         public string NotificationsLabel
@@ -452,7 +506,7 @@ namespace DevRant.WPF
             General,
             Collab,
             Updates,
-            Notifications
+            Drafts
         }
 
         public const string SectionGeneral = "GeneralFeed";
@@ -469,7 +523,8 @@ namespace DevRant.WPF
         public const string SectionCollab = "CollabFeed";
         
         public const string SectionNotifications = "MyNotifications";
-        
+        public const string SectionDrafts = "RantDrafts";
+
         public const string SectionFollowed = "FollowedUsers";
         private NotificationsChecker nchecker;
         private const string NotificationCount = "notif_state";
@@ -514,11 +569,15 @@ namespace DevRant.WPF
                 case SectionStoriesAll:
                     await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.All);
                     break;
-
+                                        
                 case SectionNotifications:
                     LoadNotifications();
                     break;
-                
+
+                case SectionDrafts:
+                    LoadDrafts();
+                    break;
+
                 case SectionFollowed:
                     LoadFollowed();
                     break;
@@ -531,6 +590,23 @@ namespace DevRant.WPF
             currentSectionName = section;
 
             IsLoading = false;
+        }
+
+        private void LoadDrafts()
+        {
+            var drafts = db.GetDrafts();
+            feeds.Clear();
+
+            foreach (var draft in drafts)
+            {
+                ViewModels.Draft vm = new Draft(draft);
+
+                feeds.Add(vm);
+            }
+
+            currentSection = FeedType.Drafts;
+
+            feedView.SortDescriptions.Clear();
         }
 
         private async Task LoadCollabs()
@@ -568,7 +644,11 @@ namespace DevRant.WPF
 
             if (!dlg.Cancelled)
             {
-                //TODO: Add if buffered ...
+                if (dlg.AddedDraft != null)
+                {
+                    //TODO: Should store the added draft in mem?
+                    UpdateDrafts(db.GetNumberOfDrafts());
+                }
             }
         }
 
@@ -824,7 +904,7 @@ namespace DevRant.WPF
                 feeds.Add(notif);
             }
             
-            currentSection = FeedType.Notifications;
+            currentSection = FeedType.Drafts;
             
             feedView.SortDescriptions.Clear();
             

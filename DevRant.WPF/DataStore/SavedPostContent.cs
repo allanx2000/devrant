@@ -58,7 +58,7 @@ namespace DevRant.WPF.DataStore
         public string Tags
         {
             get { return Get<string>(); }
-            private set
+            set
             {
                 Set(value);
                 RaisePropertyChanged();
@@ -68,7 +68,7 @@ namespace DevRant.WPF.DataStore
         public string ImagePath
         {
             get { return Get<string>(); }
-            private set
+            set
             {
                 Set(value);
                 RaisePropertyChanged();

@@ -35,6 +35,8 @@ namespace DevRant.WPF
             Rant
         }
 
+        public SavedPostContent AddedDraft { get { return vm.AddedDraft; } }
+
         private EditPostWindow()
         {
         }

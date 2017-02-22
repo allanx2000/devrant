@@ -158,11 +158,47 @@ namespace DevRant.WPF
         {
             get { return new mvvm.CommandHelper(() => ImagePath = null); }
         }
-        
+
+        public ICommand SaveDraftCommand
+        {
+            get { return new mvvm.CommandHelper(SaveDraft); }
+        }
+
+        private void SaveDraft()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(Text) || Text.Length < 5)
+                    throw new Exception("Rant or comment must be more than 5 characters long.");
+
+                SavedPostContent data = new SavedPostContent(Text);
+
+                if (type == EditPostWindow.Type.Rant && !string.IsNullOrEmpty(TagsString))
+                    data.Tags = TagsString;
+
+                if (!string.IsNullOrEmpty(ImagePath))
+                {
+                    data.ImagePath = ImagePath;
+                }
+
+                db.AddDraft(data);
+                
+                AddedDraft = data;
+
+                Cancelled = false;
+                window.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBoxFactory.ShowError(e, owner: window);
+            }
+        }
+
         public ICommand PostCommand
         {
             get { return new mvvm.CommandHelper(Post); }
         }
+        
         private async void Post()
         {
             try
@@ -203,5 +239,7 @@ namespace DevRant.WPF
         {
             get { return new mvvm.CommandHelper(() => window.Close()); }
         }
+
+        public SavedPostContent AddedDraft { get; private set; }
     }
 }

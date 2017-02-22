@@ -80,7 +80,7 @@ namespace DevRant.WPF.DataStore
             InsertReadQuery = "INSERT INTO {0} VALUES({1},'{2}')";
             FindReadQuery = "SELECT COUNT(*) FROM {0} WHERE PostID = {1}";
 
-            InsertDraftQuery = "INSERT INTO {0} VALUES(NULL,'{1}','{2}','{3}')";
+            InsertDraftQuery = "INSERT INTO {0} VALUES(NULL,'{1}',{2},{3})";
         }
 
         private void CreateAllTables()
@@ -126,11 +126,18 @@ namespace DevRant.WPF.DataStore
 
         public void AddDraft(SavedPostContent pc)
         {
+            string tags = SQLUtils.SQLEncode(pc.Tags);
+            string image = SQLUtils.SQLEncode(pc.ImagePath);
+
+            tags = tags == null ? "NULL" : "'" + tags + "'";
+            image = image == null ? "NULL" : "'" + image + "'";
+            
             string cmd = string.Format(InsertDraftQuery,
+                TableDrafts,
                 SQLUtils.SQLEncode(pc.Text),
-                SQLUtils.SQLEncode(pc.ImagePath), 
-                SQLUtils.SQLEncode(pc.Tags)
-           );
+                image,
+                tags
+            );
 
             ExecuteNonQuery(cmd);
 
