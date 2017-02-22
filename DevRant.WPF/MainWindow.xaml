@@ -38,6 +38,43 @@
                 />
         </DataTemplate>
 
+        <DataTemplate x:Key="DraftTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.ColumnSpan="2">
+                    <TextBlock Text="{Binding Text}"/>
+                </Label>
+
+                <Label Grid.Row="1" Grid.Column="0" 
+                       Style="{StaticResource GridField}" 
+                       FontWeight="Bold" Visibility="{Binding ImagePathVisibility}"
+                       Content="Image Path: "/>
+
+                <Label Grid.Row="1" Grid.Column="1" Visibility="{Binding ImagePathVisibility}">
+                    <TextBlock Text="{Binding ImagePath}"/>
+                </Label>
+
+                <Label Grid.Row="2" Grid.Column="0" 
+                       Style="{StaticResource GridField}" 
+                       FontWeight="Bold" Visibility="{Binding TagsVisibility}" 
+                       Content="Tags: "/>
+                <Label Grid.Row="2" Grid.Column="1" Visibility="{Binding TagsVisibility}">
+                    <TextBlock Text="{Binding Tags}"/>
+                </Label>
+
+            </Grid>
+        </DataTemplate>
+
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -143,6 +180,9 @@
                                   Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=Follow}"/>
                         <MenuItem Header="Unfollow User"  Command="{Binding UnfollowUserCommand}"  
                                   Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=Unfollow}"/>
+
+                        <MenuItem Header="Post"  Command="{Binding PostDraftCommand}"  
+                                  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=IsDraft}"/>
                     </ContextMenu>
                 </ListBox.ContextMenu>
             </ListBox>

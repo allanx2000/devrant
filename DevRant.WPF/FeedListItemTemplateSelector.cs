@@ -30,6 +30,8 @@ namespace DevRant.WPF
                 dt = elemnt.FindResource("NotificationTemplate") as DataTemplate;
             else if (item is Collab)
                 dt = elemnt.FindResource("CollabTemplate") as DataTemplate;
+            else if (item is Draft)
+                dt = elemnt.FindResource("DraftTemplate") as DataTemplate;
 
             return dt;
         }

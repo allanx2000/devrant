@@ -113,8 +113,7 @@ namespace DevRant.WPF.Checkers
                 var update = new UpdateArgs(unread, total);
                 update.Error = error;
 
-                OnUpdate.Invoke(update);
-                
+                App.Current.Dispatcher.Invoke(() => OnUpdate.Invoke(update));
             }
         }
 

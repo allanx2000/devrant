@@ -28,11 +28,17 @@ namespace DevRant.WPF.Converters
                 }
             }
 
+            public bool IsDraft { get { return SelectedItem != null && SelectedItem is Draft; } }
 
             public void SetSelectedItem(FeedItem value)
             {
                 SelectedItem = value;
             }
+        }
+
+        public object Convert(object parameter)
+        {
+            return Convert(null, null, parameter, null);  
         }
 
         public static readonly AppState State = new AppState();
@@ -41,18 +47,22 @@ namespace DevRant.WPF.Converters
         {
             if (parameter == null)
                 return Visibility.Collapsed;
+            else if (parameter is bool)
+                return BoolToVisibilility((bool)parameter);
             else if (parameter is string)
             {
-                switch ((string) parameter)
+                switch ((string)parameter)
                 {
+                    case "IsDraft":
+                        return BoolToVisibilility(State.IsDraft);
                     case "IsCommentable":
-                        return State.IsCommentable ? Visibility.Visible : Visibility.Collapsed;
+                        return BoolToVisibilility(State.IsCommentable);
                     case "Follow":
-                        return State.IsRant && !State.Following? Visibility.Visible : Visibility.Collapsed;
+                        return BoolToVisibilility(State.IsRant && !State.Following);
                     case "Unfollow":
-                        return State.IsRant && State.Following ? Visibility.Visible : Visibility.Collapsed;
+                        return BoolToVisibilility(State.IsRant && State.Following);
                     case "IsRant":
-                        return State.IsRant ? Visibility.Visible : Visibility.Collapsed;
+                        return BoolToVisibilility(State.IsRant);
                     default:
                         return Visibility.Visible;
                 }
@@ -60,6 +70,11 @@ namespace DevRant.WPF.Converters
             else
                 throw new NotImplementedException();
                 
+        }
+
+        private Visibility BoolToVisibilility(bool value)
+        {
+             return value? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

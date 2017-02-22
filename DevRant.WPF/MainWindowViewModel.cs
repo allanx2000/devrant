@@ -83,7 +83,7 @@ namespace DevRant.WPF
 
             UpdateFollowedPosts(fchecker.GetFeedUpdate());
             UpdateNotifications(new NotificationsChecker.UpdateArgs(0, 0), true);
-            UpdateDrafts(0);
+            UpdateDrafts(db.GetNumberOfDrafts());
         }
         
 
@@ -604,6 +604,7 @@ namespace DevRant.WPF
                 feeds.Add(vm);
             }
 
+            
             currentSection = FeedType.Drafts;
 
             feedView.SortDescriptions.Clear();
