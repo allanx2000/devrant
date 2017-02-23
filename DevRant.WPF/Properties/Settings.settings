@@ -23,10 +23,10 @@
     <Setting Name="FollowedUsersUpdateInterval" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5</Value>
     </Setting>
-    <Setting Name="StoryRange" Type="DevRant.Dtos.StoryRange" Scope="User">
+    <Setting Name="StoryRange" Type="DevRant.Enums.StoryRange" Scope="User">
       <Value Profile="(Default)">Week</Value>
     </Setting>
-    <Setting Name="StorySort" Type="DevRant.Dtos.RantSort" Scope="User">
+    <Setting Name="StorySort" Type="DevRant.Enums.RantSort" Scope="User">
       <Value Profile="(Default)">Algo</Value>
     </Setting>
     <Setting Name="HideUsername" Type="System.Boolean" Scope="User">
@@ -37,6 +37,9 @@
     </Setting>
     <Setting Name="FilterOutRead" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DataStoreFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

@@ -74,11 +74,21 @@ namespace DevRant.WPF
             ShowUsername = !ds.HideUsername;
             ShowCreateTime = ds.ShowCreateTime;
             FilterOutRead = ds.FilterOutRead;
+            DBFolder = ds.DBFolder;
         }
         
         public string Password { get; set; }
         public string Username { get; set; }
 
+        public string DBFolder
+        {
+            get { return Get<string>(); }
+            set
+            {
+                Set(value);
+                RaisePropertyChanged();
+            }
+        }
 
         public bool Cancelled { get; private set; }
 
@@ -137,8 +147,22 @@ namespace DevRant.WPF
                 RaisePropertyChanged();
             }
         }
-        
+
         #region Commands
+
+        public ICommand SelectDBFolderCommand
+        {
+            get { return new mvvm.CommandHelper(SelectDBFolder); }
+        }
+
+        private void SelectDBFolder()
+        {
+            var dlg = DialogsUtility.CreateFolderBrowser();
+            dlg.ShowDialog();
+
+            if (dlg.SelectedPath != null)
+                DBFolder = dlg.SelectedPath;
+        }
 
         public ICommand AddUserCommand
         {
@@ -209,6 +233,7 @@ namespace DevRant.WPF
         public bool ShowUsername {get; set; }
         public bool ShowCreateTime { get; set; }
         public bool LoginChanged { get; private set; }
+        public bool DatabaseChanged { get; private set; }
 
         private void Save()
         {
@@ -226,6 +251,13 @@ namespace DevRant.WPF
                 ds.SetHideUsername(!ShowUsername);
                 ds.SetShowCreateTime(ShowCreateTime);
                 ds.SetFilterOutRead(FilterOutRead);
+
+                //Check DBPath
+                if (ds.DBFolder != DBFolder)
+                {
+                    ds.SetDBFolder(DBFolder);
+                    DatabaseChanged = true;
+                }
 
                 //Check/Save Login
                 if (Username != null && Password != null)

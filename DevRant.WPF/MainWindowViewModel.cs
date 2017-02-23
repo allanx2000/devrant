@@ -21,6 +21,7 @@ using DevRant.Enums;
 using DevRant.V1;
 using DevRant.WPF.Checkers;
 using DevRant.WPF.Controls;
+using System.IO;
 
 namespace DevRant.WPF
 {
@@ -45,7 +46,7 @@ namespace DevRant.WPF
             this.window = window;
             ds = new AppSettingsDataStore();
             api = new DevRantClient();
-            db = SQLiteStore.Instance;
+            db = SQLiteStore.CreateInstance(ds.DBFolder);
 
             statusMessages = new MessageCollection();
             statusMessages.Changed += StatusChanged;
@@ -604,7 +605,7 @@ namespace DevRant.WPF
 
             IsLoading = false;
         }
-
+        
         private void LoadDrafts()
         {
             var drafts = db.GetDrafts();
@@ -743,9 +744,29 @@ namespace DevRant.WPF
                         await api.User.Logout();
 
                         await Login();
-                    
                 }
 
+                if (dlg.DatabaseChanged)
+                {
+                    db.Close();
+
+                    FileInfo info = new FileInfo(db.DBPath);
+                    string newPath = Path.Combine(ds.DBFolder, info.Name);
+
+
+                    if (!File.Exists(newPath))
+                        info.MoveTo(newPath);
+                    //else just use existing
+
+                    //Restart
+                    nchecker.Stop();
+                    fchecker.Stop();
+
+                    MainWindow newWindow = new MainWindow();
+                    newWindow.Show();
+                    
+                    window.Close();
+                }
             }
         }
 
@@ -786,6 +807,19 @@ namespace DevRant.WPF
             fchecker.GetAll(username);
         }
 
+        public ICommand ViewMyProfileCommand
+        {
+            get { return new mvvm.CommandHelper(ViewMyProfile); }
+        }
+
+        private void ViewMyProfile()
+        {
+            if (LoggedInUser != null)
+            {
+                ViewProfile(LoggedInUser);
+            }
+        }
+
         public ICommand ViewProfileCommand
         {
             get { return new mvvm.CommandHelper(ViewProfile); }
@@ -797,6 +831,13 @@ namespace DevRant.WPF
                 return;
 
             Process.Start(((ViewModels.Rant)SelectedPost).ProfileURL);
+        }
+
+        private void ViewProfile(string name)
+        {
+            string url = Utilities.GetProfileUrl(name);
+
+            Process.Start(url);
         }
 
         public ICommand ViewNotificationsCommand

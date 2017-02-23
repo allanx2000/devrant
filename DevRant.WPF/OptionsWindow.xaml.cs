@@ -43,8 +43,8 @@ namespace DevRant.WPF
 
 
         public bool LoginChanged { get { return vm.LoginChanged; } }
-
         public List<string> AddedUsers { get { return vm.AddedUsers; } }
+        public bool DatabaseChanged { get { return vm.DatabaseChanged; } }
         public bool Cancelled { get { return vm.Cancelled; } }
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)

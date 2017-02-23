@@ -58,6 +58,15 @@
             </Grid>
         </GroupBox>
 
+        <GroupBox Header="Custom Database Path">
+            <DockPanel LastChildFill="True">
+                <Label DockPanel.Dock="Top">Changing this will require the application to restart.</Label>
+                <Label DockPanel.Dock="Left" FontWeight="Bold">Folder: </Label>
+                <Button DockPanel.Dock="Right" Command="{Binding SelectDBFolderCommand}">...</Button>
+                <TextBox Text="{Binding DBFolder, UpdateSourceTrigger=PropertyChanged}"/>
+            </DockPanel>
+        </GroupBox>
+        
         <GroupBox Header="Login">
             <Grid>
                 <Grid.ColumnDefinitions>

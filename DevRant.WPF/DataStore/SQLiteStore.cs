@@ -12,25 +12,34 @@ namespace DevRant.WPF.DataStore
     public class SQLiteStore : SQLiteClient, IPersistentDataStore
     {
         private const string Filename = "history.db";
+        
+        public static SQLiteStore CreateInstance(string folder = null)
+        {
+            string path = Filename;
 
-        private static SQLiteStore instance;
+            if (folder != null)
+                path = Path.Combine(folder, Filename);
 
-        public static SQLiteStore Instance
+            bool exists = File.Exists(path);
+
+            SQLiteStore db = new SQLiteStore(path, exists);
+            return db;
+        }
+
+        public string DBPath
         {
             get
             {
-                if (instance == null)
-                {
-                    bool exists = File.Exists(Filename);
-                    instance = new SQLiteStore(exists);
-                }
-
-                return instance;
+                return dbPath;
             }
         }
 
-        public SQLiteStore(bool exists) : base(Filename, !exists)
+        private readonly string dbPath;
+
+        public SQLiteStore(string path, bool exists) : base(path, !exists)
         {
+            this.dbPath = path;
+
             CreateQueries();
 
             if (!exists)
@@ -125,7 +134,7 @@ namespace DevRant.WPF.DataStore
 
             ExecuteNonQuery(cmd);
         }
-
+        
         public void AddDraft(SavedPostContent pc)
         {
             string tags = SQLUtils.SQLEncode(pc.Tags, true, true);

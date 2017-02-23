@@ -8,6 +8,10 @@ namespace DevRant.WPF.DataStore
 {
     public interface IPersistentDataStore
     {
+        void Close();
+
+        string DBPath { get; }
+        
         void MarkRead(int postId);
         bool IsRead(int postId);
 

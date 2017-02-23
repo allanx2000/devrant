@@ -15,6 +15,8 @@ namespace DevRant.WPF.DataStore
         long FollowedUsersLastChecked { get; set; }
         int FollowedUsersUpdateInterval { get; }
 
+        string DBFolder { get; }
+
         StoryRange DefaultRange { get; }
         RantSort DefaultFeed { get;}
         bool HideUsername { get; }
@@ -23,6 +25,8 @@ namespace DevRant.WPF.DataStore
 
         void Unfollow(string user);
         void Follow(string user);
+
+        void SetDBFolder(string path);
 
         void SetDefaultRange(StoryRange defaultStoryRange);
         void SetDefaultFeed(RantSort defaultFeed);

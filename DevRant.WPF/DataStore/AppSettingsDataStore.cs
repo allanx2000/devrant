@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DevRant.Dtos;
 using DevRant.Enums;
+using System.IO;
 
 namespace DevRant.WPF.DataStore
 {
@@ -95,6 +96,14 @@ namespace DevRant.WPF.DataStore
             get
             {
                 return Settings.FilterOutRead;
+            }
+        }
+
+        public string DBFolder
+        {
+            get
+            {
+                return Settings.DataStoreFolder;
             }
         }
 
@@ -195,6 +204,25 @@ namespace DevRant.WPF.DataStore
         public void SetFilterOutRead(bool filterOutRead)
         {
             Settings.FilterOutRead = filterOutRead;
+            Settings.Save();
+        }
+
+        public void SetDBFolder(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                Settings.DataStoreFolder = null;
+            }
+            else
+            {
+                if (!Directory.Exists(path))
+                {
+                    throw new DirectoryNotFoundException();
+                }
+
+                Settings.DataStoreFolder = path;
+            }
+
             Settings.Save();
         }
     }

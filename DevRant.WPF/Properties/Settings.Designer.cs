@@ -164,5 +164,17 @@ namespace DevRant.WPF.Properties {
                 this["FilterOutRead"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DataStoreFolder {
+            get {
+                return ((string)(this["DataStoreFolder"]));
+            }
+            set {
+                this["DataStoreFolder"] = value;
+            }
+        }
     }
 }
