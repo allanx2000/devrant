@@ -234,12 +234,17 @@ namespace DevRant.WPF
                 if (type == EditPostWindow.Type.Rant)
                 {
                     await api.User.PostRant(data);
+                    
+                    if (existing != null)
+                    {
+                        db.RemoveDraft(existing.ID.Value);
+                    }
                 }
                 else if (type == EditPostWindow.Type.Comment)
                 {
                     await api.User.PostComment(parent.RantId, data);
                 }
-
+                
                 Cancelled = false;
                 window.Close();
             }
