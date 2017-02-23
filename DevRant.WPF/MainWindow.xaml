@@ -144,15 +144,15 @@
                 <ListBoxItem Style="{StaticResource SubSection}" Name="StoriesWeek">Week</ListBoxItem>
                 <ListBoxItem Style="{StaticResource SubSection}" Name="StoriesMonth">Month</ListBoxItem>
                 <ListBoxItem Style="{StaticResource SubSection}" Name="StoriesAll">All</ListBoxItem>
-
+                
                 <ListBoxItem Name="CollabFeed">Collab</ListBoxItem>
 
+                <Separator Height="5" />
+                
                 <ListBoxItem Name="FollowedUsers" Content="{Binding FollowedUsersLabel, FallbackValue='Updates'}" FontWeight="{Binding FollowedUsersWeight}"/>
-
                 <ListBoxItem Name="MyNotifications" Content="{Binding NotificationsLabel, FallbackValue='Notifications'}" 
                              Visibility="{Binding NotificationsVisibility, FallbackValue=Collapsed}" 
                              FontWeight="{Binding NotificationsWeight}"/>
-
                 <ListBoxItem Name="RantDrafts" Content="{Binding DraftsLabel, FallbackValue='Drafts'}" 
                              Visibility="{Binding DraftsVisibility, FallbackValue=Collapsed}" 
                              FontWeight="{Binding DraftsWeight}"/>
