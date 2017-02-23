@@ -52,7 +52,7 @@
                 </Grid.RowDefinitions>
 
                 <Label Grid.Row="0" Grid.ColumnSpan="2">
-                    <TextBlock Text="{Binding Text}"/>
+                    <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
                 </Label>
 
                 <Label Grid.Row="1" Grid.Column="0" 
@@ -103,11 +103,12 @@
                 <MenuItem Header="Check For Updates" Command="{Binding CheckUpdatesCommand}"/>
                 <MenuItem Header="Refresh Feed" Click="RefreshFeed"/>
             </Menu>
-
+            
             <Menu DockPanel.Dock="Right" IsEnabled="{Binding LoggedIn}">
                 <MenuItem Header="Post a New Rant" Command="{Binding PostCommand}"/>
             </Menu>
 
+            <!--- Center filler -->
             <Menu/>
         </DockPanel>
 
@@ -171,9 +172,9 @@
                         <MenuItem Header="Open" Command="{Binding OpenPostCommand}"/>
                         <MenuItem Header="Comment..." Command="{Binding AddCommentCommand}"
                                   Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=IsCommentable}"/>
-                        
+
                         <Separator Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=IsRant}"/>
-                        
+
                         <MenuItem Header="View Profile"  Command="{Binding ViewProfileCommand}"  
                                   Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=IsRant}"/>
                         <MenuItem Header="Follow User"  Command="{Binding FollowUserCommand}"  
