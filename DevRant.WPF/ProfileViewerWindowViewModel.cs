@@ -6,6 +6,10 @@ using System.Collections;
 using DevRant.Dtos;
 using System.Windows.Input;
 using mvvm = Innouvous.Utils.MVVM;
+using DevRant.WPF.Controls;
+using Innouvous.Utils;
+using System.Threading.Tasks;
+using DevRant.WPF.ViewModels;
 
 namespace DevRant.WPF
 {
@@ -26,13 +30,37 @@ namespace DevRant.WPF
 
             LoadSection(0);
         }
+
+
+        public async Task Vote(VoteClickedEventArgs args)
+        {
+            try
+            {
+                await Utilities.Vote(args, api);
+            }
+            catch (Exception e)
+            {
+                MessageBoxFactory.ShowError(e);
+            }
+        }
         
+
         #region Properties
 
         public bool LoggedIn { get { return api.User.LoggedIn; } }
-
+        
         public string Username { get { return username; } }
         
+        public FeedItem Selected
+        {
+            get { return Get<FeedItem>(); }
+            set
+            {
+                Set(value);
+                RaisePropertyChanged();
+            }
+        }
+
         #region Counts
         public int Favorites
         {
@@ -143,6 +171,9 @@ namespace DevRant.WPF
             }
 
             AddItems(profile);
+
+            if (items.Count > 0)
+                window.ItemsListBox.ScrollIntoView(items[0]);
         }
 
         private void AddItems(Profile profile)
@@ -165,6 +196,26 @@ namespace DevRant.WPF
 
 
         #region Commands
+
+        public ICommand ViewRantCommand
+        {
+            get
+            {
+                return new mvvm.CommandHelper(ViewRant);
+            }
+        }
+
+
+        public void ViewRant()
+        {
+            Utilities.OpenFeedItem(Selected);
+        }
+
+        public ICommand CloseCommand
+        {
+            get { return new mvvm.CommandHelper(() => window.Close()); }
+        }
+
         public ICommand OpenInBrowserCommand
         {
             get

@@ -86,58 +86,13 @@ namespace DevRant.WPF
             UpdateNotifications(new NotificationsChecker.UpdateArgs(0, 0), true);
             UpdateDrafts(db.GetNumberOfDrafts());
         }
-        
+
 
         public async void Vote(VoteClickedEventArgs args)
         {
             try
             {
-                Vote vote = null;
-
-                Votable votable = args.SelectedItem as Votable;
-
-                if (votable != null)
-                {
-                    switch (args.Type)
-                    {
-                        case VoteButton.ButtonType.Down:
-                            throw new NotImplementedException();
-                            break;
-                        case VoteButton.ButtonType.Up:
-
-                            if (votable.Voted == VoteState.Up)
-                                vote = Dtos.Vote.ClearVote();
-                            else
-                                vote = Dtos.Vote.UpVote();
-                            break;
-                    }
-                    
-                    FeedItem item = args.SelectedItem as FeedItem;
-                    
-                    switch (args.SelectedItem.Type)
-                    {
-                            case FeedItem.FeedItemType.Post:
-                            var rant = item.AsRant();
-
-                            var r1 = await api.User.VoteRant(rant.ID, vote);
-
-                            rant.Update(r1);
-                            rant.Read = true;
-
-                            if (db != null)
-                                db.MarkRead(rant.ID);
-
-                            break;
-                        case FeedItem.FeedItemType.Collab:
-                            var collab = item.AsCollab();
-
-                            var r2 = await api.User.VoteCollab(collab.ID, vote);
-                            collab.Update(r2);
-                            break;
-                    }
-                    
-                    args.InvokeCallback();
-                }
+                await Utilities.Vote(args, api, db);
             }
             catch (InvalidCredentialsException e)
             {
@@ -146,13 +101,10 @@ namespace DevRant.WPF
             }
             catch (Exception e)
             {
-                
+
                 UpdateStatus(e.Message);
             }
-
         }
-
-
 
         private async void UpdateNotifications(NotificationsChecker.UpdateArgs args)
         {
@@ -460,25 +412,9 @@ namespace DevRant.WPF
         {
             if (SelectedPost == null)
                 return;
-            else if (SelectedPost is ViewModels.Rant)
+            else if (Utilities.OpenFeedItem(SelectedPost))
             {
-                /*
-                var dlg = new RantViewerWindow((Rant)SelectedPost, api);
-                dlg.Owner = window;
-                dlg.ShowDialog();
-                */
-
-                Process.Start(((ViewModels.Rant)SelectedPost).PostURL);
-            }
-            else if (SelectedPost is ViewModels.Collab)
-            {
-                /*
-                var dlg = new RantViewerWindow((Rant)SelectedPost, api);
-                dlg.Owner = window;
-                dlg.ShowDialog();
-                */
-
-                Process.Start(((ViewModels.Collab) SelectedPost).PostURL);
+                //OK
             }
             else if (SelectedPost is ViewModels.Notification)
             {

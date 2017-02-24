@@ -28,9 +28,14 @@ namespace DevRant.WPF
             DataContext = vm;
         }
 
-        private void RantControl_VoteClicked(object sender, Controls.VoteClickedEventArgs args)
+        private async void RantControl_VoteClicked(object sender, Controls.VoteClickedEventArgs args)
         {
+            await vm.Vote(args);
+        }
 
+        private void ViewRant(object sender, MouseButtonEventArgs e)
+        {
+            vm.ViewRant();
         }
     }
 }

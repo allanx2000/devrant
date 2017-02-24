@@ -153,8 +153,11 @@ namespace DevRant.V1
             bool success = obj["success"].ToObject<bool>();
             if (!success)
             {
-                string reason = obj["error"].ToString();
+                var error = obj["error"];
+                if (error == null)
+                    throw new Exception("Failed with no error details.");
 
+                string reason = error.ToString();
                 if (reason == InvalidCredentials)
                 {
                     throw new InvalidCredentialsException();

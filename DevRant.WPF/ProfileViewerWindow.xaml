@@ -112,13 +112,17 @@
                       VerticalScrollBarVisibility="Auto"
                       >
         -->
-        <ListBox ItemsSource="{Binding Items}" Grid.Row="4" 
-                     ScrollViewer.CanContentScroll="False"
+        <ListBox Name="ItemsListBox" ItemsSource="{Binding Items}" SelectedItem="{Binding Selected}" Grid.Row="4" 
+                    MouseDoubleClick="ViewRant" 
+                    ScrollViewer.CanContentScroll="False"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      ScrollViewer.VerticalScrollBarVisibility="Auto"
                  HorizontalContentAlignment="Stretch">
             <ListBox.ContextMenu>
-                <ContextMenu>View Rant</ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="View Rant" Command="{Binding ViewRantCommand}" />
+                </ContextMenu>
+                
             </ListBox.ContextMenu>
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -131,7 +135,16 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Button Grid.Row="5" HorizontalAlignment="Center" Command="{Binding LoadMoreCommand}">Load More</Button>
 
+        <Grid Grid.Row="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" Command="{Binding LoadMoreCommand}">Load More</Button>
+            <Button Grid.Column="2" HorizontalAlignment="Right" Command="{Binding CloseCommand}">Close</Button>
+        </Grid>
+        
     </Grid>
 </Window>
