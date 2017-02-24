@@ -45,9 +45,36 @@ namespace DevRant.Dtos
         public int Score { get; set; }
 
         /// <summary>
-        /// Rants
+        /// Stores the Rants for Rants, Upvoted, Viewed, and Favorited
         /// </summary>
-        [JsonProperty("content.content.rants")]
         public List<Rant> Rants { get; set; }
+
+        /// <summary>
+        /// Comments
+        /// </summary>
+        public List<Comment> Comments { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int RantsCount { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int UpvotedCount { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int CommentsCount { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int ViewedCount { get; set; }        
+        /// <summary>
+        /// 
+        /// </summary>
+        public int FavoritesCount { get; set; }
     }
 }

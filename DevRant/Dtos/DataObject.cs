@@ -40,6 +40,9 @@ namespace DevRant.Dtos
                 case "Notification":
                     obj = new Notification();
                     break;
+                case "Comment":
+                    obj = new Comment();
+                    break;
                 default:
                     throw new Exception(t.Name + " cannot be parsed.");
             }

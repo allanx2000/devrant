@@ -1,4 +1,5 @@
 ﻿using DevRant.WPF.Controls;
+using Innouvous.Utils;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -36,13 +37,20 @@ namespace DevRant.WPF
 
         private async void SectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var listBox = (ListBox)sender;
-            var item = (ListBoxItem)listBox.SelectedItem;
+            try
+            {
+                var listBox = (ListBox)sender;
+                var item = (ListBoxItem)listBox.SelectedItem;
 
-            if (item == null)
-                return;
+                if (item == null)
+                    return;
 
-            await LoadFeed(item.Name);
+                await LoadFeed(item.Name);
+            }
+            catch (Exception ex)
+            {
+                MessageBoxFactory.ShowError(ex.Message);
+            }
         }
 
         private async Task LoadFeed(string section)

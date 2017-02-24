@@ -835,9 +835,11 @@ namespace DevRant.WPF
 
         private void ViewProfile(string name)
         {
-            string url = Utilities.GetProfileUrl(name);
+            //string url = Utilities.GetProfileUrl(name);
+            //Process.Start(url);
 
-            Process.Start(url);
+            ProfileViewerWindow window = new ProfileViewerWindow(name, api);
+            window.ShowDialog();
         }
 
         public ICommand ViewNotificationsCommand

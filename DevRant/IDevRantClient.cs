@@ -138,7 +138,7 @@ namespace DevRant
         /// Requests profile details to the rest-api.
         /// </summary>
         /// <param name="username">Username of the profile to request.</param>
-        Task<Profile> GetProfileAsync(string username);
+        Task<Profile> GetProfileAsync(string username, ProfileContentType type = ProfileContentType.Rants, int skip = 0);
 
         /// <summary>
         /// Checks if user exists

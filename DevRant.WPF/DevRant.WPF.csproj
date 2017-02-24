@@ -28,7 +28,7 @@
     <TargetCulture>en</TargetCulture>
     <ProductName>devRant++ %28an unofficial client%29</ProductName>
     <PublisherName>innouvous</PublisherName>
-    <ApplicationRevision>43</ApplicationRevision>
+    <ApplicationRevision>44</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -101,6 +101,11 @@
     </ApplicationDefinition>
     <Compile Include="DataStore\SavedPostContent.cs" />
     <Compile Include="DraftsManager.cs" />
+    <Compile Include="ProfileViewerWindow.xaml.cs">
+      <DependentUpon>ProfileViewerWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProfileViewerWindowViewModel.cs" />
+    <Compile Include="ViewModels\ProfileSection.cs" />
     <Compile Include="ViewModels\Commentable.cs" />
     <Compile Include="Controls\MyUserControl.cs" />
     <Compile Include="Controls\CollabControl.xaml.cs">
@@ -182,6 +187,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="OptionsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProfileViewerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

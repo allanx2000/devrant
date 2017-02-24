@@ -15,5 +15,7 @@ namespace DevRant.V1
         internal const string UserId = "user_id";
         internal const string TokenId = "token_id";
         internal const string TokenKey = "token_key";
+
+        internal const int ProfileDataSkip = 30; //Returns 30 results per request
     }
 }

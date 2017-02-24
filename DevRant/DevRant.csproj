@@ -59,6 +59,7 @@
     <Compile Include="Dtos\AccessInfo.cs" />
     <Compile Include="Dtos\PostContent.cs" />
     <Compile Include="Dtos\Vote.cs" />
+    <Compile Include="Enums\ProfileContentType.cs" />
     <Compile Include="Enums\VoteParam.cs" />
     <Compile Include="Exceptions\NotLoggedInException.cs" />
     <Compile Include="V1\Constants.cs" />

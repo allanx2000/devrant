@@ -1,3 +1,4 @@
-﻿Add DB save path option
-	-move if currently default, and it exists
-	-Settings.Value
+﻿ProfileViewerWindow
+-Infinite scroll rants
+
+Downvote Button and reason

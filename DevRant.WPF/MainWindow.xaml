@@ -163,6 +163,7 @@
             <!-- Example of perfect wrapping ListBox... -->
             <ListBox Name="FeedListBox" MouseDoubleClick="FeedListBox_MouseDoubleClick" 
                  HorizontalContentAlignment="Stretch"
+                 ScrollViewer.CanContentScroll="False"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                  ItemsSource="{Binding FeedView}"  SelectedItem="{Binding SelectedPost}" 
                  ItemTemplateSelector="{StaticResource feedListTemplateSelector}"

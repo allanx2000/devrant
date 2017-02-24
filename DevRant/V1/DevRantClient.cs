@@ -62,10 +62,11 @@ namespace DevRant.V1
         /// <param name="username">Username of the profile to request.</param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="username"/> is empty.</exception>
         /// <inheritdoc />
-        public async Task<Profile> GetProfileAsync(string username)
+        public async Task<Profile> GetProfileAsync(string username, ProfileContentType type = ProfileContentType.Rants, int skip = 0)
         {
-            if (string.IsNullOrEmpty(username)) throw new ArgumentException("Must be non-empty.", nameof(username));
-
+            if (string.IsNullOrEmpty(username))
+                throw new ArgumentException("Must be non-empty.", nameof(username));
+    
             var userId = await GetUserId(username);
 
             if (userId == null)
@@ -73,35 +74,73 @@ namespace DevRant.V1
                 return null;
             }
 
-            string url = MakeUrl($"/api/users/{userId}");
+            Parameters paramz = new Parameters();
+            paramz.Add("content", type.ToString().ToLower());
+            paramz.Add("skip", skip.ToString());
+
+            string url = MakeUrl($"/api/users/{userId}", paramz);
             var response = await client.GetAsync(url);
             var responseText = await response.Content.ReadAsStringAsync();
 
             JObject obj = JObject.Parse(responseText);
             Profile profile = obj["profile"].ToObject<Profile>();
 
-            //Add Rants
+            //Add Data
             JObject content = obj["profile"]["content"]["content"] as JObject;
 
-            JArray rants = content["rants"] as JArray;
+            string sectionName = type.ToString().ToLower();
 
-            if (rants != null)
+            JObject counts = obj["profile"]["content"]["counts"] as JObject;
+            profile.RantsCount = GetCount(counts, "rants");
+            profile.CommentsCount = GetCount(counts, "comments");
+            profile.UpvotedCount = GetCount(counts, "upvoted");
+            profile.FavoritesCount = GetCount(counts, "favorites");
+            profile.ViewedCount = GetCount(counts, "viewed");
+
+            //TODO: Collab
+
+            JArray data = content[sectionName] as JArray;
+
+            if (data != null)
             {
                 List<Rant> rantsList = new List<Rant>();
-                foreach (JObject r in rants)
+                List<Comment> commentsList = new List<Comment>();
+                
+                foreach (JObject i in data)
                 {
-                    Rant info = DataObject.Parse<Rant>(r);
-                    rantsList.Add(info);
+                    switch (type)
+                    {
+                        case ProfileContentType.Rants:
+                        case ProfileContentType.Favorites:
+                        case ProfileContentType.Upvoted:
+                        case ProfileContentType.Viewed:
+                            Rant rant = DataObject.Parse<Rant>(i);
+                            rantsList.Add(rant);
+                            break;
+                        case ProfileContentType.Comments:
+                            Comment comment = DataObject.Parse<Comment>(i);
+                            commentsList.Add(comment);
+                            break;
+                    }
                 }
 
                 profile.Rants = rantsList;
+                profile.Comments = commentsList;
             }
 
             return profile;
         }
 
+        private int GetCount(JObject obj, string name)
+        {
+            if (obj == null || obj[name] == null)
+                return 0;
+            else
+                return Convert.ToInt32(obj[name].ToString());
+        }
+
         #region API Utils 
-        
+
         private const string InvalidCredentials = "Invalid user credentials.";
         
         /// <summary>
@@ -136,8 +175,7 @@ namespace DevRant.V1
                 paramz.AddRange(otherParams);
 
             if (user.LoggedIn)
-            {
-                
+            {   
                 paramz.Add(Constants.TokenKey, user.Token.Key);
                 paramz.Add(Constants.TokenId, user.Token.ID);
                 paramz.Add(Constants.UserId, user.Token.UserID);
