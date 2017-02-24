@@ -29,6 +29,12 @@ namespace DevRant.WPF.DataStore
             }
         }
         
+        public bool OpenInProfileViewer
+        {
+            //TODO: Implement
+            get { return true; }
+        }
+
         public IReadOnlyList<string> FollowedUsers
         {
             get

@@ -830,16 +830,17 @@ namespace DevRant.WPF
             if (SelectedPost == null)
                 return;
 
-            Process.Start(((ViewModels.Rant)SelectedPost).ProfileURL);
+            var profile = SelectedPost as ViewModels.Rant;
+
+            ViewProfile(profile.Username);
         }
 
         private void ViewProfile(string name)
         {
-            //string url = Utilities.GetProfileUrl(name);
-            //Process.Start(url);
-
-            ProfileViewerWindow window = new ProfileViewerWindow(name, api);
-            window.ShowDialog();
+            if (ds.OpenInProfileViewer)
+                Utilities.OpenProfile(name, window, api);
+            else
+                Utilities.OpenProfile(name);
         }
 
         public ICommand ViewNotificationsCommand

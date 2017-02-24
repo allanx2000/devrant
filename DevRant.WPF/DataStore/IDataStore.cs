@@ -22,6 +22,7 @@ namespace DevRant.WPF.DataStore
         bool HideUsername { get; }
         bool ShowCreateTime { get; }
         bool FilterOutRead { get; }
+        bool OpenInProfileViewer { get; }
 
         void Unfollow(string user);
         void Follow(string user);

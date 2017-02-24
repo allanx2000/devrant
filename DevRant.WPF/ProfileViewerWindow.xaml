@@ -6,6 +6,7 @@
         xmlns:ctrl="clr-namespace:DevRant.WPF.Controls"
         xmlns:local="clr-namespace:DevRant.WPF"
         mc:Ignorable="d" x:Name="window"
+         WindowStartupLocation="CenterScreen"
         Title="Profile Viewer" Height="800" MinWidth="615" Width="650">
     <Grid>
         <Grid.RowDefinitions>
@@ -17,15 +18,22 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <DockPanel Grid.Row="0" LastChildFill="True">
-            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="0 10">
-                <Label FontWeight="Bold" FontSize="20" Content="{Binding Username, FallbackValue=Name}"/>
-                <Label Padding="20 0" FontWeight="DemiBold" Content="{Binding Score, FallbackValue=100}"/>
+        <Grid Grid.Row="0" HorizontalAlignment="Stretch" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Label FontWeight="Bold" FontSize="20" 
+                       Content="{Binding Username, FallbackValue=Name}"/>
+                <Label FontWeight="Normal" Width="100" HorizontalContentAlignment="Left" FontSize="16"
+                       Content="{Binding Score, FallbackValue=100000}"/>
             </StackPanel>
 
-            <Button DockPanel.Dock="Right" HorizontalAlignment="Center">Open In Browser</Button>
+            <Button Grid.Column="2" HorizontalAlignment="Right" Command="{Binding OpenInBrowserCommand}">Open In Browser</Button>
             <Label/>
-        </DockPanel>
+        </Grid>
 
         <!--- TODO: Avatar -->
 
@@ -107,7 +115,8 @@
         <ListBox ItemsSource="{Binding Items}" Grid.Row="4" 
                      ScrollViewer.CanContentScroll="False"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                     ScrollViewer.VerticalScrollBarVisibility="Auto">
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 HorizontalContentAlignment="Stretch">
             <ListBox.ContextMenu>
                 <ContextMenu>View Rant</ContextMenu>
             </ListBox.ContextMenu>

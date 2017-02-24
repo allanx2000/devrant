@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace DevRant.V1
 {
-    internal class Constants
+    /// <summary>
+    /// Constants for V1 API
+    /// </summary>
+    public class Constants
     {
         internal const string AppVersion = "3";
         internal const string PlatformVersion = "3";
@@ -16,6 +19,9 @@ namespace DevRant.V1
         internal const string TokenId = "token_id";
         internal const string TokenKey = "token_key";
 
-        internal const int ProfileDataSkip = 30; //Returns 30 results per request
+        /// <summary>
+        /// Number of items returned in Profile
+        /// </summary>
+        public const int ProfileDataSkip = 30; //Returns 30 results per request
     }
 }

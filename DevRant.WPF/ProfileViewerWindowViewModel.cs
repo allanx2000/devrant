@@ -4,6 +4,8 @@ using DevRant.Enums;
 using System.Collections.ObjectModel;
 using System.Collections;
 using DevRant.Dtos;
+using System.Windows.Input;
+using mvvm = Innouvous.Utils.MVVM;
 
 namespace DevRant.WPF
 {
@@ -12,7 +14,6 @@ namespace DevRant.WPF
         private IDevRantClient api;
         private ProfileViewerWindow window;
         private string username;
-        
         
         private ObservableCollection<ProfileSection> items = new ObservableCollection<ProfileSection>();
         private bool firstLoad = true;
@@ -25,6 +26,10 @@ namespace DevRant.WPF
 
             LoadSection(0);
         }
+        
+        #region Properties
+
+        public bool LoggedIn { get { return api.User.LoggedIn; } }
 
         public string Username { get { return username; } }
         
@@ -109,17 +114,22 @@ namespace DevRant.WPF
             }
         }
 
+        #endregion
+
         private void LoadSection(int idx)
         {
             LoadSection((ProfileContentType)idx);
         }
 
+        int page;
+
         private async void LoadSection(ProfileContentType type)
         {
             items.Clear();
+            page = 0;
 
             Profile profile = await api.GetProfileAsync(username, type);
-            
+
             if (firstLoad)
             {
                 Score = profile.Score;
@@ -128,10 +138,15 @@ namespace DevRant.WPF
                 Comments = profile.CommentsCount;
                 Viewed = profile.ViewedCount;
                 Favorites = profile.FavoritesCount;
-                           
+
                 firstLoad = false;
             }
-            
+
+            AddItems(profile);
+        }
+
+        private void AddItems(Profile profile)
+        {
             if (profile.Rants != null && profile.Rants.Count > 0)
             {
                 //Check already loaded dupes
@@ -148,6 +163,65 @@ namespace DevRant.WPF
             }
         }
 
-        
+
+        #region Commands
+        public ICommand OpenInBrowserCommand
+        {
+            get
+            {
+                return new mvvm.CommandHelper(OpenInBrowser);
+            }
+        }
+
+        private void OpenInBrowser()
+        {
+            Utilities.OpenProfile(Username);
+        }
+
+        public ICommand LoadMoreCommand
+        {
+            get
+            {
+                return new mvvm.CommandHelper(LoadMore);
+            }
+        }
+
+        private async void LoadMore()
+        {
+            page++;
+
+            int skip = page * V1.Constants.ProfileDataSkip;
+
+            ProfileContentType type = (ProfileContentType)SelectedSection;
+
+            int total = GetTotal(type);
+
+            if (total < skip)
+                return;
+
+            Profile profile = await api.GetProfileAsync(username, (ProfileContentType)SelectedSection, skip);
+            AddItems(profile);
+        }
+
+        private int GetTotal(ProfileContentType type)
+        {
+            switch (type)
+            {
+                case ProfileContentType.Comments:
+                    return Comments;
+                case ProfileContentType.Favorites:
+                    return Favorites;
+                case ProfileContentType.Rants:
+                    return Rants;
+                case ProfileContentType.Upvoted:
+                    return Upvoted;
+                case ProfileContentType.Viewed:
+                    return Viewed;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        #endregion
     }
 }
