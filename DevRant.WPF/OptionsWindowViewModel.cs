@@ -211,9 +211,13 @@ namespace DevRant.WPF
         {
             if (SelectedUser == null)
                 return;
+            
+            Utilities.OpenProfile(SelectedUser, window, api);
 
+            /*
             string url = Utilities.BaseURL + "/users/" + SelectedUser;
             Process.Start(url);
+            */
         }
 
         public ICommand CancelCommand

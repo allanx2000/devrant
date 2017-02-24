@@ -28,7 +28,7 @@
     <TargetCulture>en</TargetCulture>
     <ProductName>devRant++ %28an unofficial client%29</ProductName>
     <PublisherName>innouvous</PublisherName>
-    <ApplicationRevision>44</ApplicationRevision>
+    <ApplicationRevision>45</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -99,7 +99,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\VoteReasonConverter.cs" />
     <Compile Include="DataStore\SavedPostContent.cs" />
+    <Compile Include="DownvoteReasonWindow.xaml.cs">
+      <DependentUpon>DownvoteReasonWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DownVoteViewModel.cs" />
     <Compile Include="DraftsManager.cs" />
     <Compile Include="ProfileViewerWindow.xaml.cs">
       <DependentUpon>ProfileViewerWindow.xaml</DependentUpon>
@@ -165,6 +170,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\VoteControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DownvoteReasonWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

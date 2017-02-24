@@ -34,6 +34,12 @@ namespace DevRant.WPF
             return string.Concat(BaseURL, "/users/", name);
         }
 
+        /// <summary>
+        /// Open profile in ProfileViewer
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="owner"></param>
+        /// <param name="api"></param>
         public static void OpenProfile(string username, Window owner, IDevRantClient api)
         {
             ProfileViewerWindow window = new ProfileViewerWindow(username, api);
@@ -41,6 +47,10 @@ namespace DevRant.WPF
             window.ShowDialog();
         }
 
+        /// <summary>
+        /// Open profile in browser
+        /// </summary>
+        /// <param name="username"></param>
         public static void OpenProfile(string username)
         {
             string url = Utilities.GetProfileUrl(username);
@@ -92,7 +102,21 @@ namespace DevRant.WPF
                 switch (args.Type)
                 {
                     case VoteButton.ButtonType.Down:
-                        throw new NotImplementedException();
+                        if (votable.Voted == VoteState.Down)
+                            vote = Dtos.Vote.ClearVote();
+                        else
+                        {
+                            var dlg = new DownvoteReasonWindow();
+                            dlg.Topmost = true;
+                            dlg.ShowDialog();
+
+                            if (dlg.Reason != null)
+                            {
+                                vote = Dtos.Vote.DownVote(dlg.Reason.Value);
+                            }
+                            else
+                                return;
+                        }
                         break;
                     case VoteButton.ButtonType.Up:
                         if (votable.Voted == VoteState.Up)

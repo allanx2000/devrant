@@ -1,0 +1,34 @@
+﻿<Window x:Class="DevRant.WPF.DownvoteReasonWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DevRant.WPF"
+        mc:Ignorable="d"
+        xmlns:conv="clr-namespace:DevRant.WPF.Converters"
+        Title="Select Downvote Reason..." 
+        Width="300"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None">
+
+    <Window.Resources>
+        <conv:VoteReasonConverter x:Key="reasonConverter"/>
+    </Window.Resources>
+    
+    <DockPanel>
+        <GroupBox Header="Reason" DockPanel.Dock="Top">
+            <StackPanel Orientation="Vertical" >
+                <RadioButton IsChecked="{Binding Reason, Converter={StaticResource ResourceKey=reasonConverter}, ConverterParameter=NotForMe}">Not For Me</RadioButton>
+                <RadioButton IsChecked="{Binding Reason, Converter={StaticResource ResourceKey=reasonConverter}, ConverterParameter=OffensiveSpam}">Offensive/Spam</RadioButton>
+                <RadioButton IsChecked="{Binding Reason, Converter={StaticResource ResourceKey=reasonConverter}, ConverterParameter=Repost}">Repost</RadioButton>
+            </StackPanel>
+        </GroupBox>
+
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Command="{Binding SelectCommand}">Select</Button>
+            <Button Command="{Binding CancelCommand}">Cancel</Button>
+        </StackPanel>
+    </DockPanel>
+</Window>
