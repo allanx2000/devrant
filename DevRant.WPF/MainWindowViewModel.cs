@@ -626,6 +626,39 @@ namespace DevRant.WPF
 
         }
 
+
+        public ICommand CommentRantCommand
+        {
+            get { return new mvvm.CommandHelper(CommentRant); }
+
+        }
+
+        private async void CommentRant()
+        {
+
+            var rantSelector = new RantIDInputWindow();
+            rantSelector.Owner = window;
+
+            rantSelector.ShowDialog();
+
+            if (rantSelector.RantId != null)
+            {
+                try
+                {
+                    Dtos.Rant rant = await api.GetRant(rantSelector.RantId.Value);
+
+                    var dlg = EditPostWindow.CreateForComment(api, rantSelector.RantId.Value);
+                    dlg.Owner = window;
+
+                    dlg.ShowDialog();
+                }
+                catch (Exception e)
+                {
+                    MessageBoxFactory.ShowError(e);
+                }
+            }
+        }
+
         private void AddComment()
         {
             if (SelectedPost == null)

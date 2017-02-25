@@ -47,6 +47,13 @@ namespace DevRant.WPF
             return window;
         }
 
+
+        public static EditPostWindow CreateForComment(IDevRantClient api, long rantId)
+        {
+            Commentable dummy = new ViewModels.DummyCommentable(rantId);
+            return CreateForComment(api, dummy);
+        }
+
         public static EditPostWindow CreateForComment(IDevRantClient api, Commentable parent)
         {
             var window = new EditPostWindow(Type.Comment, api, parent: parent);
@@ -60,6 +67,6 @@ namespace DevRant.WPF
             vm = new EditPostWindowViewModel(this, type, api, db, existing, parent);
             DataContext = vm;
         }
-        
+
     }
 }

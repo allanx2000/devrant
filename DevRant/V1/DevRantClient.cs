@@ -258,6 +258,29 @@ namespace DevRant.V1
             return ParseProperty<int?>(responseText, "user_id");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rantId"></param>
+        /// <returns></returns>
+        public async Task<Rant> GetRant(long rantId)
+        {
+            string url = MakeUrl("/api/devrant/rants/" + rantId);
+
+            var response = await client.GetAsync(url);
+            var responseText = await response.Content.ReadAsStringAsync();
+
+            JObject tmp = JObject.Parse(responseText);
+
+            if (CheckSuccess(tmp))
+            {
+                Rant r = ContentObject.Parse<Rant>(tmp["rant"] as JObject);
+                return r;
+            }
+            else
+                return null;
+        }
+
         #endregion
     }
 }

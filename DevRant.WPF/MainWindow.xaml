@@ -107,6 +107,7 @@
             <Menu DockPanel.Dock="Right" IsEnabled="{Binding LoggedIn}">
                 <MenuItem Header="View My Profile" Command="{Binding ViewMyProfileCommand}"/>
                 <MenuItem Header="Post a New Rant" Command="{Binding PostCommand}"/>
+                <MenuItem Header="Comment on Rant..." Command="{Binding CommentRantCommand}"/>
             </Menu>
 
             <!--- Center filler -->

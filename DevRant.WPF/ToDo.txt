@@ -1,5 +1,1 @@
-﻿ProfileViewerWindow
--Voting
-
-Downvote Button and reason
-
+﻿PostViewer, Comments

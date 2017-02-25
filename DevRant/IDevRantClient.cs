@@ -146,6 +146,13 @@ namespace DevRant
         /// <param name="username"></param>
         /// <returns></returns>
         Task<bool> IsValidUser(string username);
+
+        /// <summary>
+        /// Gets a rant by Id
+        /// </summary>
+        /// <param name="rantId"></param>
+        /// <returns></returns>
+        Task<Rant> GetRant(long rantId);
     }
 
 }
