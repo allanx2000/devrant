@@ -17,9 +17,14 @@ namespace DevRant.Dtos
             set { Set("num_comments", value); }
         }
 
+        /// <summary>
+        /// Comments, only if returning full Rant
+        /// </summary>
+        public List<Comment> Comments { get; set; }
+
         private TagsCollection tags = null;
         private bool tagsLoaded;
-
+        
         /// <summary>
         /// Tags
         /// </summary>

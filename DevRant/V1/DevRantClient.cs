@@ -275,6 +275,22 @@ namespace DevRant.V1
             if (CheckSuccess(tmp))
             {
                 Rant r = ContentObject.Parse<Rant>(tmp["rant"] as JObject);
+
+                JArray comments = tmp["comments"] as JArray;
+
+                List<Comment> list = new List<Comment>();
+
+                if (comments != null)
+                {
+                    foreach (JObject o in comments)
+                    {
+                        Comment c = ContentObject.Parse<Comment>(o);
+                        list.Add(c);
+                    }
+
+                    r.Comments = list;
+                }
+
                 return r;
             }
             else
