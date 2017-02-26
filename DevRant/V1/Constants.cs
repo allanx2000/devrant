@@ -14,6 +14,7 @@ namespace DevRant.V1
         internal const string AppVersion = "3";
         internal const string PlatformVersion = "3";
         internal const string BaseAddress = "https://www.devrant.io/";
+        internal const string AvatarAddress = "https://avatars.devrant.io/";
 
         internal const string UserId = "user_id";
         internal const string TokenId = "token_id";

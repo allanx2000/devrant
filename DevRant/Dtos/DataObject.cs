@@ -48,9 +48,28 @@ namespace DevRant.Dtos
             }
 
             obj.AddValues(data);
-            
+
+            if (obj.kvs.ContainsKey(RawAvatarKey))
+            {
+                try
+                {
+                    JObject i = JObject.Parse(obj.kvs[RawAvatarKey].ToString());
+
+                    if (i != null)
+                        obj.kvs.Add(AvatarKey, i["i"].ToString());
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+
             return (T)(object)obj;
         }
+
+        private const string RawAvatarKey = "user_avatar";
+        private const string AvatarKey = "avatar";
+
 
         /// <summary>
         /// Sets the property
@@ -130,6 +149,15 @@ namespace DevRant.Dtos
         /// Create Time
         /// </summary>
         public long CreatedTime { get { return Get<int>("created_time"); } }
+
+
+        internal string GetAvatarImage()
+        {
+            if (kvs.ContainsKey(AvatarKey))
+                return (string) kvs[AvatarKey];
+            else
+                return null;
+        }
 
     }
 }

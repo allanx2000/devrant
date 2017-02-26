@@ -10,6 +10,11 @@ using DevRant.Dtos;
 using DevRant.WPF.ViewModels;
 using DevRant.Enums;
 using DevRant.WPF.DataStore;
+using System.Net;
+using System.Drawing;
+using System.Windows.Media;
+using System.IO;
+using System.Windows.Media.Imaging;
 
 namespace DevRant.WPF
 {
@@ -96,6 +101,33 @@ namespace DevRant.WPF
         {
             string url = BaseURL + "/rants/" + rantId;
             return url;
+        }
+
+        public static Image GetImage(string url)
+        {
+            var request = WebRequest.Create(url);
+            using (var response = request.GetResponse())
+            using (var stream = response.GetResponseStream())
+            {
+                Bitmap bitmap = new Bitmap(stream);
+                return bitmap;
+            }
+        }
+        
+        public static ImageSource GetImageSource(Image bitmap)
+        {
+            using (MemoryStream memory = new MemoryStream())
+            {
+                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+                memory.Position = 0;
+                BitmapImage bitmapimage = new BitmapImage();
+                bitmapimage.BeginInit();
+                bitmapimage.StreamSource = memory;
+                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapimage.EndInit();
+
+                return bitmapimage;
+            }
         }
 
         /// <summary>

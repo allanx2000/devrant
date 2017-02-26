@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using DevRant.Dtos;
 using DevRant.Enums;
+using static System.Net.Mime.MediaTypeNames;
+using System.Windows.Media;
 
 namespace DevRant
 {
@@ -153,6 +155,12 @@ namespace DevRant
         /// <param name="rantId"></param>
         /// <returns></returns>
         Task<Rant> GetRant(long rantId);
+
+        /// <summary>
+        /// Gets the Avatar image from devRant
+        /// </summary>
+        /// <returns></returns>
+        ImageSource GetAvatar(string imgName);
     }
 
 }

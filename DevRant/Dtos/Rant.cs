@@ -1,13 +1,14 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System;
 
 namespace DevRant.Dtos
 {
     /// <summary>
     /// Represents a data-transfer-object used for basic information about a rant.
     /// </summary>
-    public class Rant : ContentObject
+    public class Rant : ContentObject, HasAvatar
     {
         /// <summary>
         /// Number of Comments
@@ -43,6 +44,17 @@ namespace DevRant.Dtos
                 }
 
                 return tags;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string AvatarImage
+        {
+            get
+            {
+                return base.GetAvatarImage();
             }
         }
 

@@ -82,6 +82,20 @@ namespace DevRant.WPF.Controls
                 RaisePropertyChange();
             }
         }
+
+        public ImageSource Avatar
+        {
+            get
+            {
+                return  bucket.Get<ImageSource>("Avatar");
+            }
+            set
+            {
+                bucket.Set("Avatar", value);
+                RaisePropertyChange();
+            }
+        }
+
         public Visibility CommentsVisibility
         {
             get
@@ -110,8 +124,15 @@ namespace DevRant.WPF.Controls
         {
             if (e.NewValue != null)
             {
-                TagsVisibility = e.NewValue is Rant? Visibility.Visible : Visibility.Collapsed; //&& ((Rant)e.NewValue).tag
-                CommentsVisibility = e.NewValue is Rant ? Visibility.Visible : Visibility.Collapsed;
+                FeedItem item = e.NewValue as FeedItem;
+                TagsVisibility = item is Rant? Visibility.Visible : Visibility.Collapsed; //&& ((Rant)e.NewValue).tag
+                CommentsVisibility = item is Rant ? Visibility.Visible : Visibility.Collapsed;
+
+                var hasAvatar = item as Dtos.HasAvatar;
+                if (API != null && UsernameVisibility == Visibility.Visible && hasAvatar != null)
+                {
+                    Avatar = API.GetAvatar(hasAvatar.AvatarImage);
+                }       
             }
         }
 

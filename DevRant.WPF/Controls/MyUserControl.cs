@@ -11,6 +11,8 @@ namespace DevRant.WPF.Controls
 {
     public class MyUserControl : UserControl, INotifyPropertyChanged
     {
+        public static IDevRantClient API { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChange([CallerMemberName] string name = "")

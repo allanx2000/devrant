@@ -7,14 +7,16 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Threading;
 using DevRant.Enums;
+using System.Windows.Media;
 
 namespace DevRant.WPF.ViewModels
 {
-    public class Rant : FeedItem, Commentable, Votable, ProfileSection
+    public class Rant : FeedItem, Commentable, Votable, ProfileSection, HasAvatar
     {
 
         private Dtos.Rant rant;
         
+        public string AvatarImage { get { return rant.AvatarImage; } }
 
         public long RantId { get { return rant.Id; } }
         public string Text { get { return rant.Text; } }
@@ -68,9 +70,9 @@ namespace DevRant.WPF.ViewModels
             RaisePropertyChanged("Voted");
         }
 
-        public BitmapImage Picture {
+        public ImageSource Picture {
             get {
-                return Get<BitmapImage>(); }
+                return Get<ImageSource>(); }
             private set
             {
                 Set(value);
@@ -112,17 +114,11 @@ namespace DevRant.WPF.ViewModels
         {
             if (rant.Image != null)
             {
-                var request = WebRequest.Create(rant.Image.Url);
 
                 try
                 {
-                    using (var response = request.GetResponse())
-                    using (var stream = response.GetResponseStream())
-                    {
-                        Bitmap bitmap = new Bitmap(stream);
-
-                        App.Current.Dispatcher.Invoke(() => Picture = BitmapToImageSource(bitmap));
-                    }
+                    Image bmp = Utilities.GetImage(rant.Image.Url);
+                    App.Current.Dispatcher.Invoke(() => Picture = Utilities.GetImageSource(bmp));
                 }
                 catch (Exception e)
                 {
@@ -143,22 +139,6 @@ namespace DevRant.WPF.ViewModels
             RaisePropertyChanged("Voted");
         }
         
-        BitmapImage BitmapToImageSource(Bitmap bitmap)
-        {
-            using (MemoryStream memory = new MemoryStream())
-            {
-                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
-                memory.Position = 0;
-                BitmapImage bitmapimage = new BitmapImage();
-                bitmapimage.BeginInit();
-                bitmapimage.StreamSource = memory;
-                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapimage.EndInit();
-
-                return bitmapimage;
-            }
-        }
-
         public void IncrementComments()
         {
             rant.NrOfComments+=1;

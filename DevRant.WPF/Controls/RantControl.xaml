@@ -35,7 +35,8 @@
             <StackPanel Orientation="Horizontal" 
                            Visibility="{Binding UsernameVisibility, ElementName=control}" 
                            Margin="0 5 0 0">
-                <Label FontWeight="Bold" FontSize="14">
+                <Image Height="50" Source="{Binding Avatar, ElementName=control}"/>
+                <Label FontWeight="Bold" VerticalAlignment="Center" FontSize="14">
                     <Label.Style>
                         <Style TargetType="{x:Type Label}">
                             <Setter Property="Foreground" Value="Black"/>
@@ -52,7 +53,7 @@
 
                 <Label Width="20"/>
 
-                <Label MinWidth="30" HorizontalContentAlignment="Center" Background="Gray" Foreground="White" FontWeight="Bold" 
+                <Label MinWidth="30"  VerticalAlignment="Center" HorizontalContentAlignment="Center" Background="Gray" Foreground="White" FontWeight="Bold" 
                                            Content="{Binding UserScoreString}">
                     <Label.Style>
                         <Style TargetType="{x:Type Label}">

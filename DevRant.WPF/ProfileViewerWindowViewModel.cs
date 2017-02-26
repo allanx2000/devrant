@@ -10,6 +10,7 @@ using DevRant.WPF.Controls;
 using Innouvous.Utils;
 using System.Threading.Tasks;
 using DevRant.WPF.ViewModels;
+using System.Windows.Media;
 
 namespace DevRant.WPF
 {
@@ -21,6 +22,19 @@ namespace DevRant.WPF
         
         private ObservableCollection<ProfileSection> items = new ObservableCollection<ProfileSection>();
         private bool firstLoad = true;
+
+        public ImageSource Avatar
+        {
+            get
+            {
+                return Get<ImageSource>();
+            }
+            set
+            {
+                Set(value);
+                RaisePropertyChanged();
+            }
+        }
 
         public ProfileViewerWindowViewModel(string username, ProfileViewerWindow profileViewerWindow, IDevRantClient api)
         {
@@ -166,6 +180,9 @@ namespace DevRant.WPF
                 Comments = profile.CommentsCount;
                 Viewed = profile.ViewedCount;
                 Favorites = profile.FavoritesCount;
+
+                if (profile.AvatarImage != null)
+                    Avatar = api.GetAvatar(profile.AvatarImage);
 
                 firstLoad = false;
             }

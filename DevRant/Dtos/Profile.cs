@@ -6,7 +6,7 @@ namespace DevRant.Dtos
     /// <summary>
     /// Represents a data-transfer-object for a devrant profile.
     /// </summary>
-    public class Profile
+    public class Profile : HasAvatar
     {
         /// <summary>
         /// Represents the username of the profile.
@@ -76,5 +76,12 @@ namespace DevRant.Dtos
         /// 
         /// </summary>
         public int FavoritesCount { get; set; }
+
+        /// <summary>
+        /// The image name for the avatar
+        /// PNG = full
+        /// JPG = head only
+        /// </summary>
+        public string AvatarImage { get; internal set; }
     }
 }

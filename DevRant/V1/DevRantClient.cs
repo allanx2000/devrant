@@ -6,8 +6,10 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace DevRant.V1
 {
@@ -96,6 +98,10 @@ namespace DevRant.V1
             profile.UpvotedCount = GetCount(counts, "upvoted");
             profile.FavoritesCount = GetCount(counts, "favorites");
             profile.ViewedCount = GetCount(counts, "viewed");
+
+            //Avatar Image
+            string avt = obj["profile"]["avatar"]["i"].ToString();
+            profile.AvatarImage = avt;
 
             //TODO: Collab
 
@@ -295,6 +301,35 @@ namespace DevRant.V1
             }
             else
                 return null;
+        }
+
+        private static readonly ObjectCache avatarCache = MemoryCache.Default;
+        private static readonly CacheItemPolicy CachePolicy = new CacheItemPolicy()
+        {
+            SlidingExpiration = new TimeSpan(0, 5, 0)
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public ImageSource GetAvatar(string imgName)
+        {
+            if (string.IsNullOrEmpty(imgName))
+                return null;
+
+            string url = Constants.AvatarAddress + imgName;
+
+            ImageSource data;
+            if (avatarCache.Get(imgName) == null)
+            {
+                data = Utilities.GetImageSource(url);
+                avatarCache.Add(new CacheItem(imgName, data), CachePolicy);
+
+                return data;
+            }
+            else 
+                return (ImageSource)avatarCache.Get(imgName);
         }
 
         #endregion

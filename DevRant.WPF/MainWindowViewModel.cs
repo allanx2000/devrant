@@ -48,6 +48,8 @@ namespace DevRant.WPF
             api = new DevRantClient();
             db = SQLiteStore.CreateInstance(ds.DBFolder);
 
+            MyUserControl.API = api;
+
             statusMessages = new MessageCollection();
             statusMessages.Changed += StatusChanged;
 
