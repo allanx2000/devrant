@@ -6,6 +6,8 @@
              xmlns:local="clr-namespace:DevRant.WPF.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" x:Name="control">
+    <!-- This control also supports displaying comments-->
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80"/>

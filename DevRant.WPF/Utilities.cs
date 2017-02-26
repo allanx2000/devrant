@@ -111,6 +111,9 @@ namespace DevRant.WPF
 
             Votable votable = args.SelectedItem as Votable;
 
+            if (votable.Voted == VoteState.Disabled)
+                return;
+                        
             if (votable != null)
             {
                 switch (args.Type)
@@ -161,6 +164,11 @@ namespace DevRant.WPF
 
                         var r2 = await api.User.VoteCollab(collab.ID, vote);
                         collab.Update(r2);
+                        break;
+                    case FeedItem.FeedItemType.Comment:
+                        var comment = item.AsComment();
+                        var r3 = await api.User.VoteComment(comment.ID, vote);
+                        comment.Update(r3);
                         break;
                 }
 

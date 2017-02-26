@@ -152,21 +152,8 @@ namespace DevRant.V1
         public async Task<Rant> VoteRant(long rantId, Vote vote)
         {
             string url = string.Concat(Constants.BaseAddress, "api/devrant/rants/", rantId, "/vote");
-            
-            var paramz = new Parameters();
-            paramz.Add("vote", vote.StateAsString());
 
-            if (vote.State == Enums.VoteState.Down)
-            {
-                paramz.Add("reason", vote.ReasonAsString());
-            }
-
-            var body = owner.CreatePostBody(paramz);
-            
-            var response = await client.PostAsync(url, body);
-            var responseText = await response.Content.ReadAsStringAsync();
-
-            JObject obj = JObject.Parse(responseText);
+            JObject obj = await GetVoteResponse(url, vote);
 
             if (owner.CheckSuccess(obj))
             {
@@ -181,6 +168,19 @@ namespace DevRant.V1
         {
             string url = string.Concat(Constants.BaseAddress, "api/devrant/rants/", rantId, "/vote");
 
+            JObject obj = await GetVoteResponse(url, vote);
+
+            if (owner.CheckSuccess(obj))
+            {
+                var collab = DataObject.Parse<Collab>((JObject)obj["rant"]);
+                return collab;
+            }
+            else
+                return null;
+        }
+
+        private async Task<JObject> GetVoteResponse(string url, Vote vote)
+        {
             var paramz = new Parameters();
             paramz.Add("vote", vote.StateAsString());
 
@@ -195,19 +195,22 @@ namespace DevRant.V1
             var responseText = await response.Content.ReadAsStringAsync();
 
             JObject obj = JObject.Parse(responseText);
+            return obj;
+        }
+
+        public async Task<Comment> VoteComment(long commentId, Vote vote)
+        {
+            string url = string.Concat(Constants.BaseAddress, "api/comments/", commentId, "/vote");
+
+            JObject obj = await GetVoteResponse(url, vote);
 
             if (owner.CheckSuccess(obj))
             {
-                var collab = DataObject.Parse<Collab>((JObject)obj["rant"]);
-                return collab;
+                var comment = DataObject.Parse<Comment>((JObject)obj["comment"]);
+                return comment;
             }
             else
                 return null;
-        }
-
-        public Task<Comment> VoteComment(long commentId, Vote vote)
-        {
-            throw new NotImplementedException();
         }
 
 
