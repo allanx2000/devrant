@@ -190,6 +190,7 @@ namespace DevRant.WPF
             {
                 foreach (var i in profile.Comments)
                 {
+                    items.Add(new ViewModels.Comment(i));
                 }
             }
         }

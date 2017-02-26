@@ -59,7 +59,7 @@ namespace DevRant.WPF
 
         internal static bool OpenFeedItem(FeedItem item)
         {
-            if (item is Commentable && !(item is ViewModels.Notification))
+            if (item is Commentable)
             {
                 /*
                 var dlg = new RantViewerWindow((Rant)SelectedPost, api);
@@ -74,8 +74,22 @@ namespace DevRant.WPF
 
                 return true;
             }
+            else if (item is ViewModels.Comment)
+            {
+                string url = GetRantUrl(item.AsComment().RantId);
+                Process.Start(url);
+                return true;
+            }
             else
                 return false;
+        }
+
+        internal static string ReplaceNewLines(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return null;
+            else
+                return text.Replace(Environment.NewLine, "\n");
         }
 
         private static string GetRantUrl(long rantId)

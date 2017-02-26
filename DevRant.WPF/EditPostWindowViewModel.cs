@@ -65,7 +65,7 @@ namespace DevRant.WPF
                 if (Text == null)
                     return MaxCharacters;
 
-                int adjusted = Text.Replace(Environment.NewLine, " ").Length;
+                int adjusted = Utilities.ReplaceNewLines(Text).Length;
                 return MaxCharacters - adjusted;
             }
         }
@@ -217,10 +217,11 @@ namespace DevRant.WPF
         {
             try
             {
-                if (string.IsNullOrEmpty(Text) || Text.Length < 5)
+                string tmp = Utilities.ReplaceNewLines(Text);
+                if (string.IsNullOrEmpty(tmp) || tmp.Length < 5)
                     throw new Exception("Rant or comment must be more than 5 characters long.");
                 
-                PostContent data = new PostContent(Text);
+                PostContent data = new PostContent(tmp);
 
                 if (type == EditPostWindow.Type.Rant && !string.IsNullOrEmpty(TagsString))
                     data.SetTag(TagsString);

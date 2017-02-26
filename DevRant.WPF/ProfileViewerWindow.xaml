@@ -79,7 +79,7 @@
                     </StackPanel>
                 </TabItem.Header>
             </TabItem>
-            <TabItem Visibility="Collapsed">
+            <TabItem>
                 <TabItem.Header>
                     <StackPanel>
                         <Label Style="{StaticResource Header}">Comments</Label>

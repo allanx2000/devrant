@@ -13,7 +13,7 @@ namespace DevRant.Dtos
     {
         
         /// <summary>
-        /// Represents the identity of the rant.
+        /// Represents the identity of the object.
         /// </summary>
         public int Id { get { return Get<int>("id"); } }
         
@@ -61,7 +61,7 @@ namespace DevRant.Dtos
         /// <summary>
         /// Represents the text of the object.
         /// </summary>
-        public string Text { get { return Get<string>("text"); } }
+        public virtual string Text { get { return Get<string>("text"); } }
 
         /// <summary>
         /// Vote State

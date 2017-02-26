@@ -28,7 +28,7 @@
     <TargetCulture>en</TargetCulture>
     <ProductName>devRant++ %28an unofficial client%29</ProductName>
     <PublisherName>innouvous</PublisherName>
-    <ApplicationRevision>47</ApplicationRevision>
+    <ApplicationRevision>48</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -159,6 +159,7 @@
     <Compile Include="ViewModels\Draft.cs" />
     <Compile Include="ViewModels\Notification.cs" />
     <Compile Include="ViewModels\FeedItem.cs" />
+    <Compile Include="ViewModels\Comment.cs" />
     <Compile Include="ViewModels\Rant.cs" />
     <Compile Include="Controls\VoteClickedEventArgs.cs" />
     <Compile Include="ViewModels\Votable.cs" />

@@ -81,12 +81,14 @@
 
             <DockPanel>
 
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                <StackPanel Visibility="{Binding CommentsVisibility, ElementName=control}"  
+                            Orientation="Horizontal" DockPanel.Dock="Right">
                     <Label FontWeight="Bold">Comments:</Label>
                     <Label Content="{Binding CommentsCount}"/>
                 </StackPanel>
 
-                <StackPanel Visibility="{Binding TagsVisibility}" DockPanel.Dock="Left" Orientation="Horizontal">
+                <StackPanel Visibility="{Binding TagsVisibility, ElementName=control}" 
+                            DockPanel.Dock="Left" Orientation="Horizontal">
                     <Label FontWeight="Bold">Tags:</Label>
                     <Label Content="{Binding TagsString}"/>
                 </StackPanel>

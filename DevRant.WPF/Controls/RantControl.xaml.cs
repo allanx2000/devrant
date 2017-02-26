@@ -1,4 +1,5 @@
 ﻿using DevRant.WPF.ViewModels;
+using Innouvous.Utils.DataBucket;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -67,13 +68,53 @@ namespace DevRant.WPF.Controls
             }
         }
 
+        private DataBucket bucket = new DataBucket();
+
+        public Visibility TagsVisibility
+        {
+            get
+            {
+                return bucket.Get<Visibility>("TagsVisibility");
+            }
+            private set
+            {
+                bucket.Set("TagsVisibility", value);
+                RaisePropertyChange();
+            }
+        }
+        public Visibility CommentsVisibility
+        {
+            get
+            {
+                return bucket.Get<Visibility>("CommentsVisibility");
+            }
+            private set
+            {
+                bucket.Set("CommentsVisibility", value);
+                RaisePropertyChange();
+            }
+        }
 
         public RantControl()
         {
             InitializeComponent();
-            
+
+            TagsVisibility = Visibility.Visible;
+            CommentsVisibility = Visibility.Visible;
+
+            DataContextChanged += RantControl_DataContextChanged;
+
         }
-        
+
+        private void RantControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue != null)
+            {
+                TagsVisibility = e.NewValue is Rant? Visibility.Visible : Visibility.Collapsed; //&& ((Rant)e.NewValue).tag
+                CommentsVisibility = e.NewValue is Rant ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
         private void VoteControl_DownClicked(object sender, VoteClickedEventArgs args)
         {
             VoteControl_Clicked(sender, args);

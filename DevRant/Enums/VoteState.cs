@@ -18,6 +18,13 @@
         /// <summary>
         /// Downvote
         /// </summary>
-        Down = -1
+        Down = -1,
+
+        /// <summary>
+        /// Own content, voting is disabled
+        /// </summary>
+        Disabled = -2
+
+
     }
 }

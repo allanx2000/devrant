@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace DevRant.WPF.ViewModels
 {
-    public class Notification : FeedItem, Commentable
+    public class Notification : FeedItem
     {
         private Dtos.Notification notif;
         

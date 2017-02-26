@@ -16,6 +16,7 @@ namespace DevRant.WPF.ViewModels
             Notification,
             Collab,
             Draft,
+            Comment,
         }
 
         public FeedItemType Type { get; private set; }
@@ -34,6 +35,11 @@ namespace DevRant.WPF.ViewModels
         public Collab AsCollab()
         {
             return this as Collab;
+        }
+
+        internal Comment AsComment()
+        {
+            return this as Comment;
         }
     }
 }
