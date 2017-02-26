@@ -69,6 +69,14 @@ namespace DevRant.WPF.Controls
             }
         }
 
+        public bool CanVote
+        {
+            get
+            {
+                return Voted != VoteState.Disabled;
+            }
+        }
+
         public string VotesString
         {
             get
@@ -142,6 +150,7 @@ namespace DevRant.WPF.Controls
         {
             RaisePropertyChange("DownSelected");
             RaisePropertyChange("UpSelected");
+            RaisePropertyChange("CanVote");
         }
         
     }

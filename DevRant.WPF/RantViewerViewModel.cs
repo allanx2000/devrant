@@ -2,6 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Input;
 using mvvm = Innouvous.Utils.MVVM;
 
 namespace DevRant.WPF
@@ -29,7 +30,20 @@ namespace DevRant.WPF
             }
         }
         
-        public System.Windows.Input.ICommand OpenInBrowserCommand
+        public bool LoggedIn
+        {
+            get { return api.User.LoggedIn; }
+        }
+
+        public ICommand CloseCommand
+        {
+            get
+            {
+                return new mvvm.CommandHelper(() => window.Close());
+            }
+        }
+
+        public ICommand OpenInBrowserCommand
         {
             get
             {
