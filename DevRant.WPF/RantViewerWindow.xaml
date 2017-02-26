@@ -8,29 +8,41 @@
         SizeToContent="Height"
         WindowStyle="ToolWindow"
         mc:Ignorable="d"
-        Title="RantViewerWindow" Width="450" 
-        x:Name="rantWindow" WindowStartupLocation="CenterOwner">
+        Title="RantViewerWindow" Width="600" 
+        x:Name="rantWindow" 
+        WindowStartupLocation="CenterScreen" >
     <ScrollViewer MaxHeight="700" VerticalScrollBarVisibility="Auto">
-    <Grid Margin="5" >
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        <Grid Margin="5" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <ctrl:RantControl 
-            Grid.Row="0" 
+            <Button Grid.Row="0" HorizontalAlignment="Center" Command="{Binding OpenInBrowserCommand}">Open In Browser</Button>
+
+            <ctrl:RantControl 
+            Grid.Row="1" 
             UsernameVisibility="Visible"
             DateVisibility="Visible"
             DataContext="{Binding DataContext.Rant, ElementName=rantWindow}"
             LoggedIn="{Binding DataContext.LoggedIn, ElementName=rantWindow}"/>
-        
-        <ItemsControl Margin="3 10" ItemsSource="{Binding Comments}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Label>Comment</Label>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </Grid>
+
+            <!-- MinHeight="30" Background="Aqua" -->
+            <ItemsControl Margin="3" VerticalAlignment="Top"
+                          Background="LightBlue"
+                          Grid.Row="2" ItemsSource="{Binding DataContext.Comments, ElementName=rantWindow}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ctrl:RantControl 
+                        Margin="30 5 5 5" 
+                            Background="White"
+                        UsernameVisibility="Visible"
+                        DateVisibility="Visible"
+                        LoggedIn="{Binding DataContext.LoggedIn, ElementName=rantWindow}"/>
+                        </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
     </ScrollViewer>
 </Window>

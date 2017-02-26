@@ -1,1 +1,7 @@
-﻿PostViewer, Comments
+﻿PostViewer
+	-Modify Comments, Rants
+	-Reply, Oprn in Browser
+	-LoggedIn property
+	-Change button to top menu
+
+-Switch app to use static APIHolder?

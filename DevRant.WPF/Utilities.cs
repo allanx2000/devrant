@@ -62,21 +62,35 @@ namespace DevRant.WPF
             Process.Start(url);
         }
 
-        internal static bool OpenFeedItem(FeedItem item)
+        internal static bool OpenFeedItem(Commentable item)
         {
-            if (item is Commentable)
-            {
-                /*
-                var dlg = new RantViewerWindow((Rant)SelectedPost, api);
-                dlg.Owner = window;
-                dlg.ShowDialog();
-                */
+            string url = GetRantUrl(item.RantId);
+            Process.Start(url);
+            return true;
+        }
 
+        internal static bool OpenFeedItem(FeedItem item, IDevRantClient api, Window owner)
+        {
+            if (item is ViewModels.Rant)
+            {
+                Window dlg;
+                
+                dlg = new RantViewerWindow((ViewModels.Rant) item, api);
+                    
+                dlg.Owner = owner;
+                dlg.ShowDialog();
+                
+                /*
                 string url = GetRantUrl(((Commentable)item).RantId);
 
                 Process.Start(url);
+                */
 
-
+                return true;
+            }
+            else if (item is Commentable)
+            {
+                OpenFeedItem((Commentable)item);
                 return true;
             }
             else if (item is ViewModels.Comment)
@@ -92,7 +106,7 @@ namespace DevRant.WPF
         internal static string ReplaceNewLines(string text)
         {
             if (string.IsNullOrEmpty(text))
-                return null;
+                return "";
             else
                 return text.Replace(Environment.NewLine, "\n");
         }

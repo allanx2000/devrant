@@ -226,7 +226,7 @@ namespace DevRant.WPF
 
         public void ViewRant()
         {
-            Utilities.OpenFeedItem(Selected);
+            Utilities.OpenFeedItem(Selected, api, window);
         }
 
         public ICommand CloseCommand

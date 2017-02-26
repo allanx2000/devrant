@@ -414,7 +414,7 @@ namespace DevRant.WPF
         {
             if (SelectedPost == null)
                 return;
-            else if (Utilities.OpenFeedItem(SelectedPost))
+            else if (Utilities.OpenFeedItem(SelectedPost, api, window))
             {
                 //OK
             }

@@ -26,8 +26,9 @@ namespace DevRant.WPF
         {
             InitializeComponent();
 
-            vm = new RantViewerViewModel(rant, api);
+            vm = new RantViewerViewModel(this, rant, api);
             DataContext = vm;
+            
         }
 
     }
