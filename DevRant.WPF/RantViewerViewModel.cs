@@ -4,6 +4,10 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using mvvm = Innouvous.Utils.MVVM;
+using DevRant.WPF.Controls;
+using DevRant.Exceptions;
+using System.Threading.Tasks;
+using Innouvous.Utils;
 
 namespace DevRant.WPF
 {
@@ -40,6 +44,18 @@ namespace DevRant.WPF
             get
             {
                 return new mvvm.CommandHelper(() => window.Close());
+            }
+        }
+
+        internal async Task Vote(VoteClickedEventArgs args)
+        {
+            try
+            {
+                await Utilities.Vote(args, api);
+            }
+            catch (Exception e)
+            {
+                MessageBoxFactory.ShowError(e);
             }
         }
 

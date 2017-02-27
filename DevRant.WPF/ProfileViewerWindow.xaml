@@ -8,6 +8,9 @@
         mc:Ignorable="d" x:Name="window"
          WindowStartupLocation="CenterScreen"
         Title="Profile Viewer" Height="800" MinWidth="615" Width="650">
+    <Window.InputBindings>
+        <KeyBinding Key="Esc" Command="{Binding CloseCommand}"/>
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

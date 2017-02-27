@@ -127,7 +127,13 @@ namespace DevRant.WPF
                 return bitmap;
             }
         }
-        
+
+        private static System.Windows.Controls.BooleanToVisibilityConverter bool2Vis = new System.Windows.Controls.BooleanToVisibilityConverter();
+        public static Visibility ConvertToVisibility(bool v)
+        {
+            return (Visibility) bool2Vis.Convert(v, null, null, null);
+        }
+
         public static ImageSource GetImageSource(Image bitmap)
         {
             using (MemoryStream memory = new MemoryStream())

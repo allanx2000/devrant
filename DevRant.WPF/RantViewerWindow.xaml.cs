@@ -31,5 +31,9 @@ namespace DevRant.WPF
             
         }
 
+        private async void RantControl_VoteClicked(object sender, Controls.VoteClickedEventArgs args)
+        {
+           await vm.Vote(args);
+        }
     }
 }

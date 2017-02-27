@@ -11,13 +11,17 @@
         Title="RantViewerWindow" Width="600" 
         x:Name="rantWindow" 
         WindowStartupLocation="CenterScreen" >
+
+    <Window.InputBindings>
+        <KeyBinding Key="Esc" Command="{Binding CloseCommand}"/>
+    </Window.InputBindings>
     <DockPanel LastChildFill="True">
 
         <Menu DockPanel.Dock="Top" HorizontalAlignment="Stretch">
             <MenuItem Command="{Binding OpenInBrowserCommand}" Header="Open In Browser"/>
             <MenuItem Command="{Binding CloseCommand}" Header="Close"/>
         </Menu>
-        
+
         <ScrollViewer MaxHeight="700" VerticalScrollBarVisibility="Auto">
             <Grid Margin="5" >
                 <Grid.RowDefinitions>
@@ -26,11 +30,12 @@
                 </Grid.RowDefinitions>
 
                 <ctrl:RantControl 
-            Grid.Row="0" 
-            UsernameVisibility="Visible"
-            DateVisibility="Visible"
-            DataContext="{Binding DataContext.Rant, ElementName=rantWindow}"
-            LoggedIn="{Binding DataContext.LoggedIn, ElementName=rantWindow}"/>
+                    Grid.Row="0" 
+                    VoteClicked="RantControl_VoteClicked"
+                    UsernameVisibility="Visible"
+                    DateVisibility="Visible"
+                    DataContext="{Binding DataContext.Rant, ElementName=rantWindow}"
+                    LoggedIn="{Binding DataContext.LoggedIn, ElementName=rantWindow}"/>
 
                 <!-- MinHeight="30" Background="Aqua" -->
                 <ItemsControl Margin="1" VerticalAlignment="Top"
@@ -38,12 +43,13 @@
                           Grid.Row="2" ItemsSource="{Binding DataContext.Comments, ElementName=rantWindow}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <ctrl:RantControl 
-                        Margin="30 5 5 5" 
-                            Background="White"
-                        UsernameVisibility="Visible"
-                        DateVisibility="Visible"
-                        LoggedIn="{Binding DataContext.LoggedIn, ElementName=rantWindow}"/>
+                            <ctrl:RantControl
+                                VoteClicked="RantControl_VoteClicked"
+                                Margin="30 5 5 5" 
+                                Background="White"
+                                UsernameVisibility="Visible"
+                                DateVisibility="Visible"
+                                LoggedIn="{Binding DataContext.LoggedIn, ElementName=rantWindow}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

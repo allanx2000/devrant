@@ -120,13 +120,17 @@ namespace DevRant.WPF.Controls
 
         }
 
+
         private void RantControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue != null)
             {
                 FeedItem item = e.NewValue as FeedItem;
-                TagsVisibility = item is Rant? Visibility.Visible : Visibility.Collapsed; //&& ((Rant)e.NewValue).tag
-                CommentsVisibility = item is Rant ? Visibility.Visible : Visibility.Collapsed;
+
+                Rant r = item as Rant;
+                
+                TagsVisibility = Utilities.ConvertToVisibility(r != null && !string.IsNullOrEmpty(r.TagsString));
+                CommentsVisibility = Utilities.ConvertToVisibility(r != null);
 
                 var hasAvatar = item as Dtos.HasAvatar;
                 if (API != null && UsernameVisibility == Visibility.Visible && hasAvatar != null)

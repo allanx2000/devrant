@@ -1,6 +1,5 @@
 ﻿PostViewer
 	-Modify Comments, Rants
 	-Reply, Oprn in Browser
-	-LoggedIn property
 
 -Switch app to use static APIHolder?
