@@ -101,6 +101,44 @@ namespace DevRant.WPF
             return true;
         }
 
+        internal static async Task<bool> HandleButtons(Window window, ButtonClickedEventArgs args)
+        {
+
+
+            EditPostWindow editPost;
+
+            switch (args.Type)
+            {
+                case ButtonType.Up:
+                case ButtonType.Down:
+                    await Utilities.Vote(args);
+                    break;
+                case ButtonType.Reply:
+                    if (args.SelectedItem is Commentable)
+                    {
+                        Commentable ctbl = args.SelectedItem as Commentable;
+                        editPost = EditPostWindow.CreateForComment(AppManager.Instance.API, ctbl);
+                        editPost.Owner = window;
+                        editPost.ShowDialog();
+
+                        if (!editPost.Cancelled)
+                        {
+                            ctbl.IncrementComments();
+                        }
+                    }
+                    break;
+                case ButtonType.Delete:
+                    break;
+                case ButtonType.Edit:
+                    editPost = EditPostWindow.CreateForEdit(AppManager.Instance.API, args.SelectedItem);
+                    editPost.Owner = window;
+                    editPost.ShowDialog();
+                    break;
+            }
+
+            return true;
+        }
+
         internal static Task Vote(ButtonClickedEventArgs args)
         {
             return Vote(args, AppManager.Instance.API, AppManager.Instance.DB);

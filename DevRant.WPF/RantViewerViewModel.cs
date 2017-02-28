@@ -51,30 +51,7 @@ namespace DevRant.WPF
         {
             try
             {
-                EditPostWindow editPost;
-
-                switch (args.Type)
-                {
-                    case ButtonType.Up:
-                    case ButtonType.Down:
-                        await Utilities.Vote(args);
-                        break;
-                    case ButtonType.Reply:
-                        if (args.SelectedItem is Commentable)
-                        {
-                            editPost = EditPostWindow.CreateForComment(AppManager.Instance.API, args.SelectedItem as Commentable);
-                            editPost.Owner = window;
-                            editPost.ShowDialog();
-                        }
-                        break;
-                    case ButtonType.Delete:
-                        break;
-                    case ButtonType.Edit:
-                        editPost = EditPostWindow.CreateForEdit(AppManager.Instance.API, args.SelectedItem);
-                        editPost.Owner = window;
-                        editPost.ShowDialog();
-                        break;
-                }
+                await Utilities.HandleButtons(window, args);
             }
             catch (Exception e)
             {

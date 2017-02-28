@@ -8,7 +8,7 @@
         SizeToContent="Height"
         WindowStyle="ToolWindow"
         mc:Ignorable="d"
-        Title="RantViewerWindow" Width="600" 
+        Title="Viewer" Width="600" 
         x:Name="rantWindow" 
         WindowStartupLocation="CenterScreen" >
 

@@ -11,7 +11,9 @@
         SizeToContent="Height"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="None">
+        WindowStyle="None"
+        BorderBrush="DarkBlue"
+        BorderThickness="1">
 
     <Window.Resources>
         <conv:VoteReasonConverter x:Key="reasonConverter"/>

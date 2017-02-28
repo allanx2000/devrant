@@ -91,25 +91,7 @@ namespace DevRant.WPF
         {
             try
             {
-                EditPostWindow editPost;
-
-                switch (args.Type)
-                {
-                    case ButtonType.Up:
-                    case ButtonType.Down:
-                        await Utilities.Vote(args);
-                        break;
-                    case ButtonType.Reply:
-                        if (args.SelectedItem is Commentable)
-                            AddComment(args.SelectedItem as Commentable);
-                        break;
-                    case ButtonType.Delete:
-                        break;
-                    case ButtonType.Edit:
-                        editPost = EditPostWindow.CreateForEdit(AppManager.Instance.API, args.SelectedItem);
-                        editPost.ShowDialog();
-                        break;
-                }
+                await Utilities.HandleButtons(window, args);
             }
             catch (InvalidCredentialsException e)
             {

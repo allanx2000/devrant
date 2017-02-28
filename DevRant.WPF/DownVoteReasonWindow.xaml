@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DevRant.WPF"
+        
         mc:Ignorable="d"
         xmlns:conv="clr-namespace:DevRant.WPF.Converters"
         Title="Select Downvote Reason..." 
@@ -11,7 +12,9 @@
         SizeToContent="Height"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="None">
+        WindowStyle="None"
+        BorderBrush="Red"
+        BorderThickness="1">
 
     <Window.Resources>
         <conv:VoteReasonConverter x:Key="reasonConverter"/>
