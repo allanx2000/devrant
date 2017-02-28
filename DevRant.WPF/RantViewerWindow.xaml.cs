@@ -31,9 +31,10 @@ namespace DevRant.WPF
             
         }
 
-        private async void RantControl_VoteClicked(object sender, Controls.ButtonClickedEventArgs args)
+        //TODO: Need to change this to handle reply...
+        private async void Button_Clicked(object sender, Controls.ButtonClickedEventArgs args)
         {
-           await vm.Vote(args);
+           await vm.ButtonClicked(args);
         }
     }
 }

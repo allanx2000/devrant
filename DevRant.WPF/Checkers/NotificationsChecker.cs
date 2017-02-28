@@ -31,7 +31,11 @@ namespace DevRant.WPF.Checkers
 
             Notifications = new ObservableCollection<ViewModels.Notification>();
         }
-        
+
+        public NotificationsChecker() : this(AppManager.Instance.Settings, AppManager.Instance.API)
+        {
+        }
+
         public delegate void OnUpdatedHandler(UpdateArgs args);
         public event OnUpdatedHandler OnUpdate;
         

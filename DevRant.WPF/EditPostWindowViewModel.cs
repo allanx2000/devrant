@@ -34,12 +34,13 @@ namespace DevRant.WPF
 
         private Mode mode = Mode.NewRant;
 
-        public EditPostWindowViewModel(Window window, EditPostWindow.Type type, IDevRantClient api, IPersistentDataStore db = null, Draft existing = null, Commentable parent = null, FeedItem edit = null)
+        public EditPostWindowViewModel(Window window, EditPostWindow.Type type, Draft existing = null, Commentable parent = null, FeedItem edit = null)
         {
             this.window = window;
-            this.api = api;
+            this.api = AppManager.Instance.API;
+            this.db = AppManager.Instance.DB;
+
             this.type = type;
-            this.db = db;
             this.existing = existing;
             this.parent = parent;
             this.editing = edit;
@@ -47,7 +48,18 @@ namespace DevRant.WPF
             Cancelled = true;
 
             if (parent != null)
+            {
                 mode = Mode.NewComment;
+
+                ViewModels.Comment comment = parent as ViewModels.Comment;
+                if (comment != null)
+                {
+                    if (AppManager.Instance.API.User.LoggedInUser != comment.Username)
+                    {
+                        Text = "@" + comment.Username + " ";
+                    }
+                }
+            }
             else if (existing != null)
             {
                 mode = Mode.EditDraft;

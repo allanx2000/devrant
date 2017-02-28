@@ -41,9 +41,8 @@ namespace DevRant.WPF
         {
         }
 
-        private EditPostWindow(IDevRantClient api, FeedItem existing) : this(ToType(existing.Type), api, edit: existing)
+        private EditPostWindow(FeedItem existing) : this(ToType(existing.Type), edit: existing)
         {
-
         }
 
         private static Type ToType(FeedItem.FeedItemType type)
@@ -59,19 +58,19 @@ namespace DevRant.WPF
             }
         }
 
-        private EditPostWindow(Type type, IDevRantClient api, IPersistentDataStore db = null, Draft existing = null, Commentable parent = null, FeedItem edit = null)
+        private EditPostWindow(Type type, Draft existing = null, Commentable parent = null, FeedItem edit = null)
         {
             InitializeComponent();
 
-            vm = new EditPostWindowViewModel(this, type, api, db, existing, parent, edit);
+            vm = new EditPostWindowViewModel(this, type, existing, parent, edit);
             DataContext = vm;
         }
 
 
 
-        public static EditPostWindow CreateForRant(IDevRantClient api, IPersistentDataStore db, Draft existing = null)
+        public static EditPostWindow CreateForRant(Draft existing = null)
         {
-            var window = new EditPostWindow(Type.Rant, api, db, existing);
+            var window = new EditPostWindow(Type.Rant, existing);
             return window;
         }
 
@@ -84,14 +83,15 @@ namespace DevRant.WPF
 
         public static EditPostWindow CreateForComment(IDevRantClient api, Commentable parent)
         {
-            var window = new EditPostWindow(Type.Comment, api, parent: parent);
+            var window = new EditPostWindow(Type.Comment, parent: parent);
             return window;
         }
         
         public static EditPostWindow CreateForEdit(IDevRantClient api, FeedItem existing)
         {
-            var window = new EditPostWindow(api, existing);
+            var window = new EditPostWindow(existing);
             return window;
         }
+        
     }
 }

@@ -33,7 +33,12 @@ namespace DevRant.WPF.Checkers
             
             Posts = new ObservableCollection<ViewModels.Rant>();
         }
-        
+
+        public FollowedUserChecker() : this(AppManager.Instance.Settings, AppManager.Instance.API, AppManager.Instance.DB)
+        {
+
+        }
+
         public delegate void OnUpdatedHandler(UpdateArgs args);
         public event OnUpdatedHandler OnUpdate;
 

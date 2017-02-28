@@ -171,10 +171,10 @@ namespace DevRant.WPF.Controls
                 Rant r = item as Rant;
                 if (r != null)
                 {
-                    if (r.Username == API.User.LoggedInUser)
+                    if (r.Username == AppManager.Instance.API.User.LoggedInUser)
                         ByUser = true;
 
-                    ReplyVisibility = Visibility;
+                    ReplyVisibility = Visibility.Visible;
                 }
 
                 TagsVisibility = Utilities.ConvertToVisibility(r != null && !string.IsNullOrEmpty(r.TagsString));
@@ -183,19 +183,19 @@ namespace DevRant.WPF.Controls
                 Comment comment = item.AsComment();
                 if (comment != null)
                 {
-                    if (comment.Username == API.User.LoggedInUser)
+                    if (comment.Username == AppManager.Instance.API.User.LoggedInUser)
                         ByUser = true;
 
-                    ReplyVisibility = Utilities.ConvertToVisibility(ByUser);
+                    ReplyVisibility = Utilities.ConvertToVisibility(!ByUser);
                 }
 
                 ModifyVisibility = Utilities.ConvertToVisibility(ByUser);
                 DeleteVisibility = ModifyVisibility;
 
                 var hasAvatar = item as Dtos.HasAvatar;
-                if (API != null && UsernameVisibility == Visibility.Visible && hasAvatar != null)
+                if (AppManager.Instance.API != null && UsernameVisibility == Visibility.Visible && hasAvatar != null)
                 {
-                    Avatar = API.GetAvatar(hasAvatar.AvatarImage);
+                    Avatar = AppManager.Instance.API.GetAvatar(hasAvatar.AvatarImage);
                 }       
             }
         }

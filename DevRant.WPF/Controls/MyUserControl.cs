@@ -11,9 +11,6 @@ namespace DevRant.WPF.Controls
 {
     public class MyUserControl : UserControl, INotifyPropertyChanged
     {
-        public static IDevRantClient API { get; set; }
-
-
         public delegate void OnClick(object sender, ButtonClickedEventArgs args);
 
         public event PropertyChangedEventHandler PropertyChanged;

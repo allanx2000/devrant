@@ -101,6 +101,11 @@ namespace DevRant.WPF
             return true;
         }
 
+        internal static Task Vote(ButtonClickedEventArgs args)
+        {
+            return Vote(args, AppManager.Instance.API, AppManager.Instance.DB);
+        }
+
         internal static string ReplaceNewLines(string text)
         {
             if (string.IsNullOrEmpty(text))

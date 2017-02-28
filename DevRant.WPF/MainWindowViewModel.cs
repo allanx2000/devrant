@@ -28,11 +28,7 @@ namespace DevRant.WPF
     internal class MainWindowViewModel : ViewModel
     {
         private Window window;
-
-        private IDataStore ds;
-        private IDevRantClient api;
-        private IPersistentDataStore db;
-
+        
         private FollowedUserChecker fchecker;
 
         private FeedType currentSection;
@@ -44,12 +40,13 @@ namespace DevRant.WPF
         public MainWindowViewModel(Window window)
         {
             this.window = window;
-            ds = new AppSettingsDataStore();
-            api = new DevRantClient();
-            db = SQLiteStore.CreateInstance(ds.DBFolder);
 
-            MyUserControl.API = api;
+            this.ds = new AppSettingsDataStore();
+            this.api = new DevRantClient();
+            this.db = SQLiteStore.CreateInstance(ds.DBFolder);
 
+            AppManager.Initialize(api, ds, db);
+            
             statusMessages = new MessageCollection();
             statusMessages.Changed += StatusChanged;
 
@@ -57,11 +54,11 @@ namespace DevRant.WPF
             feedView.Source = feeds;
 
             //Initialize the properties
-            fchecker = new FollowedUserChecker(ds, api, db);
+            fchecker = new FollowedUserChecker();
             fchecker.OnUpdate += UpdateFollowedPosts;
             fchecker.Start();
 
-            nchecker = new NotificationsChecker(ds, api);
+            nchecker = new NotificationsChecker();
             nchecker.OnUpdate += UpdateNotifications;
 
             Startup();
@@ -100,7 +97,7 @@ namespace DevRant.WPF
                 {
                     case ButtonType.Up:
                     case ButtonType.Down:
-                        await Utilities.Vote(args, api, db);
+                        await Utilities.Vote(args);
                         break;
                     case ButtonType.Reply:
                         if (args.SelectedItem is Commentable)
@@ -109,7 +106,7 @@ namespace DevRant.WPF
                     case ButtonType.Delete:
                         break;
                     case ButtonType.Edit:
-                        editPost = EditPostWindow.CreateForEdit(api, args.SelectedItem);
+                        editPost = EditPostWindow.CreateForEdit(AppManager.Instance.API, args.SelectedItem);
                         editPost.ShowDialog();
                         break;
                 }
@@ -203,11 +200,11 @@ namespace DevRant.WPF
 
             try
             {
-                var loginInfo = ds.GetLoginInfo();
+                var loginInfo = AppManager.Instance.Settings.GetLoginInfo();
 
                 if (loginInfo != null)
                 {
-                    await api.User.Login(loginInfo.Username, loginInfo.Password);
+                    await AppManager.Instance.API.User.Login(loginInfo.Username, loginInfo.Password);
                     
                     nchecker.Start();
                     loggedIn = true;
@@ -329,13 +326,13 @@ namespace DevRant.WPF
         public string LoggedInUser
         {
             get {
-                return api.User.LoggedInUser;
+                return AppManager.Instance.API.User.LoggedInUser;
             }
         }
 
         public bool LoggedIn
         {
-            get { return api.User.LoggedIn; }
+            get { return AppManager.Instance.API.User.LoggedIn; }
         }
 
         public bool IsLoading
@@ -350,21 +347,21 @@ namespace DevRant.WPF
 
         public bool DateVisible
         {
-            get { return ds.ShowCreateTime; }
+            get { return AppManager.Instance.Settings.ShowCreateTime; }
         }
 
         public Visibility DateVisibility
         {
             get
             {
-                return ds.ShowCreateTime ? Visibility.Visible : Visibility.Collapsed;
+                return AppManager.Instance.Settings.ShowCreateTime ? Visibility.Visible : Visibility.Collapsed;
             }
         }
         
         public Visibility UsernameVisibility
         {
             get {
-                return ds.HideUsername ? Visibility.Collapsed : Visibility.Visible;
+                return AppManager.Instance.Settings.HideUsername ? Visibility.Collapsed : Visibility.Visible;
             }
         }
 
@@ -410,7 +407,7 @@ namespace DevRant.WPF
                     
                     if (value.Type == FeedItem.FeedItemType.Post)
                     {
-                        db.MarkRead(value.AsRant().ID);
+                        AppManager.Instance.DB.MarkRead(value.AsRant().ID);
                     }
 
                     if (currentSection == FeedType.Updates)
@@ -449,14 +446,14 @@ namespace DevRant.WPF
             }
             else if (SelectedPost is Draft)
             {
-                var dlg = EditPostWindow.CreateForRant(api, db, SelectedPost as Draft);
+                var dlg = EditPostWindow.CreateForRant(SelectedPost as Draft);
                 dlg.Owner = window;
 
                 dlg.ShowDialog();
 
                 if (!dlg.Cancelled)
                 {
-                    UpdateDrafts(db.GetNumberOfDrafts());
+                    UpdateDrafts(AppManager.Instance.DB.GetNumberOfDrafts());
                     LoadDrafts();
                 }
             }
@@ -493,7 +490,11 @@ namespace DevRant.WPF
         public const string SectionFollowed = "FollowedUsers";
         private NotificationsChecker nchecker;
         private const string NotificationCount = "notif_state";
-        
+
+        private IDataStore ds;
+        private IDevRantClient api;
+        private IPersistentDataStore db;
+
         public async Task LoadSection(string section)
         {
             IsLoading = true;
@@ -502,24 +503,24 @@ namespace DevRant.WPF
             switch (section)
             {
                 case SectionGeneral:
-                    filter = ds.DefaultFeed != RantSort.Top ? ds.FilterOutRead : false;
+                    filter = AppManager.Instance.Settings.DefaultFeed != RantSort.Top ? AppManager.Instance.Settings.FilterOutRead : false;
 
-                    await LoadFeed(FeedType.General, sort: ds.DefaultFeed, 
+                    await LoadFeed(FeedType.General, sort: AppManager.Instance.Settings.DefaultFeed, 
                         filter: filter); //TODO: Add params from Settings
                     break;
                 case SectionGeneralAlgo:
-                    await LoadFeed(FeedType.General, sort: RantSort.Algo, filter: ds.FilterOutRead);
+                    await LoadFeed(FeedType.General, sort: RantSort.Algo, filter: AppManager.Instance.Settings.FilterOutRead);
                     break;
                 case SectionGeneralRecent:
-                    await LoadFeed(FeedType.General, sort: RantSort.Recent, filter: ds.FilterOutRead);
+                    await LoadFeed(FeedType.General, sort: RantSort.Recent, filter: AppManager.Instance.Settings.FilterOutRead);
                     break;
                 case SectionGeneralTop:
                     await LoadFeed(FeedType.General, sort: RantSort.Top);
                     break;
                 case SectionStories:
-                    filter = ds.DefaultRange != StoryRange.All ? ds.FilterOutRead : false;
+                    filter = ds.DefaultRange != StoryRange.All ? AppManager.Instance.Settings.FilterOutRead : false;
 
-                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, ds.DefaultRange,
+                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, AppManager.Instance.Settings.DefaultRange,
                         filter: filter);
                     break;
                 case SectionStoriesDay:
@@ -559,7 +560,7 @@ namespace DevRant.WPF
         
         private void LoadDrafts()
         {
-            var drafts = db.GetDrafts();
+            var drafts = AppManager.Instance.DB.GetDrafts();
             feeds.Clear();
 
             foreach (var draft in drafts)
@@ -577,7 +578,7 @@ namespace DevRant.WPF
 
         private async Task LoadCollabs()
         {
-            var collabs = await api.Feeds.GetCollabsAsync();
+            var collabs = await AppManager.Instance.API.Feeds.GetCollabsAsync();
             feeds.Clear();
 
             foreach (var c in collabs)
@@ -620,7 +621,7 @@ namespace DevRant.WPF
 
         private void MakePost()
         {
-            var dlg = EditPostWindow.CreateForRant(api, db);
+            var dlg = EditPostWindow.CreateForRant();
             dlg.Owner = window;
 
             dlg.ShowDialog();

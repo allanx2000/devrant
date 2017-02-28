@@ -31,7 +31,7 @@
 
                 <ctrl:RantControl 
                     Grid.Row="0" 
-                    VoteClicked="RantControl_VoteClicked"
+                    VoteClicked="Button_Clicked"
                     UsernameVisibility="Visible"
                     DateVisibility="Visible"
                     DataContext="{Binding DataContext.Rant, ElementName=rantWindow}"
@@ -44,7 +44,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <ctrl:RantControl
-                                VoteClicked="RantControl_VoteClicked"
+                                VoteClicked="Button_Clicked"
                                 Margin="30 5 5 5" 
                                 Background="White"
                                 UsernameVisibility="Visible"
