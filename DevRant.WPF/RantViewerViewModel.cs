@@ -47,7 +47,7 @@ namespace DevRant.WPF
             }
         }
 
-        internal async Task Vote(VoteClickedEventArgs args)
+        internal async Task Vote(ButtonClickedEventArgs args)
         {
             try
             {
@@ -90,7 +90,8 @@ namespace DevRant.WPF
                 }
             }
 
-            window.Top = Top;
+            if (Comments.Count > 0)
+                window.Top = Top;
         }
     }
 }

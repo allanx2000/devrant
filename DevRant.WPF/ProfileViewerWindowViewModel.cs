@@ -46,7 +46,7 @@ namespace DevRant.WPF
         }
 
 
-        public async Task Vote(VoteClickedEventArgs args)
+        public async Task Vote(ButtonClickedEventArgs args)
         {
             try
             {

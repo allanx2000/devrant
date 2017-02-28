@@ -41,6 +41,34 @@ namespace DevRant.WPF
         {
         }
 
+        private EditPostWindow(IDevRantClient api, FeedItem existing) : this(ToType(existing.Type), api, edit: existing)
+        {
+
+        }
+
+        private static Type ToType(FeedItem.FeedItemType type)
+        {
+            switch (type)
+            {
+                case FeedItem.FeedItemType.Post:
+                    return Type.Rant;
+                case FeedItem.FeedItemType.Comment:
+                    return Type.Comment;
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
+        private EditPostWindow(Type type, IDevRantClient api, IPersistentDataStore db = null, Draft existing = null, Commentable parent = null, FeedItem edit = null)
+        {
+            InitializeComponent();
+
+            vm = new EditPostWindowViewModel(this, type, api, db, existing, parent, edit);
+            DataContext = vm;
+        }
+
+
+
         public static EditPostWindow CreateForRant(IDevRantClient api, IPersistentDataStore db, Draft existing = null)
         {
             var window = new EditPostWindow(Type.Rant, api, db, existing);
@@ -59,14 +87,11 @@ namespace DevRant.WPF
             var window = new EditPostWindow(Type.Comment, api, parent: parent);
             return window;
         }
-
-        private EditPostWindow(Type type, IDevRantClient api, IPersistentDataStore db = null, Draft existing = null, Commentable parent = null)
+        
+        public static EditPostWindow CreateForEdit(IDevRantClient api, FeedItem existing)
         {
-            InitializeComponent();
-
-            vm = new EditPostWindowViewModel(this, type, api, db, existing, parent);
-            DataContext = vm;
+            var window = new EditPostWindow(api, existing);
+            return window;
         }
-
     }
 }

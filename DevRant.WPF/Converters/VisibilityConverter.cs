@@ -10,17 +10,22 @@ using System.Windows.Data;
 
 namespace DevRant.WPF.Converters
 {
+    /// <summary>
+    /// This is used to generate the context menu in MainWindow
+    /// </summary>
     public class VisibilityConverter : IValueConverter
     {
-        public class AppState
+        /// <summary>
+        /// Describes the SelectedItem
+        /// </summary>
+        public class FeedListState
         {
-            //public FeedItem SelectedItem { get; private set; }
-
             private FeedItem SelectedItem;
             
             public bool Following { get { return SelectedItem is Rant ? SelectedItem.AsRant().Followed : false; }}
             public bool IsRant { get { return SelectedItem != null && SelectedItem.Type == FeedItem.FeedItemType.Post; } }
             public bool IsNotification { get { return SelectedItem != null && SelectedItem.Type == FeedItem.FeedItemType.Notification; } }
+            
 
             public bool IsCommentable {
                 get {
@@ -41,7 +46,7 @@ namespace DevRant.WPF.Converters
             return Convert(null, null, parameter, null);  
         }
 
-        public static readonly AppState State = new AppState();
+        public static readonly FeedListState State = new FeedListState();
         
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -53,6 +58,8 @@ namespace DevRant.WPF.Converters
             {
                 switch ((string)parameter)
                 {
+                    case "IsNotification":
+                        return BoolToVisibilility(State.IsNotification);
                     case "IsDraft":
                         return BoolToVisibilility(State.IsDraft);
                     case "IsCommentable":

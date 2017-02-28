@@ -213,7 +213,6 @@ namespace DevRant.V1
                 return null;
         }
 
-
         private MultipartFormDataContent CreateAuthenticatedMultipart()
         {
             MultipartFormDataContent data = new MultipartFormDataContent();
@@ -266,9 +265,19 @@ namespace DevRant.V1
 
             JObject obj = JObject.Parse(responseText);
 
-            if (owner.CheckSuccess(obj))
-            {
-            }
+            owner.CheckSuccess(obj);
+        }
+
+        public async Task MuteRant(long rantId)
+        {
+            string url = owner.MakeUrl(Constants.PathRants + rantId + "/mute");
+
+            var body = owner.CreatePostBody(new Parameters());
+            var response = await client.PostAsync(url, body);
+            var responseText = await response.Content.ReadAsStringAsync();
+
+            JObject tmp = JObject.Parse(responseText);
+            owner.CheckSuccess(tmp);
         }
     }
 }

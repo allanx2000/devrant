@@ -20,7 +20,7 @@
                 UsernameVisibility="{Binding DataContext.UsernameVisibility, ElementName=mainWindow}"
                 DateVisibility="{Binding DataContext.DateVisibility, ElementName=mainWindow}"
                 LoggedIn="{Binding DataContext.LoggedIn, ElementName=mainWindow}"
-                VoteClicked="VoteButton_Clicked"
+                VoteClicked="Button_Clicked"
                 />
         </DataTemplate>
 
@@ -34,7 +34,7 @@
             <ctrl:CollabControl
                 DateVisibility="{Binding DataContext.DateVisibility, ElementName=mainWindow}"
                 LoggedIn="{Binding DataContext.LoggedIn, ElementName=mainWindow}"
-                VoteClicked="VoteButton_Clicked"
+                VoteClicked="Button_Clicked"
                 />
         </DataTemplate>
 
@@ -173,6 +173,10 @@
                 <ListBox.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Open" Command="{Binding OpenPostCommand}"/>
+
+                        <MenuItem Header="Mute" Command="{Binding MuteCommand}"
+                                  Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=IsNotification}"/>
+
                         <MenuItem Header="Comment..." Command="{Binding AddCommentCommand}"
                                   Visibility="{Binding SelectedPost, Converter={StaticResource VisibilityConverter}, ConverterParameter=IsCommentable}"/>
 

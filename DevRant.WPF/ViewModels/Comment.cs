@@ -10,7 +10,7 @@ using DevRant.Enums;
 
 namespace DevRant.WPF.ViewModels
 {
-    public class Comment : FeedItem, Votable, ProfileSection, HasAvatar
+    public class Comment : FeedItem, Votable, ProfileSection, HasAvatar, Commentable
     {
 
         private Dtos.Comment comment;
@@ -142,6 +142,10 @@ namespace DevRant.WPF.ViewModels
 
                 return bitmapimage;
             }
+        }
+
+        public void IncrementComments()
+        {
         }
     }
 }

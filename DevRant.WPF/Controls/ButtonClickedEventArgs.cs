@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace DevRant.WPF.Controls
 {
-    public class VoteClickedEventArgs
+    public class ButtonClickedEventArgs
     {
-        public VoteButton.ButtonType Type { get; private set; }
+        public ButtonType Type { get; private set; }
 
         public delegate void CB();
 
@@ -18,7 +18,7 @@ namespace DevRant.WPF.Controls
 
         public FeedItem SelectedItem { get; internal set; }
 
-        public VoteClickedEventArgs(VoteButton.ButtonType type)
+        public ButtonClickedEventArgs(ButtonType type)
         {
             Type = type;
         }

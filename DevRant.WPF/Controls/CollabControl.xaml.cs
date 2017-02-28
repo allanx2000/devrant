@@ -58,19 +58,19 @@ namespace DevRant.WPF.Controls
         }
 
 
-        private void VoteControl_DownClicked(object sender, VoteClickedEventArgs args)
+        private void VoteControl_DownClicked(object sender, ButtonClickedEventArgs args)
         {
             VoteControl_Clicked(sender, args);
         }
 
-        private void VoteControl_Clicked(object sender, VoteClickedEventArgs args)
+        private void VoteControl_Clicked(object sender, ButtonClickedEventArgs args)
         {
 
             if (VoteClicked != null)
                 VoteClicked.Invoke(sender, args);
         }
 
-        private void VoteControl_UpClicked(object sender, VoteClickedEventArgs args)
+        private void VoteControl_UpClicked(object sender, ButtonClickedEventArgs args)
         {
 
             VoteControl_Clicked(sender, args);

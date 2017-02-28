@@ -33,14 +33,8 @@ namespace DevRant.WPF.Controls
         public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register("IsSelected", typeof(bool), typeof(VoteButton), null);
 
         private const int WAIT_TIME = 500;
+        
 
-        public enum ButtonType
-        {
-            Up,
-            Down
-        }
-
-        public delegate void OnClick(object sender, VoteClickedEventArgs args);
         public event OnClick Clicked;
         
         public Visibility PlusPlusVisibility
@@ -95,7 +89,7 @@ namespace DevRant.WPF.Controls
 
         public string ButtonText
         {
-            get { return Type == VoteButton.ButtonType.Up ? "++" : "--"; }
+            get { return Type == ButtonType.Up ? "++" : "--"; }
         }
         
         public VoteButton()
@@ -117,7 +111,7 @@ namespace DevRant.WPF.Controls
         {
             if (Clicked != null)
             {
-                var args = new VoteClickedEventArgs(Type);
+                var args = new ButtonClickedEventArgs(Type);
                 
                 args.Callback += () =>
                 {

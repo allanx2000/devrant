@@ -83,6 +83,45 @@ namespace DevRant.WPF.Controls
             }
         }
 
+        public Visibility ReplyVisibility
+        {
+            get
+            {
+                return bucket.Get<Visibility>("ReplyVisibility");
+            }
+            private set
+            {
+                bucket.Set("ReplyVisibility", value);
+                RaisePropertyChange();
+            }
+        }
+
+        public Visibility ModifyVisibility
+        {
+            get
+            {
+                return bucket.Get<Visibility>("ModifyVisibility");
+            }
+            private set
+            {
+                bucket.Set("ModifyVisibility", value);
+                RaisePropertyChange();
+            }
+        }
+
+        public Visibility DeleteVisibility
+        {
+            get
+            {
+                return bucket.Get<Visibility>("DeleteVisibility");
+            }
+            private set
+            {
+                bucket.Set("DeleteVisibility", value);
+                RaisePropertyChange();
+            }
+        }
+
         public ImageSource Avatar
         {
             get
@@ -109,6 +148,8 @@ namespace DevRant.WPF.Controls
             }
         }
 
+        public bool ByUser { get; private set; }
+
         public RantControl()
         {
             InitializeComponent();
@@ -126,11 +167,30 @@ namespace DevRant.WPF.Controls
             if (e.NewValue != null)
             {
                 FeedItem item = e.NewValue as FeedItem;
-
-                Rant r = item as Rant;
                 
+                Rant r = item as Rant;
+                if (r != null)
+                {
+                    if (r.Username == API.User.LoggedInUser)
+                        ByUser = true;
+
+                    ReplyVisibility = Visibility;
+                }
+
                 TagsVisibility = Utilities.ConvertToVisibility(r != null && !string.IsNullOrEmpty(r.TagsString));
                 CommentsVisibility = Utilities.ConvertToVisibility(r != null);
+                
+                Comment comment = item.AsComment();
+                if (comment != null)
+                {
+                    if (comment.Username == API.User.LoggedInUser)
+                        ByUser = true;
+
+                    ReplyVisibility = Utilities.ConvertToVisibility(ByUser);
+                }
+
+                ModifyVisibility = Utilities.ConvertToVisibility(ByUser);
+                DeleteVisibility = ModifyVisibility;
 
                 var hasAvatar = item as Dtos.HasAvatar;
                 if (API != null && UsernameVisibility == Visibility.Visible && hasAvatar != null)
@@ -140,22 +200,52 @@ namespace DevRant.WPF.Controls
             }
         }
 
-        private void VoteControl_DownClicked(object sender, VoteClickedEventArgs args)
+        private void VoteControl_DownClicked(object sender, ButtonClickedEventArgs args)
         {
-            VoteControl_Clicked(sender, args);
+            Button_Clicked(sender, args);
         }
 
-        private void VoteControl_Clicked(object sender, VoteClickedEventArgs args)
+        private void Button_Clicked(object sender, ButtonClickedEventArgs args)
         {
             
             if (VoteClicked != null)
                 VoteClicked.Invoke(sender, args);
         }
 
-        private void VoteControl_UpClicked(object sender, VoteClickedEventArgs args)
+        private void VoteControl_UpClicked(object sender, ButtonClickedEventArgs args)
+        {
+            Button_Clicked(sender, args);
+        }
+        
+        public ICommand LinkClickedCommand
+        {
+            get
+            {
+                return new Innouvous.Utils.MVVM.CommandHelper(LinkClicked);
+            }
+        }
+
+        private void LinkClicked(object arg)
         {
 
-            VoteControl_Clicked(sender, args);
+            if (VoteClicked != null)
+            {
+                ButtonClickedEventArgs args;
+
+                string str = arg.ToString();
+                switch (str)
+                {
+                    case "Reply":
+                        args = new ButtonClickedEventArgs(ButtonType.Reply);
+                        break;
+                    default:
+                        throw new NotSupportedException(str);
+                }
+
+                args.SelectedItem = DataContext as FeedItem;
+
+                VoteClicked.Invoke(this, args);
+            }
         }
     }
 }

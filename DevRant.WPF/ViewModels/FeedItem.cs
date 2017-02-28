@@ -12,6 +12,7 @@ namespace DevRant.WPF.ViewModels
 
         public enum FeedItemType
         {
+            NA,
             Post,
             Notification,
             Collab,

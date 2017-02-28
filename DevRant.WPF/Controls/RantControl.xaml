@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" x:Name="control">
     <!-- This control also supports displaying comments-->
-    
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80"/>
@@ -82,6 +82,7 @@
 
             <Image Source="{Binding Picture}" Grid.Row="2" Grid.Column="1"/>
 
+            <!-- Tags and Comments-->
             <DockPanel>
 
                 <StackPanel Visibility="{Binding CommentsVisibility, ElementName=control}"  
@@ -96,6 +97,21 @@
                     <Label Content="{Binding TagsString}"/>
                 </StackPanel>
             </DockPanel>
+
+            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Label Visibility="{Binding ReplyVisibility, ElementName=control}">
+                    <Hyperlink Command="{Binding LinkClickedCommand, ElementName=control}" CommandParameter="Reply">Reply</Hyperlink>
+                </Label>
+                <Label Visibility="{Binding ModifyVisibility, ElementName=control}">
+                    <Hyperlink Command="{Binding LinkClickedCommand, ElementName=control}" CommandParameter="Modify">Modify</Hyperlink>
+                    
+                </Label>
+                <Label Visibility="{Binding DeleteVisibility, ElementName=control}" >
+                    <Hyperlink  Command="{Binding LinkClickedCommand, ElementName=control}" CommandParameter="Delete">Delete</Hyperlink>
+                </Label>
+            </StackPanel>
+
+
         </StackPanel>
     </Grid>
 </local:MyUserControl>

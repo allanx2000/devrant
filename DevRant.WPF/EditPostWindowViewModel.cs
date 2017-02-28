@@ -22,8 +22,19 @@ namespace DevRant.WPF
         private IPersistentDataStore db;
         private Draft existing;
         private Commentable parent;
+        private FeedItem editing;
 
-        public EditPostWindowViewModel(Window window, EditPostWindow.Type type, IDevRantClient api, IPersistentDataStore db = null, Draft existing = null, Commentable parent = null)
+        private enum Mode
+        {
+            NewRant,
+            NewComment,
+            EditDraft,
+            EditExisting
+        }
+
+        private Mode mode = Mode.NewRant;
+
+        public EditPostWindowViewModel(Window window, EditPostWindow.Type type, IDevRantClient api, IPersistentDataStore db = null, Draft existing = null, Commentable parent = null, FeedItem edit = null)
         {
             this.window = window;
             this.api = api;
@@ -31,34 +42,75 @@ namespace DevRant.WPF
             this.db = db;
             this.existing = existing;
             this.parent = parent;
+            this.editing = edit;
 
             Cancelled = true;
 
-            if (existing != null)
+            if (parent != null)
+                mode = Mode.NewComment;
+            else if (existing != null)
             {
+                mode = Mode.EditDraft;
+
                 Text = existing.Text;
                 TagsString = existing.Tags;
                 ImagePath = existing.ImagePath;
+            }
+            else if (edit != null)
+            {
+                mode = Mode.EditExisting;
+
+                var r = edit.AsRant();
+                var comment = edit.AsComment();
+                if (r != null)
+                {
+                    Text = r.Text;
+                    TagsString = r.TagsString;
+                }
+                else if (comment != null)
+                {
+                    Text = comment.Text;
+                }
+                else
+                    throw new NotSupportedException();
             }
         }
 
         public bool Cancelled { get; private set; }
 
+        
         public Visibility TagsVisibility
         {
-            get { return type == EditPostWindow.Type.Rant ? Visibility.Visible : Visibility.Collapsed; }
+            get { return mode == Mode.NewRant || mode == Mode.EditDraft ? Visibility.Visible : Visibility.Collapsed; }
         }
 
         public Visibility SaveDraftVisibility
         {
-            get { return type == EditPostWindow.Type.Rant && db != null ? Visibility.Visible : Visibility.Collapsed; }
+            get { return (mode == Mode.NewRant || mode == Mode.EditDraft) && db != null ? Visibility.Visible : Visibility.Collapsed; }
         }
 
         public string TextType
         {
-            get { return type.ToString(); }
-        }
+            get {
+                /*
+                switch (mode)
+                {
+                    case Mode.EditDraft:
+                    case Mode.NewRant:
+                        return "Rant";
+                    case Mode.NewComment:
+                        return "Comment";
+                    case Mode.EditExisting:
+                        return editing.Type.ToString();
+                    default:
+                        throw new NotSupportedException();
+                }
+                */
 
+                return type.ToString();
+            }
+        }
+        
         public int Remaining
         {
             get {

@@ -13,6 +13,9 @@ namespace DevRant.WPF.Controls
     {
         public static IDevRantClient API { get; set; }
 
+
+        public delegate void OnClick(object sender, ButtonClickedEventArgs args);
+
         public event PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChange([CallerMemberName] string name = "")

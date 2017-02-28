@@ -271,7 +271,7 @@ namespace DevRant.V1
         /// <returns></returns>
         public async Task<Rant> GetRant(long rantId)
         {
-            string url = MakeUrl("/api/devrant/rants/" + rantId);
+            string url = MakeUrl(Constants.PathRants + rantId);
 
             var response = await client.GetAsync(url);
             var responseText = await response.Content.ReadAsStringAsync();

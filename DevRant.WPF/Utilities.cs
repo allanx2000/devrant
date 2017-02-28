@@ -69,38 +69,36 @@ namespace DevRant.WPF
             return true;
         }
 
-        internal static bool OpenFeedItem(FeedItem item, IDevRantClient api, Window owner)
+        internal static async Task<bool> OpenFeedItem(FeedItem item, IDevRantClient api, Window owner)
         {
+            if (item is ViewModels.Notification)
+            {
+                var notif = item.AsNotification();
+                var raw = await api.GetRant(item.AsNotification().RantId);
+                item = new ViewModels.Rant(raw);
+            }
+
             if (item is ViewModels.Rant)
             {
                 Window dlg;
-                
-                dlg = new RantViewerWindow((ViewModels.Rant) item, api);
-                    
+                dlg = new RantViewerWindow((ViewModels.Rant)item, api);
+
                 dlg.Owner = owner;
                 dlg.ShowDialog();
-                
-                /*
-                string url = GetRantUrl(((Commentable)item).RantId);
-
-                Process.Start(url);
-                */
-
-                return true;
             }
             else if (item is Commentable)
             {
                 OpenFeedItem((Commentable)item);
-                return true;
             }
             else if (item is ViewModels.Comment)
             {
                 string url = GetRantUrl(item.AsComment().RantId);
                 Process.Start(url);
-                return true;
             }
             else
                 return false;
+
+            return true;
         }
 
         internal static string ReplaceNewLines(string text)
@@ -157,7 +155,7 @@ namespace DevRant.WPF
         /// <param name="api">API to use to vote</param>
         /// <param name="db">Optional DB to mark as Read</param>
         /// <returns>Throws exception on errors</returns>
-        public static async Task Vote(VoteClickedEventArgs args, IDevRantClient api, IPersistentDataStore db = null)
+        public static async Task Vote(ButtonClickedEventArgs args, IDevRantClient api, IPersistentDataStore db = null)
         {
             Vote vote = null;
 
@@ -170,7 +168,7 @@ namespace DevRant.WPF
             {
                 switch (args.Type)
                 {
-                    case VoteButton.ButtonType.Down:
+                    case ButtonType.Down:
                         if (votable.Voted == VoteState.Down)
                             vote = Dtos.Vote.ClearVote();
                         else
@@ -187,7 +185,7 @@ namespace DevRant.WPF
                                 return;
                         }
                         break;
-                    case VoteButton.ButtonType.Up:
+                    case ButtonType.Up:
                         if (votable.Voted == VoteState.Up)
                             vote = Dtos.Vote.ClearVote();
                         else

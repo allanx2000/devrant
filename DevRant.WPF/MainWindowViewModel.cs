@@ -90,16 +90,34 @@ namespace DevRant.WPF
         }
 
 
-        public async void Vote(VoteClickedEventArgs args)
+        public async void HandleButton(ButtonClickedEventArgs args)
         {
             try
             {
-                await Utilities.Vote(args, api, db);
+                EditPostWindow editPost;
+
+                switch (args.Type)
+                {
+                    case ButtonType.Up:
+                    case ButtonType.Down:
+                        await Utilities.Vote(args, api, db);
+                        break;
+                    case ButtonType.Reply:
+                        if (args.SelectedItem is Commentable)
+                            AddComment(args.SelectedItem as Commentable);
+                        break;
+                    case ButtonType.Delete:
+                        break;
+                    case ButtonType.Edit:
+                        editPost = EditPostWindow.CreateForEdit(api, args.SelectedItem);
+                        editPost.ShowDialog();
+                        break;
+                }
             }
             catch (InvalidCredentialsException e)
             {
                 await Login();
-                Vote(args);
+                HandleButton(args);
             }
             catch (Exception e)
             {
@@ -406,33 +424,28 @@ namespace DevRant.WPF
                 RaisePropertyChanged();
             }
         }
-        
+
         #endregion
 
         #region Public Methods
-        public void OpenPost()
+        public async void OpenPost()
         {
             if (SelectedPost == null)
                 return;
-            else if (Utilities.OpenFeedItem(SelectedPost, api, window))
+            else if (await Utilities.OpenFeedItem(SelectedPost, api, window))
             {
-                //OK
-            }
-            else if (SelectedPost is ViewModels.Notification)
-            {
-                ViewModels.Notification notif = SelectedPost as ViewModels.Notification;
-                foreach (ViewModels.Notification n in feeds)
+                if (SelectedPost is ViewModels.Notification)
                 {
-                    if (n.RantId == notif.RantId)
-                        n.MarkRead();
+                    ViewModels.Notification notif = SelectedPost as ViewModels.Notification;
+                    foreach (ViewModels.Notification n in feeds)
+                    {
+                        if (n.RantId == notif.RantId)
+                            n.MarkRead();
+                    }
+
+                    UpdateNotifications(new NotificationsChecker.UpdateArgs(feeds.Where(x => !x.Read).Count(), feeds.Count));
+                    FeedView.Refresh();
                 }
-
-                UpdateNotifications(new NotificationsChecker.UpdateArgs(feeds.Where(x => !x.Read).Count(), feeds.Count));
-                FeedView.Refresh();
-
-                Process.Start(notif.URL);
-
-                //nchecker.Check();
             }
             else if (SelectedPost is Draft)
             {
@@ -447,7 +460,7 @@ namespace DevRant.WPF
                     LoadDrafts();
                 }
             }
-            
+
         }
 
         #region Sections
@@ -622,6 +635,22 @@ namespace DevRant.WPF
             }
         }
 
+        
+
+        public ICommand MuteCommand
+        {
+            get { return new mvvm.CommandHelper(Mute); }
+
+        }
+
+        private async void Mute()
+        {
+            if (SelectedPost is ViewModels.Notification)
+            {
+               await api.User.MuteRant(SelectedPost.AsNotification().RantId);
+            }
+        }
+
         public ICommand AddCommentCommand
         {
             get { return new mvvm.CommandHelper(AddComment); }
@@ -635,6 +664,9 @@ namespace DevRant.WPF
 
         }
 
+        /// <summary>
+        /// Comment on a specific rant using the RantSelector
+        /// </summary>
         private async void CommentRant()
         {
 
@@ -648,7 +680,7 @@ namespace DevRant.WPF
                 try
                 {
                     Dtos.Rant rant = await api.GetRant(rantSelector.RantId.Value);
-
+                    
                     var dlg = EditPostWindow.CreateForComment(api, rantSelector.RantId.Value);
                     dlg.Owner = window;
 
@@ -660,13 +692,20 @@ namespace DevRant.WPF
                 }
             }
         }
-
         private void AddComment()
         {
-            if (SelectedPost == null)
-                return;
+            AddComment(null);
+        }
 
-            Commentable post = SelectedPost as Commentable;
+        private void AddComment(Commentable post)
+        {
+            if (post == null)
+            {
+                if (SelectedPost == null)
+                    return;
+                else
+                    post = SelectedPost as Commentable;
+            }
 
             var dlg = EditPostWindow.CreateForComment(api, post);
             dlg.Owner = window;

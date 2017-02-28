@@ -78,9 +78,10 @@ namespace DevRant.WPF
             vm.ShowStatusHistory();
         }
 
-        private void VoteButton_Clicked(object sender, VoteClickedEventArgs args)
+        private void Button_Clicked(object sender, ButtonClickedEventArgs args)
         {
-            vm.Vote(args);
+            vm.HandleButton(args);
         }
+        
     }
 }

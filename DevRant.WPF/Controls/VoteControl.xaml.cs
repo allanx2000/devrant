@@ -128,21 +128,23 @@ namespace DevRant.WPF.Controls
             }
         }
 
-        private void VoteButton_Clicked(object sender, VoteClickedEventArgs args)
+        private void Button_Clicked(object sender, ButtonClickedEventArgs args)
         {
             args.Callback += UpdateSelected;
             args.SelectedItem = DataContext as FeedItem;
 
             switch (args.Type)
             {
-                case VoteButton.ButtonType.Down:
+                case ButtonType.Down:
                     if (DownClicked != null)
                         DownClicked.Invoke(sender, args);
                     break;
-                case VoteButton.ButtonType.Up:
+                case ButtonType.Up:
                     if (UpClicked != null)
                         UpClicked.Invoke(sender, args);
                     break;
+                default:
+                    throw new NotImplementedException();
             }
         }
 
