@@ -130,6 +130,10 @@ namespace DevRant.WPF
                 case ButtonType.Delete:
                     break;
                 case ButtonType.Edit:
+                    TimeSpan timespan = DateTime.Now.ToUniversalTime() - FromUnixTime(args.SelectedItem.RawCreateTime);
+                    if (timespan > MaxModifyMinutes)
+                        throw new Exception(args.SelectedItem.Type + " can no longer be edited.");
+
                     editPost = EditPostWindow.CreateForEdit(AppManager.Instance.API, args.SelectedItem);
                     editPost.Owner = window;
                     editPost.ShowDialog();
@@ -170,6 +174,8 @@ namespace DevRant.WPF
         }
 
         private static System.Windows.Controls.BooleanToVisibilityConverter bool2Vis = new System.Windows.Controls.BooleanToVisibilityConverter();
+        private static readonly TimeSpan MaxModifyMinutes = new TimeSpan(0, 5, 0);
+
         public static Visibility ConvertToVisibility(bool v)
         {
             return (Visibility) bool2Vis.Convert(v, null, null, null);

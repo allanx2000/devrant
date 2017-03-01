@@ -471,7 +471,7 @@ namespace DevRant.WPF
 
         public const string SectionFollowed = "FollowedUsers";
         private NotificationsChecker nchecker;
-        private const string NotificationCount = "notif_state";
+        private const string NotificationCount = "num_notifs";
 
         private IDataStore ds;
         private IDevRantClient api;

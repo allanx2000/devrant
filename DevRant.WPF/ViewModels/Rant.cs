@@ -94,10 +94,8 @@ namespace DevRant.WPF.ViewModels
         }
 
         public int ID { get { return rant.Id; } }
-
-        public long RawCreateTime { get { return rant.CreatedTime; } }
-
-        public Rant(Dtos.Rant rant) : base(FeedItemType.Post)
+        
+        public Rant(Dtos.Rant rant) : base(FeedItemType.Post, rant.CreatedTime)
         {
             this.rant = rant;
             DateTime dt = Utilities.FromUnixTime(rant.CreatedTime);

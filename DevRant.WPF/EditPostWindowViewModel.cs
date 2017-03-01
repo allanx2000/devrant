@@ -307,7 +307,15 @@ namespace DevRant.WPF
                 }
                 else if (type == EditPostWindow.Type.Comment)
                 {
-                    await api.User.PostComment(parent.RantId, data);
+                    if (editing != null)
+                    {
+                        //TODO: Implement
+                        throw new NotImplementedException();
+                    }
+                    else
+                    {
+                        await api.User.PostComment(parent.RantId, data);
+                    }
                 }
                 
                 Cancelled = false;

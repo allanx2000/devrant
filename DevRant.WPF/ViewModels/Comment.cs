@@ -80,7 +80,7 @@ namespace DevRant.WPF.ViewModels
             }
         }
 
-        public Comment(Dtos.Comment comment) : base(FeedItemType.Comment)
+        public Comment(Dtos.Comment comment) : base(FeedItemType.Comment, comment.CreatedTime)
         {
             this.comment = comment;
             DateTime dt = Utilities.FromUnixTime(comment.CreatedTime);

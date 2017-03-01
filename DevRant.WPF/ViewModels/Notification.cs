@@ -41,7 +41,7 @@ namespace DevRant.WPF.ViewModels
 
         public long CreateTimeRaw { get { return notif.CreatedTime; } }
 
-        public Notification(Dtos.Notification notif) : base(FeedItemType.Notification)
+        public Notification(Dtos.Notification notif) : base(FeedItemType.Notification, notif.CreatedTime)
         {
             this.notif = notif;
 

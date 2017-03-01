@@ -11,3 +11,7 @@
 
 -Check update notifications on feed refresh
 -Switch app to use static APIHolder?
+
+-Change Comment on Rant to View Rant...
+
+-Reload Post page when response comes back

@@ -14,7 +14,8 @@ namespace DevRant.WPF.ViewModels
     {
         private Dtos.Collab collab;
 
-        public Collab(Dtos.Collab collab) : base(FeedItemType.Collab)
+
+        public Collab(Dtos.Collab collab) : base(FeedItemType.Collab, collab.CreatedTime)
         {
             this.collab = collab;
 

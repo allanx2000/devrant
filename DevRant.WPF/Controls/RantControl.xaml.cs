@@ -238,12 +238,16 @@ namespace DevRant.WPF.Controls
                     case "Reply":
                         args = new ButtonClickedEventArgs(ButtonType.Reply);
                         break;
+                    case "Modify":
+                        args = new ButtonClickedEventArgs(ButtonType.Edit);
+                        break;
                     default:
                         throw new NotSupportedException(str);
                 }
 
                 args.SelectedItem = DataContext as FeedItem;
 
+                //Change to ButtonClicked
                 VoteClicked.Invoke(this, args);
             }
         }

@@ -43,7 +43,7 @@ namespace DevRant.WPF.ViewModels
 
         public long? ID { get { return draft.ID; } }
 
-        public Draft() : base(FeedItemType.Draft)
+        public Draft() : base(FeedItemType.Draft, -1)
         {
         }
 

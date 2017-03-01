@@ -5,9 +5,11 @@ namespace DevRant.WPF.ViewModels
     public abstract class FeedItem : Innouvous.Utils.Merged45.MVVM45.ViewModel
     {
         
-        public FeedItem(FeedItemType type)
+        public FeedItem(FeedItemType type, long createTime)
         {
             Type = type;
+            RawCreateTime = createTime;
+
         }
 
         public enum FeedItemType
@@ -23,6 +25,7 @@ namespace DevRant.WPF.ViewModels
         public FeedItemType Type { get; private set; }
 
         public virtual bool Read { get; set; }
+        public long RawCreateTime { get; private set; }
 
         public Notification AsNotification()
         {

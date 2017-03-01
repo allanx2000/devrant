@@ -22,8 +22,8 @@ namespace DevRant.WPF
             this.api = api;
             this.window = window;
             
-            GetComments();
             Comments = new ObservableCollection<Comment>();
+            GetComments();
         }
 
         public long Top
@@ -51,7 +51,10 @@ namespace DevRant.WPF
         {
             try
             {
-                await Utilities.HandleButtons(window, args);
+                bool handled = await Utilities.HandleButtons(window, args);
+
+                if (handled)
+                    GetComments();
             }
             catch (Exception e)
             {

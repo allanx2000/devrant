@@ -50,7 +50,8 @@ namespace DevRant.WPF
         {
             try
             {
-                await Utilities.Vote(args, api);
+                await Utilities.HandleButtons(window, args);
+                //await Utilities.Vote(args, api);
             }
             catch (Exception e)
             {
