@@ -99,6 +99,11 @@
                 </Style>
             </DockPanel.Resources>
             <Menu DockPanel.Dock="Left">
+                <MenuItem Header="View...">
+                    <MenuItem Header="Rant" Command="{Binding ViewSpecificRant}"/>
+                    <MenuItem Header="Profile" Command="{Binding ViewSpecificProfileCommand}"/>
+                </MenuItem>
+                
                 <MenuItem Header="Options" Command="{Binding OpenOptionsCommand}"/>
                 <MenuItem Header="Check For Updates" Command="{Binding CheckUpdatesCommand}"/>
                 <MenuItem Header="Refresh Feed" Click="RefreshFeed"/>
@@ -107,7 +112,6 @@
             <Menu DockPanel.Dock="Right" IsEnabled="{Binding LoggedIn}">
                 <MenuItem Header="View My Profile" Command="{Binding ViewMyProfileCommand}"/>
                 <MenuItem Header="Post a New Rant" Command="{Binding PostCommand}"/>
-                <MenuItem Header="Comment on Rant..." Command="{Binding CommentRantCommand}"/>
             </Menu>
 
             <!--- Center filler -->

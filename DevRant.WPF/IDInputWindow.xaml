@@ -1,4 +1,4 @@
-﻿<Window x:Class="DevRant.WPF.RantIDInputWindow"
+﻿<Window x:Class="DevRant.WPF.IDInputWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -20,12 +20,12 @@
     </Window.Resources>
     
     <DockPanel LastChildFill="True">
-        <Label DockPanel.Dock="Left">Rant ID: </Label>
+        <Label DockPanel.Dock="Left"  Content="{Binding IDLabel, FallbackValue=ID:}"/>
         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Command="{Binding SelectCommand}">Select</Button>
             <Button Command="{Binding CancelCommand}">Cancel</Button>
         </StackPanel>
 
-        <TextBox Text="{Binding RantID, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Text="{Binding ID, UpdateSourceTrigger=PropertyChanged}"/>
     </DockPanel>
 </Window>

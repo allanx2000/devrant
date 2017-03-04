@@ -28,7 +28,7 @@
     <TargetCulture>en</TargetCulture>
     <ProductName>devRant++ %28an unofficial client%29</ProductName>
     <PublisherName>innouvous</PublisherName>
-    <ApplicationRevision>53</ApplicationRevision>
+    <ApplicationRevision>55</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -104,8 +104,8 @@
     <Compile Include="Converters\VoteReasonConverter.cs" />
     <Compile Include="DataStore\SavedPostContent.cs" />
     <Compile Include="DevRant\WPF\ViewModels\DummyCommentable.cs" />
-    <Compile Include="RantIDInputWindow.xaml.cs">
-      <DependentUpon>RantIDInputWindow.xaml</DependentUpon>
+    <Compile Include="IDInputWindow.xaml.cs">
+      <DependentUpon>IDInputWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="DownvoteReasonWindow.xaml.cs">
       <DependentUpon>DownvoteReasonWindow.xaml</DependentUpon>
@@ -116,7 +116,7 @@
       <DependentUpon>ProfileViewerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ProfileViewerWindowViewModel.cs" />
-    <Compile Include="RantIDInputWindowViewModel.cs" />
+    <Compile Include="IDInputWindowViewModel.cs" />
     <Compile Include="ViewModels\ProfileSection.cs" />
     <Compile Include="ViewModels\Commentable.cs" />
     <Compile Include="Controls\MyUserControl.cs" />
@@ -181,7 +181,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="RantIDInputWindow.xaml">
+    <Page Include="IDInputWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

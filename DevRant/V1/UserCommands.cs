@@ -279,5 +279,17 @@ namespace DevRant.V1
             JObject tmp = JObject.Parse(responseText);
             owner.CheckSuccess(tmp);
         }
+
+        public async Task ToggleFavorite(long rantId)
+        {
+            string url = owner.MakeUrl(Constants.PathRants + rantId + "/favorite");
+
+            var body = owner.CreatePostBody(new Parameters());
+            var response = await client.PostAsync(url, body);
+            var responseText = await response.Content.ReadAsStringAsync();
+
+            JObject tmp = JObject.Parse(responseText);
+            owner.CheckSuccess(tmp);
+        }
     }
 }

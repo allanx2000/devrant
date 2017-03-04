@@ -13,6 +13,7 @@ namespace DevRant.WPF.Controls
         Edit,
         Delete,
         Reply,
-        MuteRant
+        MuteRant,
+        ToggleFavorite
     }
 }

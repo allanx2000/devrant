@@ -19,6 +19,17 @@ namespace DevRant.Dtos
         }
 
         /// <summary>
+        /// Is Favorite
+        /// </summary>
+        public bool Favorited
+        {
+            get
+            {
+                return Get<int>("favorited") == 1;
+            }
+        }
+
+        /// <summary>
         /// Comments, only if returning full Rant
         /// </summary>
         public List<Comment> Comments { get; set; }

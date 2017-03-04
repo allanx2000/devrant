@@ -3,15 +3,3 @@
 	-Reply, Oprn in Browser
 
 	-Add buttons to RantViewer and commands for handling
-	-mute option
-
--Notifications open 
-	-rant in viewer?
-	
-
--Check update notifications on feed refresh
--Switch app to use static APIHolder?
-
--Change Comment on Rant to View Rant...
-
--Reload Post page when response comes back

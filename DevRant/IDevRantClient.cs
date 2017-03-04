@@ -64,6 +64,14 @@ namespace DevRant
         Task MuteRant(long rantId);
 
         /// <summary>
+        /// Mute notifications for the rant
+        /// </summary>
+        /// <param name="rantId"></param>
+        /// <returns></returns>
+        Task ToggleFavorite(long rantId);
+
+
+        /// <summary>
         /// Whether a user is logged in. Certain methods may throw an NotLoggedInException if authentication is required
         /// </summary>
         bool LoggedIn { get; }

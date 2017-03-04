@@ -27,6 +27,11 @@ namespace DevRant.WPF.ViewModels
             }
         }
 
+        public string FavoriteText
+        {
+            get { return rant.Favorited ? "Unfavorite" : "Favority"; }
+        }
+
         public string VotesString
         {
             get
@@ -135,6 +140,7 @@ namespace DevRant.WPF.ViewModels
             RaisePropertyChanged("UserScoreString");
             RaisePropertyChanged("CommentsCount");
             RaisePropertyChanged("Voted");
+            RaisePropertyChanged("FavoriteText");
         }
         
         public void IncrementComments()

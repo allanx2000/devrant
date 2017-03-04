@@ -18,16 +18,16 @@ namespace DevRant.WPF
     /// <summary>
     /// Interaction logic for DownVoteReasonWindow.xaml
     /// </summary>
-    public partial class RantIDInputWindow : Window
+    public partial class IDInputWindow : Window
     {
-        private RantIDInputWindowViewModel vm;
-        
-        public long? RantId { get { return vm.RantID; } } 
+        private IDInputWindowViewModel vm;
 
-        public RantIDInputWindow()
+        public string InputValue { get { return vm.ID; } } 
+
+        public IDInputWindow(IDInputWindowViewModel.Type type)
         {
             InitializeComponent();
-            vm = new RantIDInputWindowViewModel(this);
+            vm = new IDInputWindowViewModel(type, this);
             DataContext = vm;
         }
     }

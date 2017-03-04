@@ -480,64 +480,74 @@ namespace DevRant.WPF
         public async Task LoadSection(string section)
         {
             IsLoading = true;
-            bool filter;
 
-            switch (section)
+            try
             {
-                case SectionGeneral:
-                    filter = AppManager.Instance.Settings.DefaultFeed != RantSort.Top ? AppManager.Instance.Settings.FilterOutRead : false;
+                bool filter;
 
-                    await LoadFeed(FeedType.General, sort: AppManager.Instance.Settings.DefaultFeed, 
-                        filter: filter); //TODO: Add params from Settings
-                    break;
-                case SectionGeneralAlgo:
-                    await LoadFeed(FeedType.General, sort: RantSort.Algo, filter: AppManager.Instance.Settings.FilterOutRead);
-                    break;
-                case SectionGeneralRecent:
-                    await LoadFeed(FeedType.General, sort: RantSort.Recent, filter: AppManager.Instance.Settings.FilterOutRead);
-                    break;
-                case SectionGeneralTop:
-                    await LoadFeed(FeedType.General, sort: RantSort.Top);
-                    break;
-                case SectionStories:
-                    filter = ds.DefaultRange != StoryRange.All ? AppManager.Instance.Settings.FilterOutRead : false;
+                switch (section)
+                {
+                    case SectionGeneral:
+                        filter = AppManager.Instance.Settings.DefaultFeed != RantSort.Top ? AppManager.Instance.Settings.FilterOutRead : false;
 
-                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, AppManager.Instance.Settings.DefaultRange,
-                        filter: filter);
-                    break;
-                case SectionStoriesDay:
-                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Day, filter: ds.FilterOutRead);
-                    break;
-                case SectionStoriesWeek:
-                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Week, filter: ds.FilterOutRead);
-                    break;
-                case SectionStoriesMonth:
-                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Month, filter: ds.FilterOutRead);
-                    break;
-                case SectionStoriesAll:
-                    await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.All);
-                    break;
-                                        
-                case SectionNotifications:
-                    LoadNotifications();
-                    break;
+                        await LoadFeed(FeedType.General, sort: AppManager.Instance.Settings.DefaultFeed,
+                            filter: filter); //TODO: Add params from Settings
+                        break;
+                    case SectionGeneralAlgo:
+                        await LoadFeed(FeedType.General, sort: RantSort.Algo, filter: AppManager.Instance.Settings.FilterOutRead);
+                        break;
+                    case SectionGeneralRecent:
+                        await LoadFeed(FeedType.General, sort: RantSort.Recent, filter: AppManager.Instance.Settings.FilterOutRead);
+                        break;
+                    case SectionGeneralTop:
+                        await LoadFeed(FeedType.General, sort: RantSort.Top);
+                        break;
+                    case SectionStories:
+                        filter = ds.DefaultRange != StoryRange.All ? AppManager.Instance.Settings.FilterOutRead : false;
 
-                case SectionDrafts:
-                    LoadDrafts();
-                    break;
+                        await LoadFeed(FeedType.Stories, ds.DefaultFeed, AppManager.Instance.Settings.DefaultRange,
+                            filter: filter);
+                        break;
+                    case SectionStoriesDay:
+                        await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Day, filter: ds.FilterOutRead);
+                        break;
+                    case SectionStoriesWeek:
+                        await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Week, filter: ds.FilterOutRead);
+                        break;
+                    case SectionStoriesMonth:
+                        await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Month, filter: ds.FilterOutRead);
+                        break;
+                    case SectionStoriesAll:
+                        await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.All);
+                        break;
 
-                case SectionFollowed:
-                    LoadFollowed();
-                    break;
+                    case SectionNotifications:
+                        LoadNotifications();
+                        break;
 
-                case SectionCollab:
-                    await LoadCollabs();
-                    break;
+                    case SectionDrafts:
+                        LoadDrafts();
+                        break;
+
+                    case SectionFollowed:
+                        LoadFollowed();
+                        break;
+
+                    case SectionCollab:
+                        await LoadCollabs();
+                        break;
+                }
+
+                currentSectionName = section;
             }
-
-            currentSectionName = section;
-
-            IsLoading = false;
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
         
         private void LoadDrafts()
@@ -634,37 +644,45 @@ namespace DevRant.WPF
             }
         }
 
+        /*
         public ICommand AddCommentCommand
         {
             get { return new mvvm.CommandHelper(AddComment); }
 
         }
 
-
-        public ICommand CommentRantCommand
+            
+        private void AddComment()
         {
-            get { return new mvvm.CommandHelper(CommentRant); }
+            AddComment(null);
+        }
+        */
+
+
+        public ICommand ViewSpecificRantCommand
+        {
+            get { return new mvvm.CommandHelper(ViewSpecificRant); }
 
         }
 
         /// <summary>
         /// Comment on a specific rant using the RantSelector
         /// </summary>
-        private async void CommentRant()
+        private async void ViewSpecificRant()
         {
 
-            var rantSelector = new RantIDInputWindow();
+            var rantSelector = new IDInputWindow(IDInputWindowViewModel.Type.Rant);
             rantSelector.Owner = window;
 
             rantSelector.ShowDialog();
 
-            if (rantSelector.RantId != null)
+            if (!string.IsNullOrEmpty(rantSelector.InputValue))
             {
                 try
                 {
-                    Dtos.Rant rant = await api.GetRant(rantSelector.RantId.Value);
-                    
-                    var dlg = EditPostWindow.CreateForComment(api, rantSelector.RantId.Value);
+                    Dtos.Rant rant = await api.GetRant(Convert.ToInt64(rantSelector.InputValue));
+
+                    var dlg = new RantViewerWindow(new ViewModels.Rant(rant), api);
                     dlg.Owner = window;
 
                     dlg.ShowDialog();
@@ -674,10 +692,6 @@ namespace DevRant.WPF
                     MessageBoxFactory.ShowError(e);
                 }
             }
-        }
-        private void AddComment()
-        {
-            AddComment(null);
         }
 
         private void AddComment(Commentable post)
@@ -818,6 +832,37 @@ namespace DevRant.WPF
             get { return new mvvm.CommandHelper(ViewProfile); }
         }
 
+        public ICommand ViewSpecificProfileCommand
+        {
+            get { return new mvvm.CommandHelper(ViewSpecificProfile); }
+        }
+                
+        private async void ViewSpecificProfile()
+        {
+            try
+            {
+                var dlg = new IDInputWindow(IDInputWindowViewModel.Type.Profile);
+                dlg.Owner = window;
+                dlg.ShowDialog();
+
+                string username = dlg.InputValue;
+
+                if (!string.IsNullOrEmpty(username))
+                {
+                    bool valid = await api.IsValidUser(username);
+
+                    if (valid)
+                        ViewProfile(username);
+                    else
+                        throw new Exception(username + " does not exist.");
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBoxFactory.ShowError(e);
+            }
+        }
+
         private void ViewProfile()
         {
             if (SelectedPost == null)
@@ -855,7 +900,7 @@ namespace DevRant.WPF
             get { return new mvvm.CommandHelper(Test); }
         }
 
-        public int Limit { get { return 50; } }
+        public int Limit { get { return 20; } }
 
         private async void Test()
         {
@@ -1004,7 +1049,7 @@ namespace DevRant.WPF
             List<long> ids = new List<long>();
 
             int page = 0;
-            while (rants.Count < Limit && page < 5)
+            while (rants.Count < Limit && page < 10)
             {
                 int skip = page * Limit;
 
