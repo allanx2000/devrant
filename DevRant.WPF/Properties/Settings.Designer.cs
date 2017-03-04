@@ -176,5 +176,41 @@ namespace DevRant.WPF.Properties {
                 this["DataStoreFolder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int MaxPages {
+            get {
+                return ((int)(this["MaxPages"]));
+            }
+            set {
+                this["MaxPages"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int MinScore {
+            get {
+                return ((int)(this["MinScore"]));
+            }
+            set {
+                this["MinScore"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int ResultsLimit {
+            get {
+                return ((int)(this["ResultsLimit"]));
+            }
+            set {
+                this["ResultsLimit"] = value;
+            }
+        }
     }
 }

@@ -23,6 +23,9 @@ namespace DevRant.WPF.DataStore
         bool ShowCreateTime { get; }
         bool FilterOutRead { get; }
         bool OpenInProfileViewer { get; }
+        int ResultsLimit { get; }
+        int MaxPages { get; }
+        int MinScore { get; set; }
 
         void Unfollow(string user);
         void Follow(string user);
@@ -38,6 +41,7 @@ namespace DevRant.WPF.DataStore
         void SetShowCreateTime(bool showCreateTime);
         void SetLogin(LoginInfo loginInfo);
         void SetFilterOutRead(bool filterOutRead);
+        void SetLimits(int resultsLimit, int minScore, int maxPages);
 
 
         /*

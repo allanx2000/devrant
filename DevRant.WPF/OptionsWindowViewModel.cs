@@ -75,6 +75,38 @@ namespace DevRant.WPF
             ShowCreateTime = ds.ShowCreateTime;
             FilterOutRead = ds.FilterOutRead;
             DBFolder = ds.DBFolder;
+
+            ResultsLimit = ds.ResultsLimit;
+            MinScore = ds.MinScore;
+            MaxPages = ds.MaxPages;
+        }
+
+        public int ResultsLimit
+        {
+            get { return Get<int>(); }
+            set
+            {
+                Set(value);
+                RaisePropertyChanged();
+            }
+        }
+        public int MaxPages
+        {
+            get { return Get<int>(); }
+            set
+            {
+                Set(value);
+                RaisePropertyChanged();
+            }
+        }
+        public int MinScore
+        {
+            get { return Get<int>(); }
+            set
+            {
+                Set(value);
+                RaisePropertyChanged();
+            }
         }
         
         public string Password { get; set; }
@@ -255,6 +287,8 @@ namespace DevRant.WPF
                 ds.SetHideUsername(!ShowUsername);
                 ds.SetShowCreateTime(ShowCreateTime);
                 ds.SetFilterOutRead(FilterOutRead);
+
+                ds.SetLimits(ResultsLimit, MinScore, MaxPages);
 
                 //Check DBPath
                 if (ds.DBFolder != DBFolder)

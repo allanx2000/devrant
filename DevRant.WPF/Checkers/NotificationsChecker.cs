@@ -50,6 +50,7 @@ namespace DevRant.WPF.Checkers
             public int Total { get; private set; }
             public int TotalUnread { get; private set; }
             public Exception Error { get; internal set; }
+            //public int? Pages { get; internal set; }
         }
         
         

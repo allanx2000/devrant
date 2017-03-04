@@ -5,123 +5,165 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DevRant.WPF"
         mc:Ignorable="d"
-        Title="Options" Width="350" SizeToContent="Height"
+        Title="Options" Width="700" SizeToContent="Height"
         WindowStyle="ToolWindow"
         WindowStartupLocation="CenterOwner"
         >
-    <StackPanel>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        <GroupBox Header="General">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
-                <Grid Grid.Row="0" Grid.ColumnSpan="2">
-
+        <StackPanel Grid.Column="0">
+            <GroupBox Header="General">
+                <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Grid.ColumnSpan="2">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
                             <CheckBox IsChecked="{Binding ShowUsername}">Show Username</CheckBox>
                             <CheckBox IsChecked="{Binding ShowCreateTime}">Show Create Time</CheckBox>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1">
+                            <CheckBox IsChecked="{Binding FilterOutRead}">Don't count read rants</CheckBox>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+                        <Label>Check for new updates every</Label>
+                        <TextBox Width="30" Text="{Binding UpdateCheckInterval}"/>
+                        <Label>minutes</Label>
                     </StackPanel>
 
-                    <StackPanel Grid.Column="1">
-                        <CheckBox IsChecked="{Binding FilterOutRead}">Don't count read rants</CheckBox>
-                    </StackPanel>
+                    <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource GridField}">Default Feed:</Label>
+                    <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding RantSorts}" SelectedItem="{Binding DefaultFeed}" />
+
+                    <Label Grid.Column="0" Grid.Row="3" Style="{StaticResource GridField}">Default Story:</Label>
+                    <ComboBox Grid.Column="1" Grid.Row="3" ItemsSource="{Binding StoryRanges}" SelectedItem="{Binding DefaultStoryRange}" />
+
                 </Grid>
-                
-                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
-                    <Label>Check for new updates every</Label>
-                    <TextBox Width="30" Text="{Binding UpdateCheckInterval}"/>
-                    <Label>minutes</Label>
-                </StackPanel>
+            </GroupBox>
 
-                <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource GridField}">Default Feed:</Label>
-                <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding RantSorts}" SelectedItem="{Binding DefaultFeed}" />
-
-                <Label Grid.Column="0" Grid.Row="3" Style="{StaticResource GridField}">Default Story:</Label>
-                <ComboBox Grid.Column="1" Grid.Row="3" ItemsSource="{Binding StoryRanges}" SelectedItem="{Binding DefaultStoryRange}" />
-
-            </Grid>
-        </GroupBox>
-
-        <GroupBox Header="Custom Database Path">
-            <DockPanel LastChildFill="True">
-                <Label DockPanel.Dock="Top">Changing this will require the application to restart.</Label>
-                <Label DockPanel.Dock="Left" FontWeight="Bold">Folder: </Label>
-                <Button DockPanel.Dock="Right" Command="{Binding SelectDBFolderCommand}">...</Button>
-                <TextBox Text="{Binding DBFolder, UpdateSourceTrigger=PropertyChanged}"/>
-            </DockPanel>
-        </GroupBox>
-        
-        <GroupBox Header="Login">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
-                <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource GridField}">Username:</Label>
-                <TextBox Name="UsernameText" Grid.Row="0" Grid.Column="1" Text="{Binding Username}"/>
-
-                <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource GridField}">Password:</Label>
-                <PasswordBox Name="PasswordText" Grid.Row="1" Grid.Column="1" PasswordChanged="PasswordBox_PasswordChanged"
-                             Margin="5 0" Padding="3" />
-
-            </Grid>
-        </GroupBox>
-
-        <GroupBox Header="Following">
-            <StackPanel>
+            <GroupBox Header="Feed Options">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0">Follow:</Label>
-                    <TextBox Grid.Column="1" Text="{Binding UserToFollow}"/>
-                    <Button Grid.Column="2" Padding="13 3" Command="{Binding AddUserCommand}" >Add</Button>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource GridField}">Results Limit:</Label>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ResultsLimit}"/>
+                    <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource GridField}">Request Limit:</Label>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MaxPages}" />
+                    <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource GridField}">Min. Score:</Label>
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MinScore}" />
+
                 </Grid>
+            </GroupBox>
+            
+            <GroupBox Header="Login">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <Label Height="10"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
+                    <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource GridField}">Username:</Label>
+                    <TextBox Name="UsernameText" Grid.Row="0" Grid.Column="1" Text="{Binding Username}"/>
+
+                    <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource GridField}">Password:</Label>
+                    <PasswordBox Name="PasswordText" Grid.Row="1" Grid.Column="1" PasswordChanged="PasswordBox_PasswordChanged"
+                             Margin="5 0" Padding="3" />
+
+                </Grid>
+            </GroupBox>
+
+        </StackPanel>
+
+        <StackPanel Grid.Column="1">
+
+            <GroupBox Header="Custom Database Path">
                 <DockPanel LastChildFill="True">
-                    <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center" Orientation="Vertical">
-                        <Button IsEnabled="{Binding UserSelected}" Command="{Binding OpenProfileCommand}">
-                            <TextBlock TextAlignment="Center">Open<LineBreak/> Profile</TextBlock>
-                        </Button>
-                        <Button IsEnabled="{Binding UserSelected}" Command="{Binding RemoveUserCommand}">Remove</Button>
-                    </StackPanel>
-                    <ListBox Height="200" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}"/>
+                    <Label DockPanel.Dock="Top">Changing this will require the application to restart.</Label>
+                    <Label DockPanel.Dock="Left" FontWeight="Bold">Folder:</Label>
+                    <Button DockPanel.Dock="Right" Command="{Binding SelectDBFolderCommand}">...</Button>
+                    <TextBox Text="{Binding DBFolder, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
+            </GroupBox>
 
-            </StackPanel>
-        </GroupBox>
+            <GroupBox Header="Following">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0">Follow:</Label>
+                        <TextBox Grid.Column="1" Text="{Binding UserToFollow}"/>
+                        <Button Grid.Column="2" Padding="13 3" Command="{Binding AddUserCommand}" >Add</Button>
+                    </Grid>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Label Height="10"/>
+
+                    <DockPanel LastChildFill="True">
+                        <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center" Orientation="Vertical">
+                            <Button IsEnabled="{Binding UserSelected}" Command="{Binding OpenProfileCommand}">
+                                <TextBlock TextAlignment="Center">Open<LineBreak/> Profile</TextBlock>
+                            </Button>
+                            <Button IsEnabled="{Binding UserSelected}" Command="{Binding RemoveUserCommand}">Remove</Button>
+                        </StackPanel>
+                        <ListBox Height="200" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}"/>
+                    </DockPanel>
+
+                </StackPanel>
+            </GroupBox>
+
+
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Command="{Binding SaveCommand}">Save</Button>
             <Button Command="{Binding CancelCommand}">Cancel</Button>
         </StackPanel>
 
-    </StackPanel>
+
+    </Grid>
 </Window>

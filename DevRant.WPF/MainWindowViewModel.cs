@@ -36,6 +36,10 @@ namespace DevRant.WPF
         
         private ObservableCollection<FeedItem> feeds = new ObservableCollection<FeedItem>();
         private CollectionViewSource feedView;
+        
+        public int MaxPages { get { return 15; } }
+        public int MinScore { get { return 20; } }
+
 
         public MainWindowViewModel(Window window)
         {
@@ -476,7 +480,7 @@ namespace DevRant.WPF
         private IDataStore ds;
         private IDevRantClient api;
         private IPersistentDataStore db;
-
+        
         public async Task LoadSection(string section)
         {
             IsLoading = true;
@@ -900,7 +904,7 @@ namespace DevRant.WPF
             get { return new mvvm.CommandHelper(Test); }
         }
 
-        public int Limit { get { return 20; } }
+
 
         private async void Test()
         {
@@ -1027,17 +1031,17 @@ namespace DevRant.WPF
 
         private async Task LoadFeed(FeedType type, RantSort sort = RantSort.Algo, StoryRange range = StoryRange.Day, bool filter = false)
         {
-            Func<int, Task<IReadOnlyCollection<Dtos.Rant>>> getter;
+            Func<int, int, Task<IReadOnlyCollection<Dtos.Rant>>> getter;
 
             SettingsCollection collection = new SettingsCollection();
 
             switch (type)
             {
                 case FeedType.General:
-                    getter = async (skip) => await api.Feeds.GetRantsAsync(sort: sort, skip: skip, settings: collection);
+                    getter = async (skip, limit) => await api.Feeds.GetRantsAsync(sort: sort, skip: skip, limit: limit, settings: collection);
                     break;
                 case FeedType.Stories:
-                    getter = async (skip) => await api.Feeds.GetStoriesAsync(range: range, sort: sort, skip: skip);
+                    getter = async (skip, limit) => await api.Feeds.GetStoriesAsync(range: range, sort: sort, skip: skip, limit: limit);
                     break;
                 default:
                     return;
@@ -1049,16 +1053,24 @@ namespace DevRant.WPF
             List<long> ids = new List<long>();
 
             int page = 0;
-            while (rants.Count < Limit && page < 10)
-            {
-                int skip = page * Limit;
 
-                var tmp = await getter.Invoke(skip);
+            int maxPages = ds.MaxPages;
+            var lim = ds.ResultsLimit;
+            int minScore = ds.MinScore;
+
+            while (rants.Count < lim && page < maxPages)
+            {
+                int skip = page * lim;
+
+                var tmp = await getter.Invoke(skip, lim);
                 if (tmp.Count == 0)
                     break;
 
                 foreach (var r in tmp)
                 {
+                    if (r.Score < minScore)
+                        continue;
+
                     if (!ds.FilterOutRead || !db.IsRead(r.Id))
                     {
                         if (!ids.Contains(r.Id))
@@ -1085,14 +1097,15 @@ namespace DevRant.WPF
                 int count = Convert.ToInt32(collection[NotificationCount]);
                 UpdateNotifications(new NotificationsChecker.UpdateArgs(count, count));
             }
-
+            
             UpdateFollowedInRants();
 
             feedView.SortDescriptions.Clear();
             
             currentSection = type;
 
-            UpdateStatus("Loaded " + rants.Count + " rants");
+            string message = "Loaded {0} rants from {1} pages";
+            UpdateStatus(string.Format(message, rants.Count, page + 1));
         }
         
         /// <summary>

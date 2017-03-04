@@ -113,6 +113,35 @@ namespace DevRant.WPF.DataStore
             }
         }
 
+        public int ResultsLimit
+        {
+            get
+            {
+                return Settings.ResultsLimit;
+            }
+        }
+
+        public int MaxPages
+        {
+            get
+            {
+                return Settings.MaxPages;
+            }
+        }
+
+        public int MinScore
+        {
+            get
+            {
+                return Settings.MinScore;
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public void Follow(string user)
         {
             if (!followedUsers.Contains(user))
@@ -229,6 +258,21 @@ namespace DevRant.WPF.DataStore
                 Settings.DataStoreFolder = path;
             }
 
+            Settings.Save();
+        }
+
+        public void SetLimits(int resultsLimit, int minScore, int maxPages)
+        {
+            if (resultsLimit < 10)
+                throw new Exception("Results limit must be 10 or greater.");
+            else if (maxPages > 20)
+                throw new Exception("Maximum pages to search must be 20 or less.");
+            else if (minScore < 0)
+                minScore = 0;
+
+            Settings.ResultsLimit = resultsLimit;
+            Settings.MinScore = minScore;
+            Settings.MaxPages = maxPages;
             Settings.Save();
         }
     }
