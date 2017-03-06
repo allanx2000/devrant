@@ -1105,7 +1105,7 @@ namespace DevRant.WPF
             currentSection = type;
 
             string message = "Loaded {0} rants from {1} pages";
-            UpdateStatus(string.Format(message, rants.Count, page + 1));
+            UpdateStatus(string.Format(message, rants.Count, page));
         }
         
         /// <summary>
