@@ -662,11 +662,57 @@ namespace DevRant.WPF
         }
         */
 
+        
+
+        public ICommand SupriseMeCommand
+        {
+            get { return new mvvm.CommandHelper(SurpriseMe); }
+        }
+
+        private bool acceptRant(Dtos.Rant rant)
+        {
+            if (db != null && db.IsRead(rant.Id))
+                return false;
+            else
+                return true;
+        }
+
+        private async void SurpriseMe()
+        {
+            window.IsEnabled = false;
+
+            try
+            {
+                UpdateStatus("Finding random rant...");
+
+                Dtos.Rant rant = await api.SurpriseMe(acceptRant);
+                
+                UpdateStatus("Done.");
+
+                var dlg = new RantViewerWindow(new ViewModels.Rant(rant), api);
+                dlg.Owner = window;
+
+                dlg.ShowDialog();
+
+                if (db != null)
+                {
+                    db.MarkRead(rant.Id);
+                }
+            }
+            catch (Exception e)
+            {
+                //MessageBoxFactory.ShowError(e);
+                UpdateStatus("Error: " + e.Message);
+            }
+            finally
+            {
+                window.IsEnabled = true;
+            }
+        }
 
         public ICommand ViewSpecificRantCommand
         {
             get { return new mvvm.CommandHelper(ViewSpecificRant); }
-
         }
 
         /// <summary>

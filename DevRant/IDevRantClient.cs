@@ -4,6 +4,7 @@ using DevRant.Dtos;
 using DevRant.Enums;
 using static System.Net.Mime.MediaTypeNames;
 using System.Windows.Media;
+using System;
 
 namespace DevRant
 {
@@ -125,8 +126,7 @@ namespace DevRant
         /// <param name="data"></param>
         /// <returns></returns>
         Task PostComment(long rantId, PostContent data);
-
-
+        
         /// <summary>
         /// Vote on a comment
         /// </summary>
@@ -170,6 +170,13 @@ namespace DevRant
         /// <param name="rantId"></param>
         /// <returns></returns>
         Task<Rant> GetRant(long rantId);
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        Task<Rant> SurpriseMe(Func<Rant, bool> acceptor = null);
 
         /// <summary>
         /// Gets the Avatar image from devRant

@@ -332,6 +332,49 @@ namespace DevRant.V1
                 return (ImageSource)avatarCache.Get(imgName);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="acceptor">Returns whether the caller accepts the rant</param>
+        /// <returns></returns>
+        public async Task<Rant> SurpriseMe(Func<Rant, bool> acceptor = null)
+        {
+            return await SurpriseMe(acceptor, 0);
+        }
+
+        private const int MaxTries = 10;
+
+        private async Task<Rant> SurpriseMe(Func<Rant, bool> acceptor, int tries)
+        {
+            string url = MakeUrl(Constants.PathRants + "surprise");
+
+            while (tries < MaxTries)
+            {
+                var response = await client.GetAsync(url);
+                var responseText = await response.Content.ReadAsStringAsync();
+
+                JObject obj = JObject.Parse(responseText);
+
+                if (CheckSuccess(obj))
+                {
+                    Rant r = DataObject.Parse<Rant>(obj["rant"] as JObject);
+                    if (acceptor != null)
+                    {
+                        if (acceptor.Invoke(r)) //Accepted
+                        {
+                            return r;
+                        }
+                        else
+                            tries++;
+                    }
+                    else
+                        return r;
+                }
+            }
+
+            throw new Exception("Was not able to find a new rant.");
+        }
+
         #endregion
     }
 }

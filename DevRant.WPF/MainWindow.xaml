@@ -74,22 +74,19 @@
 
             </Grid>
         </DataTemplate>
-
     </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="180"/>
             <ColumnDefinition Width="*"/>
-            <!--
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-            -->
         </Grid.ColumnDefinitions>
 
         <DockPanel Grid.Row="0" Grid.ColumnSpan="4" LastChildFill="True">
@@ -105,8 +102,7 @@
                 </MenuItem>
                 
                 <MenuItem Header="Options" Command="{Binding OpenOptionsCommand}"/>
-                <MenuItem Header="Check For Updates" Command="{Binding CheckUpdatesCommand}"/>
-                <MenuItem Header="Refresh Feed" Click="RefreshFeed"/>
+                <MenuItem Header="Surprise Me!" Command="{Binding SupriseMeCommand}"/>
             </Menu>
             
             <Menu DockPanel.Dock="Right" IsEnabled="{Binding LoggedIn}">
@@ -200,13 +196,11 @@
             </ListBox>
         </GroupBox>
 
-        <!--
-        <GridSplitter Grid.Column="2" Grid.Row="2" Width="5"  HorizontalAlignment="Center"
-                        VerticalAlignment="Stretch"/>
-        <TextBox Grid.Column="3" Grid.Row="2">Test</TextBox>
-        -->
 
-        <StatusBar Cursor="Hand" Grid.Row="3" Grid.ColumnSpan="2" Padding="3" MouseDoubleClick="StatusBar_MouseDoubleClick">
+        <Button Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center" Command="{Binding CheckUpdatesCommand}">Check For Updates</Button>
+        <Button Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center" Click="RefreshFeed">Refresh Feed</Button>
+
+        <StatusBar Cursor="Hand" Grid.Row="4" Grid.ColumnSpan="2" Padding="3" MouseDoubleClick="StatusBar_MouseDoubleClick">
             <TextBlock Text="{Binding StatusMessage}"/>
         </StatusBar>
 
