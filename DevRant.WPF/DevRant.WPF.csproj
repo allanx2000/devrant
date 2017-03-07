@@ -28,7 +28,7 @@
     <TargetCulture>en</TargetCulture>
     <ProductName>devRant++ %28an unofficial client%29</ProductName>
     <PublisherName>innouvous</PublisherName>
-    <ApplicationRevision>58</ApplicationRevision>
+    <ApplicationRevision>60</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -117,6 +117,7 @@
     </Compile>
     <Compile Include="ProfileViewerWindowViewModel.cs" />
     <Compile Include="IDInputWindowViewModel.cs" />
+    <Compile Include="ScrollHandler.cs" />
     <Compile Include="ViewModels\ProfileSection.cs" />
     <Compile Include="ViewModels\Commentable.cs" />
     <Compile Include="Controls\MyUserControl.cs" />
@@ -287,6 +288,7 @@
     <Content Include="Libs\System.Data.SQLite.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Notes\ShortcutsMain.txt" />
     <Resource Include="ToDo.txt" />
     <Resource Include="Libs\System.Data.SQLite.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

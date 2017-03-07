@@ -20,15 +20,24 @@ namespace DevRant.WPF
     /// </summary>
     public partial class RantViewerWindow : Window
     {
-        private RantViewerViewModel vm;
+        private readonly RantViewerViewModel vm;
+        private readonly ScrollHandler scroller;
 
         public RantViewerWindow(Rant rant, IDevRantClient api)
         {
             InitializeComponent();
 
-            vm = new RantViewerViewModel(this, rant, api);
+            vm = new RantViewerViewModel(this, rant, api, Scroll);
             DataContext = vm;
-            
+
+            scroller = new ScrollHandler(ScrollViewer);
+
+            //ScrollViewer.Focus();
+        }
+
+        private void Scroll(string direction)
+        {
+            scroller.Scroll(direction);
         }
 
         //TODO: Need to change this to handle reply...
@@ -36,5 +45,6 @@ namespace DevRant.WPF
         {
            await vm.ButtonClicked(args);
         }
+        
     }
 }

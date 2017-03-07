@@ -1,0 +1,9 @@
+﻿ALT + W: New rant
+ALT + S: Surprise Me/Show random rant
+ALT + R: Refresh current feed
+ALT + U: Check for new Updates and Notifications
+ALT + V: View...
+ALT + M: View My Profile
+ALT + O: Options
+
+ESC will close/cancel any child window

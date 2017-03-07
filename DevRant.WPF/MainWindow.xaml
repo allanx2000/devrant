@@ -96,18 +96,18 @@
                 </Style>
             </DockPanel.Resources>
             <Menu DockPanel.Dock="Left">
-                <MenuItem Header="View...">
-                    <MenuItem Header="Rant" Command="{Binding ViewSpecificRant}"/>
-                    <MenuItem Header="Profile" Command="{Binding ViewSpecificProfileCommand}"/>
+                <MenuItem Header="_View...">
+                    <MenuItem Header="_Rant" Command="{Binding ViewSpecificRantCommand}"/>
+                    <MenuItem Header="_Profile" Command="{Binding ViewSpecificProfileCommand}"/>
                 </MenuItem>
                 
-                <MenuItem Header="Options" Command="{Binding OpenOptionsCommand}"/>
-                <MenuItem Header="Surprise Me!" Command="{Binding SupriseMeCommand}"/>
+                <MenuItem Header="_Options" Command="{Binding OpenOptionsCommand}"/>
+                <MenuItem Header="_Surprise Me!" Command="{Binding SupriseMeCommand}"/>
             </Menu>
             
             <Menu DockPanel.Dock="Right" IsEnabled="{Binding LoggedIn}">
-                <MenuItem Header="View My Profile" Command="{Binding ViewMyProfileCommand}"/>
-                <MenuItem Header="Post a New Rant" Command="{Binding PostCommand}"/>
+                <MenuItem Header="View My _Profile" Command="{Binding ViewMyProfileCommand}"/>
+                <MenuItem Header="Post a Ne_w Rant" Command="{Binding PostCommand}"/>
             </Menu>
 
             <!--- Center filler -->
@@ -197,8 +197,8 @@
         </GroupBox>
 
 
-        <Button Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center" Command="{Binding CheckUpdatesCommand}">Check For Updates</Button>
-        <Button Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center" Click="RefreshFeed">Refresh Feed</Button>
+        <Button Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center" Command="{Binding CheckUpdatesCommand}">Check For _Updates</Button>
+        <Button Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center" Click="RefreshFeed">_Refresh Feed</Button>
 
         <StatusBar Cursor="Hand" Grid.Row="4" Grid.ColumnSpan="2" Padding="3" MouseDoubleClick="StatusBar_MouseDoubleClick">
             <TextBlock Text="{Binding StatusMessage}"/>

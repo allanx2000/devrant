@@ -15,12 +15,14 @@ namespace DevRant.WPF
     {
         private IDevRantClient api;
         private Window window;
+        private Action<string> onScroll;
 
-        public RantViewerViewModel(Window window, Rant rant, IDevRantClient api)
+        public RantViewerViewModel(Window window, Rant rant, IDevRantClient api, Action<string> onScroll)
         {
             Rant = rant;
             this.api = api;
             this.window = window;
+            this.onScroll = onScroll;
             
             Comments = new ObservableCollection<Comment>();
             GetComments();
@@ -37,6 +39,33 @@ namespace DevRant.WPF
         public bool LoggedIn
         {
             get { return api.User.LoggedIn; }
+        }
+
+
+        public ICommand ScrollCommand
+        {
+            get
+            {
+                return new mvvm.CommandHelper(Scroll);
+            }
+        }
+
+        private void Scroll(object arg)
+        {
+            try
+            {
+                if (Comments.Count > 0 && onScroll != null)
+                {
+
+                    string param = arg as string;
+
+                    onScroll.Invoke(param);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBoxFactory.ShowError(e);
+            }
         }
 
         public ICommand CloseCommand

@@ -4,4 +4,9 @@
 
 	-Add buttons to RantViewer and commands for handling
 
--Surprise Me
+-Keyboard Only controls/navigation
+	-Need to use Command Bindings
+	-Make reference sheet window of commands
+
+-Add Esc to RantIdSelector, ReasonSelector, EditWindow
+-Shortcut keys (CTRL) to update, notifs, drafts
