@@ -77,6 +77,12 @@ namespace DevRant.WPF
                 var raw = await api.GetRant(item.AsNotification().RantId);
                 item = new ViewModels.Rant(raw);
             }
+            else if (item is ViewModels.Comment)
+            {
+                var raw = await api.GetRant(item.AsComment().RantId);
+                item = new ViewModels.Rant(raw);
+            }
+
 
             if (item is ViewModels.Rant)
             {
@@ -86,13 +92,9 @@ namespace DevRant.WPF
                 dlg.Owner = owner;
                 dlg.ShowDialog();
             }
-            else if (item is Commentable)
+            else if (item is ViewModels.Collab)
             {
-                OpenFeedItem((Commentable)item);
-            }
-            else if (item is ViewModels.Comment)
-            {
-                string url = GetRantUrl(item.AsComment().RantId);
+                string url = GetRantUrl(item.AsCollab().RantId);
                 Process.Start(url);
             }
             else
