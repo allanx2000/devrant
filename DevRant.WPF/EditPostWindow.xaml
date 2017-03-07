@@ -8,6 +8,12 @@
         Title="{Binding WindowTitle}" Height="400" Width="600"
         WindowStartupLocation="CenterOwner"
         WindowStyle="ToolWindow">
+
+
+    <Window.InputBindings>
+        <KeyBinding Key="Esc" Command="{Binding CancelCommand}"/>
+    </Window.InputBindings>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -49,8 +55,8 @@
         </DockPanel>
 
         <StackPanel Grid.Row="3" HorizontalAlignment="Center" Orientation="Horizontal">
-            <Button Command="{Binding PostCommand}">Post</Button>
-            <Button Command="{Binding SaveDraftCommand}" Visibility="{Binding SaveDraftVisibility}">Save Draft</Button>
+            <Button Command="{Binding PostCommand}">_Post</Button>
+            <Button Command="{Binding SaveDraftCommand}" Visibility="{Binding _SaveDraftVisibility}">Save Draft</Button>
             <Button Command="{Binding CancelCommand}">Cancel</Button>
         </StackPanel>
     </Grid>

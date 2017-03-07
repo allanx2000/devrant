@@ -18,6 +18,11 @@
     <Window.Resources>
         <conv:VoteReasonConverter x:Key="reasonConverter"/>
     </Window.Resources>
+
+    <Window.InputBindings>
+        <KeyBinding Key="Esc" Command="{Binding CancelCommand}"/>
+        <KeyBinding Key="Return" Command="{Binding SelectCommand}"/>
+    </Window.InputBindings>
     
     <DockPanel LastChildFill="True">
         <Label DockPanel.Dock="Left"  Content="{Binding IDLabel, FallbackValue=ID:}"/>
@@ -26,6 +31,6 @@
             <Button Command="{Binding CancelCommand}">Cancel</Button>
         </StackPanel>
 
-        <TextBox Text="{Binding ID, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Name="InputTextbox" Text="{Binding ID, UpdateSourceTrigger=PropertyChanged}"/>
     </DockPanel>
 </Window>

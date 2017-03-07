@@ -19,7 +19,11 @@
     <Window.Resources>
         <conv:VoteReasonConverter x:Key="reasonConverter"/>
     </Window.Resources>
-    
+
+    <Window.InputBindings>
+        <KeyBinding Key="Esc" Command="{Binding CancelCommand}"/>
+    </Window.InputBindings>
+
     <DockPanel>
         <GroupBox Header="Reason" DockPanel.Dock="Top">
             <StackPanel Orientation="Vertical" >
