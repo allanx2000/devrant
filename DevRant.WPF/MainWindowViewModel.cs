@@ -113,6 +113,9 @@ namespace DevRant.WPF
         {
             await UpdateNotifications(args, false);
         }
+
+        private object notifLock = new object();
+
         private async Task UpdateNotifications(NotificationsChecker.UpdateArgs args, bool forInit)
         {
             StringBuilder sb = new StringBuilder();
@@ -123,7 +126,7 @@ namespace DevRant.WPF
                 sb.Append(" (" + args.TotalUnread + ")");
                 NotificationsWeight = FontWeights.Bold;
 
-                if (currentSection == FeedType.Drafts)
+                if (currentSection == FeedType.Notifications)
                 {
                    LoadNotifications();
                 }
@@ -454,7 +457,8 @@ namespace DevRant.WPF
             General,
             Collab,
             Updates,
-            Drafts
+            Drafts,
+            Notifications
         }
 
         public const string SectionGeneral = "GeneralFeed";
@@ -1067,7 +1071,7 @@ namespace DevRant.WPF
                 feeds.Add(notif);
             }
             
-            currentSection = FeedType.Drafts;
+            currentSection = FeedType.Notifications;
             
             feedView.SortDescriptions.Clear();
             
