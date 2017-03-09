@@ -24,6 +24,8 @@ namespace DevRant.WPF
             this.DataContext = vm;
 
             InitializeComponent();
+
+            //SectionsListBox.se
         }
 
         private async void RefreshFeed(object sender, RoutedEventArgs e)

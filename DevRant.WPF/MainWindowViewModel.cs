@@ -28,15 +28,15 @@ namespace DevRant.WPF
     internal class MainWindowViewModel : ViewModel
     {
         private Window window;
-        
+
         private FollowedUserChecker fchecker;
 
         private FeedType currentSection;
         private string currentSectionName;
-        
+
         private ObservableCollection<FeedItem> feeds = new ObservableCollection<FeedItem>();
         private CollectionViewSource feedView;
-        
+
         public int MaxPages { get { return 15; } }
         public int MinScore { get { return 20; } }
 
@@ -50,7 +50,7 @@ namespace DevRant.WPF
             this.db = SQLiteStore.CreateInstance(ds.DBFolder);
 
             AppManager.Initialize(api, ds, db);
-            
+
             statusMessages = new MessageCollection();
             statusMessages.Changed += StatusChanged;
 
@@ -66,7 +66,7 @@ namespace DevRant.WPF
             nchecker.OnUpdate += UpdateNotifications;
 
             Startup();
-            
+
             //TestLogin();
             //Test();
         }
@@ -75,10 +75,10 @@ namespace DevRant.WPF
         {
             try
             {
-               if (await Login())
-               {
+                if (await Login())
+                {
                     await LoadSection(currentSectionName);
-               }
+                }
             }
             catch (Exception e)
             {
@@ -128,7 +128,7 @@ namespace DevRant.WPF
 
                 if (currentSection == FeedType.Notifications)
                 {
-                   LoadNotifications();
+                    LoadNotifications();
                 }
             }
             else
@@ -180,7 +180,7 @@ namespace DevRant.WPF
             }
 
             DraftsLabel = sb.ToString();
-            
+
         }
 
         private async Task<bool> Login()
@@ -194,7 +194,7 @@ namespace DevRant.WPF
                 if (loginInfo != null)
                 {
                     await AppManager.Instance.API.User.Login(loginInfo.Username, loginInfo.Password);
-                    
+
                     nchecker.Start();
                     loggedIn = true;
                 }
@@ -314,7 +314,8 @@ namespace DevRant.WPF
 
         public string LoggedInUser
         {
-            get {
+            get
+            {
                 return AppManager.Instance.API.User.LoggedInUser;
             }
         }
@@ -346,10 +347,11 @@ namespace DevRant.WPF
                 return AppManager.Instance.Settings.ShowCreateTime ? Visibility.Visible : Visibility.Collapsed;
             }
         }
-        
+
         public Visibility UsernameVisibility
         {
-            get {
+            get
+            {
                 return AppManager.Instance.Settings.HideUsername ? Visibility.Collapsed : Visibility.Visible;
             }
         }
@@ -384,7 +386,7 @@ namespace DevRant.WPF
                 RaisePropertyChanged();
             }
         }
-        
+
         public FeedItem SelectedPost
         {
             get { return Get<FeedItem>(); }
@@ -393,14 +395,14 @@ namespace DevRant.WPF
                 if (value != null)
                 {
                     value.Read = true;
-                    
+
                     if (value.Type == FeedItem.FeedItemType.Post)
                     {
                         AppManager.Instance.DB.MarkRead(value.AsRant().ID);
                     }
 
                     if (currentSection == FeedType.Updates)
-                    {                        
+                    {
                         UpdateFollowedPosts(fchecker.GetFeedUpdate());
                     }
                 }
@@ -471,9 +473,9 @@ namespace DevRant.WPF
         public const string SectionStoriesWeek = "StoriesWeek";
         public const string SectionStoriesMonth = "StoriesMonth";
         public const string SectionStoriesAll = "StoriesAll";
-        
+
         public const string SectionCollab = "CollabFeed";
-        
+
         public const string SectionNotifications = "MyNotifications";
         public const string SectionDrafts = "RantDrafts";
 
@@ -484,7 +486,7 @@ namespace DevRant.WPF
         private IDataStore ds;
         private IDevRantClient api;
         private IPersistentDataStore db;
-        
+
         public async Task LoadSection(string section)
         {
             IsLoading = true;
@@ -557,7 +559,7 @@ namespace DevRant.WPF
                 IsLoading = false;
             }
         }
-        
+
         private void LoadDrafts()
         {
             var drafts = AppManager.Instance.DB.GetDrafts();
@@ -570,7 +572,7 @@ namespace DevRant.WPF
                 feeds.Add(vm);
             }
 
-            
+
             currentSection = FeedType.Drafts;
 
             feedView.SortDescriptions.Clear();
@@ -596,7 +598,7 @@ namespace DevRant.WPF
         #endregion
 
         #region Commands
-        
+
         public ICommand DeleteDraftCommand
         {
             get { return new mvvm.CommandHelper(DeleteDraft); }
@@ -636,7 +638,7 @@ namespace DevRant.WPF
             }
         }
 
-        
+
 
         public ICommand MuteCommand
         {
@@ -648,7 +650,7 @@ namespace DevRant.WPF
         {
             if (SelectedPost is ViewModels.Notification)
             {
-               await api.User.MuteRant(SelectedPost.AsNotification().RantId);
+                await api.User.MuteRant(SelectedPost.AsNotification().RantId);
             }
         }
 
@@ -666,17 +668,24 @@ namespace DevRant.WPF
         }
         */
 
-        
+
 
         public ICommand SupriseMeCommand
         {
             get { return new mvvm.CommandHelper(SurpriseMe); }
         }
 
+        //Used to count number of tries
+        private int acceptorTries = 0;
+
         private bool acceptRant(Dtos.Rant rant)
         {
+            acceptorTries++;
+
             if (db != null && db.IsRead(rant.Id))
+            {
                 return false;
+            }
             else
                 return true;
         }
@@ -689,9 +698,10 @@ namespace DevRant.WPF
             {
                 UpdateStatus("Finding random rant...");
 
+                acceptorTries = 0; //Reset counter
                 Dtos.Rant rant = await api.SurpriseMe(acceptRant);
-                
-                UpdateStatus("Done.");
+
+                UpdateStatus("Done, after " + acceptorTries + " tries.");
 
                 var dlg = new RantViewerWindow(new ViewModels.Rant(rant), api);
                 dlg.Owner = window;
@@ -799,12 +809,12 @@ namespace DevRant.WPF
 
                 RaisePropertyChanged("UsernameVisibility");
                 RaisePropertyChanged("DateVisibility");
-                
+
                 if (dlg.LoginChanged)
                 {
-                        await api.User.Logout();
+                    await api.User.Logout();
 
-                        await Login();
+                    await Login();
                 }
 
                 if (dlg.DatabaseChanged)
@@ -825,7 +835,7 @@ namespace DevRant.WPF
 
                     MainWindow newWindow = new MainWindow();
                     newWindow.Show();
-                    
+
                     window.Close();
                 }
             }
@@ -890,7 +900,7 @@ namespace DevRant.WPF
         {
             get { return new mvvm.CommandHelper(ViewSpecificProfile); }
         }
-                
+
         private async void ViewSpecificProfile()
         {
             try
@@ -1070,11 +1080,11 @@ namespace DevRant.WPF
             {
                 feeds.Add(notif);
             }
-            
+
             currentSection = FeedType.Notifications;
-            
+
             feedView.SortDescriptions.Clear();
-            
+
             feedView.SortDescriptions.Add(new SortDescription("Read", ListSortDirection.Ascending));
             feedView.SortDescriptions.Add(new SortDescription("CreateTimeRaw", ListSortDirection.Descending));
         }
@@ -1118,24 +1128,22 @@ namespace DevRant.WPF
 
                 foreach (var r in tmp)
                 {
-                    if (r.Score < minScore)
-                        continue;
-
-                    if (!ds.FilterOutRead || !db.IsRead(r.Id))
+                    if (VoteState.Disabled == r.Voted
+                        || r.Score < minScore
+                        || (ds.FilterOutRead && db.IsRead(r.Id)))
                     {
-                        if (!ids.Contains(r.Id))
-                        {
-                            rants.Add(r);
-                            ids.Add(r.Id);
-                        }
+                        continue;
                     }
+
+                    rants.Add(r);
+                    ids.Add(r.Id);
                 }
 
                 page++;
             }
 
             feeds.Clear();
-            
+
             foreach (var rant in rants)
             {
                 ViewModels.Rant r = new ViewModels.Rant(rant);
@@ -1147,17 +1155,17 @@ namespace DevRant.WPF
                 int count = Convert.ToInt32(collection[NotificationCount]);
                 UpdateNotifications(new NotificationsChecker.UpdateArgs(count, count));
             }
-            
+
             UpdateFollowedInRants();
 
             feedView.SortDescriptions.Clear();
-            
+
             currentSection = type;
 
             string message = "Loaded {0} rants from {1} pages";
             UpdateStatus(string.Format(message, rants.Count, page));
         }
-        
+
         /// <summary>
         /// Updates the Followed property in the rants, which is also shown in the View
         /// </summary>
@@ -1176,6 +1184,6 @@ namespace DevRant.WPF
             //Updates the ContextMenu
             RaisePropertyChanged("SelectedPost");
         }
-        
+
     }
 }

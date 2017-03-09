@@ -170,6 +170,10 @@
                  ItemTemplateSelector="{StaticResource feedListTemplateSelector}"
                      Margin="0,5,0,-5">
 
+                <ListBox.InputBindings>
+                    <KeyBinding Command="{Binding OpenPostCommand}" Key="Return"/>
+                </ListBox.InputBindings>
+                
                 <ListBox.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Open" Command="{Binding OpenPostCommand}"/>
