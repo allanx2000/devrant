@@ -479,7 +479,7 @@ namespace DevRant.WPF
 
         public async Task LoadSection(string section)
         {
-            IsLoading = true;
+            window.IsEnabled = false;
 
             try
             {
@@ -546,7 +546,7 @@ namespace DevRant.WPF
             }
             finally
             {
-                IsLoading = false;
+                window.IsEnabled = true;
             }
         }
 
@@ -1114,7 +1114,7 @@ namespace DevRant.WPF
                 
                 try
                 {
-                    var tmp = await getter.Invoke(skip, lim, currentSet);
+                    var tmp = await getter.Invoke(skip, lim);
                     //if (tmp.Count == 0)
                     //    break;
 
@@ -1137,11 +1137,13 @@ namespace DevRant.WPF
 
                 }
 
+                /*
                 if (collection.ContainsKey(SettingsCollection.Set))
                 {
                     this.currentSet = collection[SettingsCollection.Set].ToString();
                     currentSet = this.currentSet;
                 }
+                */
 
                 page++;
             }
