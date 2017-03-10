@@ -11,6 +11,16 @@ namespace DevRant.Dtos
 
     public class SettingsCollection : Dictionary<string, object>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string NumNotifs = "num_notifs";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string Set = "set";
+
         internal void AddAll(JObject obj = null)
         {
             if (obj != null)

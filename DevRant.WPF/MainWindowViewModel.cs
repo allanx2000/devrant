@@ -324,17 +324,7 @@ namespace DevRant.WPF
         {
             get { return AppManager.Instance.API.User.LoggedIn; }
         }
-
-        public bool IsLoading
-        {
-            get { return Get<bool>(); }
-            private set
-            {
-                Set(value);
-                RaisePropertyChanged();
-            }
-        }
-
+        
         public bool DateVisible
         {
             get { return AppManager.Instance.Settings.ShowCreateTime; }
@@ -1111,7 +1101,7 @@ namespace DevRant.WPF
 
             //Remove duplicates
             List<long> ids = new List<long>();
-
+            
             int page = 0;
 
             int maxPages = ds.MaxPages;
@@ -1121,22 +1111,36 @@ namespace DevRant.WPF
             while (rants.Count < lim && page < maxPages)
             {
                 int skip = page * lim;
-
-                var tmp = await getter.Invoke(skip, lim);
-                if (tmp.Count == 0)
-                    break;
-
-                foreach (var r in tmp)
+                
+                try
                 {
-                    if (VoteState.Disabled == r.Voted
-                        || r.Score < minScore
-                        || (ds.FilterOutRead && db.IsRead(r.Id)))
-                    {
-                        continue;
-                    }
+                    var tmp = await getter.Invoke(skip, lim, currentSet);
+                    //if (tmp.Count == 0)
+                    //    break;
 
-                    rants.Add(r);
-                    ids.Add(r.Id);
+                    foreach (var r in tmp)
+                    {
+                        if (ids.Contains(r.Id)
+                            || VoteState.Disabled == r.Voted
+                            || r.Score < minScore
+                            || (ds.FilterOutRead && db.IsRead(r.Id)))
+                        {
+                            continue;
+                        }
+
+                        rants.Add(r);
+                        ids.Add(r.Id);
+                    }
+                }
+                catch (Exception e)
+                {
+
+                }
+
+                if (collection.ContainsKey(SettingsCollection.Set))
+                {
+                    this.currentSet = collection[SettingsCollection.Set].ToString();
+                    currentSet = this.currentSet;
                 }
 
                 page++;

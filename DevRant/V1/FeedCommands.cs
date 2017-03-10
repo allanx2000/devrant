@@ -134,11 +134,16 @@ namespace DevRant.V1
 
             if (settings != null)
             {
-                var num = tmp["num_notifs"];
-                if (tmp["num_notifs"] != null)
+                var num = tmp[SettingsCollection.NumNotifs];
+                if (tmp[SettingsCollection.NumNotifs] != null)
                 {
                     var notifs = Convert.ToInt32(num.ToString());
-                    settings["num_notifs"] = notifs;
+                    settings[SettingsCollection.NumNotifs] = notifs;
+                }
+
+                if (tmp[SettingsCollection.Set] != null)
+                {
+                    settings[SettingsCollection.Set] = tmp[SettingsCollection.Set];
                 }
             }
 

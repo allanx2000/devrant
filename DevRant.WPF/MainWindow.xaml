@@ -8,7 +8,7 @@
         xmlns:ctrl="clr-namespace:DevRant.WPF.Controls"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="devRant++" Height="800" Width="800" IsEnabled="{Binding !IsLoading}"
+        Title="devRant++" Height="800" Width="800"
         Closed="Window_Closed" x:Name="mainWindow">
 
     <Window.Resources>
@@ -202,8 +202,15 @@
 
 
         <Button Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center" Command="{Binding CheckUpdatesCommand}">Check For _Updates</Button>
-        <Button Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center" Click="RefreshFeed">_Refresh Feed</Button>
 
+        <StackPanel Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center"  Orientation="Horizontal">
+        <Button Click="RefreshFeed">_Refresh Feed</Button>
+    
+        <!--    
+            <Button Command="{Binding LoadMoreCommand}">Load _More</Button>
+        -->
+        
+        </StackPanel>
         <StatusBar Cursor="Hand" Grid.Row="4" Grid.ColumnSpan="2" Padding="3" MouseDoubleClick="StatusBar_MouseDoubleClick">
             <TextBlock Text="{Binding StatusMessage}"/>
         </StatusBar>
