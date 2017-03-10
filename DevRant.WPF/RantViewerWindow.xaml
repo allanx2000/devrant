@@ -8,9 +8,8 @@
         SizeToContent="Height"
         WindowStyle="ToolWindow"
         mc:Ignorable="d"
-        Title="Viewer" Width="600" 
-        x:Name="rantWindow" 
-        WindowStartupLocation="CenterScreen" >
+        Title="Viewer" Width="800" 
+        x:Name="rantWindow" >
 
     <Window.InputBindings>
         <KeyBinding Key="Esc" Command="{Binding CloseCommand}"/>

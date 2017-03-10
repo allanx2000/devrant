@@ -22,6 +22,14 @@ namespace DevRant.WPF
     {
         public const string BaseURL = "https://www.devrant.io/";
 
+        public static double GetLeft(double windowWidth)
+        {
+            double screenWidth = SystemParameters.PrimaryScreenWidth;
+
+            double left = (screenWidth - windowWidth) / 2;
+            return left;
+        }
+
         public static long ToUnixTime(DateTime time)
         {
             long unixTimestamp = (long)(time.ToUniversalTime().Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
@@ -51,7 +59,7 @@ namespace DevRant.WPF
             window.Owner = owner;
             window.ShowDialog();
         }
-
+        
         /// <summary>
         /// Open profile in browser
         /// </summary>

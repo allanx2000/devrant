@@ -121,9 +121,6 @@ namespace DevRant.WPF
                     Comments.Add(new Comment(c));
                 }
             }
-
-            if (Comments.Count > 0)
-                window.Top = Top;
         }
     }
 }

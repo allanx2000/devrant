@@ -10,3 +10,5 @@
 -Add <Separator><menuitem>help </> and About to View
 
 -Add disabled color to VoteControl
+
+-Mark special if image is animated (how?)

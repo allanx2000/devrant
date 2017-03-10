@@ -32,6 +32,10 @@ namespace DevRant.WPF
 
             scroller = new ScrollHandler(ScrollViewer);
 
+            //TODO: Check if this works
+            Top = 10;
+            Left = Utilities.GetLeft(Width);
+
             //ScrollViewer.Focus();
         }
 
