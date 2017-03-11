@@ -37,7 +37,7 @@
                            Margin="0 5 0 0">
                 <Image Height="50" Source="{Binding Avatar, ElementName=control}"/>
                 
-                <Label MouseLeftButtonDown="Label_MouseLeftButtonDown" FontWeight="Bold" VerticalAlignment="Center" FontSize="14">
+                <Label Cursor="Hand" MouseLeftButtonDown="UsernameLabel_MouseLeftButtonDown" FontWeight="Bold" VerticalAlignment="Center" FontSize="14">
                     <Label.Style>
                         <Style TargetType="{x:Type Label}">
                             <Setter Property="Foreground" Value="Black"/>

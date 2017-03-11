@@ -929,10 +929,7 @@ namespace DevRant.WPF
 
         private void ViewProfile(string name)
         {
-            if (ds.OpenInProfileViewer)
-                Utilities.OpenProfile(name, window, api);
-            else
-                Utilities.OpenProfile(name);
+            Utilities.OpenProfile(name);
         }
 
         public ICommand ViewNotificationsCommand

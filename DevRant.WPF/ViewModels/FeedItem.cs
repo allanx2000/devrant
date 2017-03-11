@@ -26,7 +26,7 @@ namespace DevRant.WPF.ViewModels
 
         public virtual bool Read { get; set; }
         public long RawCreateTime { get; private set; }
-
+        
         public Notification AsNotification()
         {
             return this as Notification;

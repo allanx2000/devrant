@@ -118,6 +118,7 @@
     <Compile Include="ProfileViewerWindowViewModel.cs" />
     <Compile Include="IDInputWindowViewModel.cs" />
     <Compile Include="ScrollHandler.cs" />
+    <Compile Include="ViewModels\HasUsername.cs" />
     <Compile Include="ViewModels\ProfileSection.cs" />
     <Compile Include="ViewModels\Commentable.cs" />
     <Compile Include="Controls\MyUserControl.cs" />

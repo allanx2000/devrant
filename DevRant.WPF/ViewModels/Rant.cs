@@ -11,7 +11,7 @@ using System.Windows.Media;
 
 namespace DevRant.WPF.ViewModels
 {
-    public class Rant : FeedItem, Commentable, Votable, ProfileSection, HasAvatar
+    public class Rant : FeedItem, Commentable, Votable, ProfileSection, HasAvatar, HasUsername
     {
 
         private Dtos.Rant rant;

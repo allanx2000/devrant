@@ -26,9 +26,11 @@ namespace DevRant.WPF.Controls
         public static DependencyProperty LoggedInProperty = DependencyProperty.Register("LoggedIn", typeof(bool), typeof(RantControl));
         public static DependencyProperty DateVisibilityProperty = DependencyProperty.Register("DateVisibility", typeof(Visibility), typeof(RantControl));
         public static DependencyProperty UsernameVisibilityProperty = DependencyProperty.Register("UsernameVisibility", typeof(Visibility), typeof(RantControl));
+        
+
 
         public event VoteButton.OnClick VoteClicked;
-
+        
         public bool LoggedIn
         {
             get
@@ -150,6 +152,8 @@ namespace DevRant.WPF.Controls
 
         public bool ByUser { get; private set; }
 
+        private FeedItem item;
+
         public RantControl()
         {
             InitializeComponent();
@@ -166,7 +170,7 @@ namespace DevRant.WPF.Controls
         {
             if (e.NewValue != null)
             {
-                FeedItem item = e.NewValue as FeedItem;
+                this.item = e.NewValue as FeedItem;
                 
                 Rant r = item as Rant;
                 if (r != null)
@@ -252,10 +256,13 @@ namespace DevRant.WPF.Controls
             }
         }
 
-        private void Label_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void UsernameLabel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            //DP for onUsenrame Clicked
-            //Pass username
+            if (item is HasUsername)
+            {
+                
+                Utilities.OpenProfile(((HasUsername)item).Username);
+            }
         }
     }
 }

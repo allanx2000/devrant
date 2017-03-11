@@ -53,21 +53,18 @@ namespace DevRant.WPF
         /// <param name="username"></param>
         /// <param name="owner"></param>
         /// <param name="api"></param>
-        public static void OpenProfile(string username, Window owner, IDevRantClient api)
-        {
-            ProfileViewerWindow window = new ProfileViewerWindow(username, api);
-            window.Owner = owner;
-            window.ShowDialog();
-        }
-        
-        /// <summary>
-        /// Open profile in browser
-        /// </summary>
-        /// <param name="username"></param>
         public static void OpenProfile(string username)
         {
-            string url = Utilities.GetProfileUrl(username);
-            Process.Start(url);
+            if (AppManager.Instance.Settings.OpenInProfileViewer)
+            {
+                ProfileViewerWindow window = new ProfileViewerWindow(username, AppManager.Instance.API);
+                window.ShowDialog();
+            }
+            else
+            {
+                string url = Utilities.GetProfileUrl(username);
+                Process.Start(url);
+            }
         }
 
         internal static bool OpenFeedItem(Commentable item)

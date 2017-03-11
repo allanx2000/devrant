@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 namespace DevRant.WPF.ViewModels
 {
-    public class Collab : FeedItem, Commentable, Votable
+    public class Collab : FeedItem, Commentable, Votable, HasUsername
     {
         private Dtos.Collab collab;
 

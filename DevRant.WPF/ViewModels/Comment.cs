@@ -10,7 +10,7 @@ using DevRant.Enums;
 
 namespace DevRant.WPF.ViewModels
 {
-    public class Comment : FeedItem, Votable, ProfileSection, HasAvatar, Commentable
+    public class Comment : FeedItem, Votable, ProfileSection, HasAvatar, HasUsername, Commentable
     {
 
         private Dtos.Comment comment;
@@ -79,7 +79,7 @@ namespace DevRant.WPF.ViewModels
                 return comment.AvatarImage;
             }
         }
-
+        
         public Comment(Dtos.Comment comment) : base(FeedItemType.Comment, comment.CreatedTime)
         {
             this.comment = comment;
