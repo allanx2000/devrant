@@ -22,14 +22,18 @@
 
     <Window.InputBindings>
         <KeyBinding Key="Esc" Command="{Binding CancelCommand}"/>
+        <KeyBinding Key="Return" Command="{Binding SelectCommand}"/>
+        <KeyBinding Key="F1" Command="{Binding SetReasonCommand}" CommandParameter="0"/>
+        <KeyBinding Key="F2" Command="{Binding SetReasonCommand}" CommandParameter="1"/>
+        <KeyBinding Key="F3" Command="{Binding SetReasonCommand}" CommandParameter="2"/>
     </Window.InputBindings>
 
     <DockPanel>
         <GroupBox Header="Reason" DockPanel.Dock="Top">
             <StackPanel Orientation="Vertical" >
-                <RadioButton IsChecked="{Binding Reason, Converter={StaticResource ResourceKey=reasonConverter}, ConverterParameter=NotForMe}">Not For Me</RadioButton>
-                <RadioButton IsChecked="{Binding Reason, Converter={StaticResource ResourceKey=reasonConverter}, ConverterParameter=OffensiveSpam}">Offensive/Spam</RadioButton>
-                <RadioButton IsChecked="{Binding Reason, Converter={StaticResource ResourceKey=reasonConverter}, ConverterParameter=Repost}">Repost</RadioButton>
+                <RadioButton IsChecked="{Binding Reason, Converter={StaticResource ResourceKey=reasonConverter}, ConverterParameter=NotForMe}">Not For Me (F1)</RadioButton>
+                <RadioButton IsChecked="{Binding Reason, Converter={StaticResource ResourceKey=reasonConverter}, ConverterParameter=Repost}">Repost (F2)</RadioButton>
+                <RadioButton IsChecked="{Binding Reason, Converter={StaticResource ResourceKey=reasonConverter}, ConverterParameter=OffensiveSpam}">Offensive/Spam (F3)</RadioButton>
             </StackPanel>
         </GroupBox>
 

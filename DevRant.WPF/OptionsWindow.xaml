@@ -9,6 +9,11 @@
         WindowStyle="ToolWindow"
         WindowStartupLocation="CenterOwner"
         >
+
+    <Window.InputBindings>
+        <KeyBinding Key="Esc" Command="{Binding CancelCommand}"/>
+    </Window.InputBindings>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>

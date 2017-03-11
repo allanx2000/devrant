@@ -12,3 +12,4 @@
 -Add disabled color to VoteControl
 
 -Mark special if image is animated (how?)
+-View Profile when user name clicked in rant

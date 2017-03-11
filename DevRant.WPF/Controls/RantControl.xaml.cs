@@ -251,5 +251,11 @@ namespace DevRant.WPF.Controls
                 VoteClicked.Invoke(this, args);
             }
         }
+
+        private void Label_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            //DP for onUsenrame Clicked
+            //Pass username
+        }
     }
 }

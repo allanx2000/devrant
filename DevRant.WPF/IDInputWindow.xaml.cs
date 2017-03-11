@@ -29,6 +29,8 @@ namespace DevRant.WPF
             InitializeComponent();
             vm = new IDInputWindowViewModel(type, this);
             DataContext = vm;
+
+            InputTextbox.Focus();
         }
     }
 }

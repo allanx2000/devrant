@@ -27,6 +27,23 @@ namespace DevRant.WPF
             }
         }
 
+        public ICommand SetReasonCommand
+        {
+            get { return new mvvm.CommandHelper(SetReason); }
+        }
+
+        private void SetReason(object val)
+        {
+            try
+            {
+                Reason = (VoteParam) Convert.ToInt32(val);
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+
         public ICommand CancelCommand
         {
             get { return new mvvm.CommandHelper(Cancel); }

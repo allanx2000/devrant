@@ -16,6 +16,7 @@
         <KeyBinding Key="PageUp" Command="{Binding ScrollCommand}" CommandParameter="Up"/>
         <KeyBinding Key="PageDown"  Command="{Binding ScrollCommand}" CommandParameter="Down"/>
     </Window.InputBindings>
+
     <DockPanel LastChildFill="True">
 
         <Menu DockPanel.Dock="Top" HorizontalAlignment="Stretch">
