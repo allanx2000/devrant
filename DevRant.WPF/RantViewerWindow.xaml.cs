@@ -43,8 +43,7 @@ namespace DevRant.WPF
         {
             scroller.Scroll(direction);
         }
-
-        //TODO: Need to change this to handle reply...
+        
         private async void Button_Clicked(object sender, Controls.ButtonClickedEventArgs args)
         {
            await vm.ButtonClicked(args);

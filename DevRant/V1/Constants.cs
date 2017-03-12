@@ -26,5 +26,6 @@ namespace DevRant.V1
         public const int ProfileDataSkip = 30; //Returns 30 results per request
 
         internal const string PathRants = "/api/devrant/rants/";
+        internal const string PathComments = "/api/comments/";
     }
 }

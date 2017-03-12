@@ -20,6 +20,8 @@ namespace DevRant.V1
             this.client = client;
         }
 
+        #region Notifications
+
         /// <summary>
         /// 
         /// </summary>
@@ -72,7 +74,10 @@ namespace DevRant.V1
 
             return map;
         }
-        
+
+        #endregion
+
+        #region User State
 
         /// <summary>
         /// Checks the credentials are valid
@@ -148,7 +153,10 @@ namespace DevRant.V1
             }
         }
 
-        //TODO: Return new score
+        #endregion
+
+        #region Voting
+
         public async Task<Rant> VoteRant(long rantId, Vote vote)
         {
             string url = string.Concat(Constants.BaseAddress, "api/devrant/rants/", rantId, "/vote");
@@ -213,6 +221,8 @@ namespace DevRant.V1
                 return null;
         }
 
+        #endregion
+
         private MultipartFormDataContent CreateAuthenticatedMultipart()
         {
             MultipartFormDataContent data = new MultipartFormDataContent();
@@ -224,6 +234,9 @@ namespace DevRant.V1
 
             return data;
         }
+
+        #region Post/Edit/Delete
+
         public async Task PostRant(PostContent post)
         {
             string url = string.Concat(Constants.BaseAddress, "api/devrant/rants");
@@ -247,12 +260,12 @@ namespace DevRant.V1
             }
         }
 
-        public async Task PostComment(long rantId, PostContent post)
-        {
-            string url = string.Concat(Constants.BaseAddress, "api/devrant/rants/", rantId, "/comments");
 
+        public async void EditRant(int rantId, PostContent post)
+        {
+            string url = string.Concat(Constants.BaseAddress, Constants.PathRants, rantId);
             MultipartFormDataContent data = CreateAuthenticatedMultipart();
-            data.Add(new StringContent(post.Text), "comment");
+            data.Add(new StringContent(post.Text), "rant");
 
             if (post.Image != null)
                 data.Add(new ByteArrayContent(post.Image), "image", post.GenerateImageName());
@@ -265,8 +278,75 @@ namespace DevRant.V1
 
             JObject obj = JObject.Parse(responseText);
 
+            if (owner.CheckSuccess(obj))
+            {
+            }
+        }
+
+
+        public async void DeleteRant(int rantId)
+        {
+            string url = owner.MakeUrl(string.Concat(Constants.BaseAddress, Constants.PathRants, rantId));
+            var response = await client.DeleteAsync(url);
+            var responseText = await response.Content.ReadAsStringAsync();
+
+            JObject obj = JObject.Parse(responseText);
+
             owner.CheckSuccess(obj);
         }
+
+
+
+        public async Task PostComment(long rantId, PostContent post)
+        {
+            string url = string.Concat(Constants.BaseAddress, Constants.PathRants, rantId, "/comments");
+
+            MultipartFormDataContent data = CreateAuthenticatedMultipart();
+            data.Add(new StringContent(post.Text), "comment");
+
+            if (post.Image != null)
+                data.Add(new ByteArrayContent(post.Image), "image", post.GenerateImageName());
+            
+            var response = await client.PostAsync(url, data);
+            var responseText = await response.Content.ReadAsStringAsync();
+
+            JObject obj = JObject.Parse(responseText);
+
+            owner.CheckSuccess(obj);
+        }
+        
+        public async void EditComment(int commentId, PostContent post)
+        {
+            string url = string.Concat(Constants.BaseAddress, Constants.PathComments, commentId);
+
+            MultipartFormDataContent data = CreateAuthenticatedMultipart();
+            data.Add(new StringContent(post.Text), "comment");
+
+            if (post.Image != null)
+                data.Add(new ByteArrayContent(post.Image), "image", post.GenerateImageName());
+            
+            var response = await client.PostAsync(url, data);
+            var responseText = await response.Content.ReadAsStringAsync();
+
+            JObject obj = JObject.Parse(responseText);
+
+            owner.CheckSuccess(obj);
+        }
+
+        public async void DeleteComment(int commentId)
+        {
+            string url = owner.MakeUrl(string.Concat(Constants.BaseAddress, Constants.PathComments, commentId));
+            var response = await client.DeleteAsync(url);
+            var responseText = await response.Content.ReadAsStringAsync();
+
+            JObject obj = JObject.Parse(responseText);
+
+            owner.CheckSuccess(obj);
+        }
+
+
+
+        #endregion
 
         public async Task MuteRant(long rantId)
         {
@@ -291,5 +371,7 @@ namespace DevRant.V1
             JObject tmp = JObject.Parse(responseText);
             owner.CheckSuccess(tmp);
         }
+
+        
     }
 }

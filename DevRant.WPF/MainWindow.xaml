@@ -20,7 +20,7 @@
                 UsernameVisibility="{Binding DataContext.UsernameVisibility, ElementName=mainWindow}"
                 DateVisibility="{Binding DataContext.DateVisibility, ElementName=mainWindow}"
                 LoggedIn="{Binding DataContext.LoggedIn, ElementName=mainWindow}"
-                VoteClicked="Button_Clicked"
+                ButtonClicked="Button_Clicked"
                 />
         </DataTemplate>
 

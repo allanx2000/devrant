@@ -67,7 +67,14 @@ namespace DevRant.WPF
 
         private void FeedListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            vm.OpenPost();
+            try
+            {
+                vm.OpenPost();
+            }
+            catch (Exception ex)
+            {
+                MessageBoxFactory.ShowError(ex, owner: this);
+            }
         }
 
         private void Window_Closed(object sender, EventArgs e)

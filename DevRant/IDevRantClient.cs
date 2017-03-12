@@ -134,6 +134,34 @@ namespace DevRant
         /// <param name="vote"></param>
         /// <returns></returns>
         Task<Comment> VoteComment(long commentId, Vote vote);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commentId"></param>
+        /// <param name="post"></param>
+        void EditComment(int commentId, PostContent post);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commentId"></param>
+        void DeleteComment(int commentId);
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rantId"></param>
+        /// <param name="post"></param>
+        void EditRant(int rantId, PostContent post);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rantId"></param>
+        void DeleteRant(int rantId);
+
     }
 
     /// <summary>

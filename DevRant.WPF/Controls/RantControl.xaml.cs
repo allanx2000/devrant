@@ -29,7 +29,7 @@ namespace DevRant.WPF.Controls
         
 
 
-        public event VoteButton.OnClick VoteClicked;
+        public event VoteButton.OnClick ButtonClicked;
         
         public bool LoggedIn
         {
@@ -212,8 +212,8 @@ namespace DevRant.WPF.Controls
         private void Button_Clicked(object sender, ButtonClickedEventArgs args)
         {
             
-            if (VoteClicked != null)
-                VoteClicked.Invoke(sender, args);
+            if (ButtonClicked != null)
+                ButtonClicked.Invoke(sender, args);
         }
 
         private void VoteControl_UpClicked(object sender, ButtonClickedEventArgs args)
@@ -232,7 +232,7 @@ namespace DevRant.WPF.Controls
         private void LinkClicked(object arg)
         {
 
-            if (VoteClicked != null)
+            if (ButtonClicked != null)
             {
                 ButtonClickedEventArgs args;
 
@@ -245,6 +245,9 @@ namespace DevRant.WPF.Controls
                     case "Modify":
                         args = new ButtonClickedEventArgs(ButtonType.Edit);
                         break;
+                    case "Delete":
+                        args = new ButtonClickedEventArgs(ButtonType.Delete);
+                        break;
                     default:
                         throw new NotSupportedException(str);
                 }
@@ -252,7 +255,7 @@ namespace DevRant.WPF.Controls
                 args.SelectedItem = DataContext as FeedItem;
 
                 //Change to ButtonClicked
-                VoteClicked.Invoke(this, args);
+                ButtonClicked.Invoke(this, args);
             }
         }
 

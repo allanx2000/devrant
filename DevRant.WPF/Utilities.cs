@@ -135,6 +135,15 @@ namespace DevRant.WPF
                     }
                     break;
                 case ButtonType.Delete:
+                    switch (args.SelectedItem.Type)
+                    {
+                        case FeedItem.FeedItemType.Post:
+                            AppManager.Instance.API.User.DeleteRant(args.SelectedItem.AsRant().ID);
+                            break;
+                        case FeedItem.FeedItemType.Comment:
+                            AppManager.Instance.API.User.DeleteComment(args.SelectedItem.AsComment().ID);
+                            break;
+                    }
                     break;
                 case ButtonType.Edit:
                     TimeSpan timespan = DateTime.Now.ToUniversalTime() - FromUnixTime(args.SelectedItem.RawCreateTime);

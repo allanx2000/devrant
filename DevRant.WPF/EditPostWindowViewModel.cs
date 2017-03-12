@@ -98,7 +98,15 @@ namespace DevRant.WPF
 
         public Visibility SaveDraftVisibility
         {
-            get { return (mode == Mode.NewRant || mode == Mode.EditDraft) && db != null ? Visibility.Visible : Visibility.Collapsed; }
+            get
+            {
+                if (type == EditPostWindow.Type.Comment)
+                    return Visibility.Collapsed;
+                else if (db != null)
+                    return (mode == Mode.NewRant || mode == Mode.EditDraft) ? Visibility.Visible : Visibility.Collapsed;
+                else
+                    return Visibility.Collapsed;
+            }
         }
 
         public string TextType
@@ -298,8 +306,16 @@ namespace DevRant.WPF
 
                 if (type == EditPostWindow.Type.Rant)
                 {
-                    await api.User.PostRant(data);
                     
+                    if (editing != null)
+                    {
+                        api.User.EditRant(editing.AsRant().ID, data);
+                    }
+                    else
+                    {
+                        await api.User.PostRant(data);
+                    }
+
                     if (existing != null)
                     {
                         db.RemoveDraft(existing.ID.Value);
@@ -309,8 +325,7 @@ namespace DevRant.WPF
                 {
                     if (editing != null)
                     {
-                        //TODO: Implement
-                        throw new NotImplementedException();
+                        api.User.EditComment(editing.AsComment().ID, data);
                     }
                     else
                     {
