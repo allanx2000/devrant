@@ -1,7 +1,6 @@
 ﻿PostViewer
 	-Add buttons to RantViewer and commands for handling
-		-Modify Comments, Rants
-		-Reply, Oprn in Browser
+		-Un/Favorite
 
 -Create TextViewerWindow(string txtName)
 -Add <Separator><menuitem>help </> and About to View
