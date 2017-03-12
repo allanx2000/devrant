@@ -8,6 +8,7 @@ using System.Windows.Media.Imaging;
 using System.Threading;
 using DevRant.Enums;
 using System.Windows.Media;
+using WpfAnimatedGif;
 
 namespace DevRant.WPF.ViewModels
 {
@@ -99,37 +100,51 @@ namespace DevRant.WPF.ViewModels
         }
 
         public int ID { get { return rant.Id; } }
-        
+
+        public Visibility CanAnimate {
+            get { return Get<Visibility>(); } 
+            private set {
+                Set(value);
+                RaisePropertyChanged();
+            }
+        }
+
         public Rant(Dtos.Rant rant) : base(FeedItemType.Post, rant.CreatedTime)
         {
             this.rant = rant;
             DateTime dt = Utilities.FromUnixTime(rant.CreatedTime);
             CreateTime = dt.ToLocalTime().ToString("M/d/yyyy h:mm tt");
+            CanAnimate = Visibility.Collapsed;
 
             if (rant.Image != null)
             {
-                Thread th = new Thread(() => LoadImage());
+                Action<ImageSource, Visibility> cb = (img, vis) =>
+                {
+                    Picture = img;
+                    CanAnimate = vis;
+                };
+
+                Thread th = new Thread(() => LoadImage(rant.Image, cb));
                 th.Start();
             }
         }
 
-        private void LoadImage()
+        /*
+        public string PictureUrl
         {
-            if (rant.Image != null)
+            get
             {
-
-                try
-                {
-                    Image bmp = Utilities.GetImage(rant.Image.Url);
-                    App.Current.Dispatcher.Invoke(() => Picture = Utilities.GetImageSource(bmp));
-                }
-                catch (Exception e)
-                {
-                    //Timeout?
-                }
+                var result = Get<string>();
+                return result == null ? "" : result;
+            }
+            set
+            {
+                Set(value);
+                RaisePropertyChanged();
             }
         }
-
+        */
+        
         internal void Update(Dtos.Rant updated)
         {
             rant = updated;

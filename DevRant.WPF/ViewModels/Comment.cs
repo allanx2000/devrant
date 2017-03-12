@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Threading;
 using DevRant.Enums;
+using System.Windows.Media;
 
 namespace DevRant.WPF.ViewModels
 {
@@ -59,15 +60,26 @@ namespace DevRant.WPF.ViewModels
             RaisePropertyChanged("Voted");
         }
 
-        public BitmapImage Picture {
+        public ImageSource Picture {
             get {
-                return Get<BitmapImage>(); }
+                return Get<ImageSource>(); }
             private set
             {
                 Set(value);
                 RaisePropertyChanged();
             }
         }
+
+        public Visibility CanAnimate
+        {
+            get { return Get<Visibility>(); }
+            private set
+            {
+                Set(value);
+                RaisePropertyChanged();
+            }
+        }
+
         public int ID { get { return comment.Id; } }
 
         public long RawCreateTime { get { return comment.CreatedTime; } }
@@ -85,37 +97,21 @@ namespace DevRant.WPF.ViewModels
             this.comment = comment;
             DateTime dt = Utilities.FromUnixTime(comment.CreatedTime);
             CreateTime = dt.ToLocalTime().ToString("M/d/yyyy h:mm tt");
+            CanAnimate = Visibility.Collapsed;
 
             if (comment.Image != null)
             {
-                Thread th = new Thread(() => LoadImage());
+                Action<ImageSource, Visibility> cb = (img, vis) =>
+                {
+                    Picture = img;
+                    CanAnimate = vis;
+                };
+
+                Thread th = new Thread(() => LoadImage(comment.Image, cb));
                 th.Start();
             }
         }
-
-        private void LoadImage()
-        {
-            if (comment.Image != null)
-            {
-                var request = WebRequest.Create(comment.Image.Url);
-
-                try
-                {
-                    using (var response = request.GetResponse())
-                    using (var stream = response.GetResponseStream())
-                    {
-                        Bitmap bitmap = new Bitmap(stream);
-
-                        App.Current.Dispatcher.Invoke(() => Picture = BitmapToImageSource(bitmap));
-                    }
-                }
-                catch (Exception e)
-                {
-                    //Timeout?
-                }
-            }
-        }
-
+        
         internal void Update(Dtos.Comment updated)
         {
             comment = updated;

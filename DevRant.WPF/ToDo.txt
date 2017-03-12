@@ -3,13 +3,8 @@
 		-Modify Comments, Rants
 		-Reply, Oprn in Browser
 
--Keyboard Only controls/navigation
-	-Make reference sheet window of commands
-
 -Create TextViewerWindow(string txtName)
 -Add <Separator><menuitem>help </> and About to View
 
 -Add disabled color to VoteControl
-
 -Mark special if image is animated (how?)
--View Profile when user name clicked in rant

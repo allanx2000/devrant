@@ -8,6 +8,13 @@ namespace DevRant.Dtos
     public class ImageInfo
     {
         /// <summary>
+        /// If animatable?
+        /// </summary>
+        [JsonProperty("frame")]
+        public string Frame { get; set; }
+
+
+        /// <summary>
         /// Full URL
         /// </summary>
         [JsonProperty("url")]

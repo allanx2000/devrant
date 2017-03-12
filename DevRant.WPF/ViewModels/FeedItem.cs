@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Drawing;
+using System.Windows;
+using System.Windows.Media;
 
 namespace DevRant.WPF.ViewModels
 {
@@ -27,6 +30,37 @@ namespace DevRant.WPF.ViewModels
         public virtual bool Read { get; set; }
         public long RawCreateTime { get; private set; }
         
+        protected void LoadImage(Dtos.ImageInfo imageInfo, Action<ImageSource,Visibility> callback)
+        {
+            if (imageInfo != null)
+            {
+
+                try
+                {
+                    Image bmp = Utilities.GetImage(imageInfo.Url);
+
+                    App.Current.Dispatcher.Invoke(() => {
+
+                        var picture = Utilities.GetImageSource(bmp);
+                        var animate = Utilities.ConvertToVisibility(imageInfo.Frame != null);
+                        
+                        callback.Invoke(picture, animate);
+
+                        //PictureUrl = rant.Image.Url;
+                    });
+
+
+
+                    //App.Current.Dispatcher.Invoke(() => Picture = Utilities.GetImageSource(bmp));
+                }
+                catch (Exception e)
+                {
+                    //Timeout?
+                }
+            }
+        }
+
+
         public Notification AsNotification()
         {
             return this as Notification;
