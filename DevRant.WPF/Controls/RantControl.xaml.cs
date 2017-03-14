@@ -253,7 +253,7 @@ namespace DevRant.WPF.Controls
                 }
 
                 args.SelectedItem = DataContext as FeedItem;
-
+                
                 //Change to ButtonClicked
                 ButtonClicked.Invoke(this, args);
             }
@@ -263,9 +263,12 @@ namespace DevRant.WPF.Controls
         {
             if (item is HasUsername)
             {
-                
-                Utilities.OpenProfile(((HasUsername)item).Username);
+                Window window = Window.GetWindow(this);
+
+                Utilities.OpenProfile(((HasUsername)item).Username, window);
             }
         }
+        
+        
     }
 }

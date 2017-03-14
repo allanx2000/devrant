@@ -83,7 +83,7 @@
             </Label>
 
             <DockPanel LastChildFill="True" Grid.Row="2" Grid.Column="1">
-                <Label DockPanel.Dock="Top" Visibility="{Binding CanAnimate}" FontWeight="Bold" Foreground="Purple" HorizontalAlignment="Center" >Has Animation</Label>
+                <Label DockPanel.Dock="Top" Visibility="{Binding CanAnimate}" FontWeight="Bold" Foreground="Purple" HorizontalAlignment="Center" >HasAnimation</Label>
                 <Image Source="{Binding Picture}"/>
             </DockPanel>
            

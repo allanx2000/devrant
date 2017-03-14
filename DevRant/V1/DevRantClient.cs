@@ -100,7 +100,8 @@ namespace DevRant.V1
             profile.ViewedCount = GetCount(counts, "viewed");
 
             //Avatar Image
-            string avt = obj["profile"]["avatar"]["i"].ToString();
+            var img = obj["profile"]["avatar"]["i"];
+            string avt = img == null? null : img.ToString();
             profile.AvatarImage = avt;
 
             //TODO: Collab
