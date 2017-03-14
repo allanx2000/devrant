@@ -56,7 +56,7 @@
 
         <StackPanel Grid.Row="3" HorizontalAlignment="Center" Orientation="Horizontal">
             <Button Command="{Binding PostCommand}">_Post</Button>
-            <Button Command="{Binding SaveDraftCommand}" Visibility="{Binding _SaveDraftVisibility}">Save Draft</Button>
+            <Button Command="{Binding SaveDraftCommand}" Visibility="{Binding SaveDraftVisibility}">_Save Draft</Button>
             <Button Command="{Binding CancelCommand}">Cancel</Button>
         </StackPanel>
     </Grid>
