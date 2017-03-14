@@ -30,7 +30,7 @@ namespace DevRant.WPF.ViewModels
 
         public string FavoriteText
         {
-            get { return rant.Favorited ? "Unfavorite" : "Favority"; }
+            get { return rant.Favorited ? "Unfavorite" : "Favorite"; }
         }
 
         public string VotesString
@@ -107,6 +107,12 @@ namespace DevRant.WPF.ViewModels
                 Set(value);
                 RaisePropertyChanged();
             }
+        }
+
+        public bool IsFavorite
+        {
+            get { return rant.Favorited; }
+            set { rant.Favorited = value; }
         }
 
         public Rant(Dtos.Rant rant) : base(FeedItemType.Post, rant.CreatedTime)

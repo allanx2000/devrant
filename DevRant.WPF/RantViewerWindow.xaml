@@ -21,7 +21,10 @@
 
         <Menu DockPanel.Dock="Top" HorizontalAlignment="Stretch">
             <MenuItem Command="{Binding OpenInBrowserCommand}" Header="Open In _Browser"/>
+            <MenuItem Command="{Binding ToggleFavoriteCommand}" Header="{Binding FavoriteString, FallbackValue=Favorite}"/>
+            <!--
             <MenuItem Command="{Binding CloseCommand}" Header="Close"/>
+            -->
         </Menu>
 
         <ScrollViewer Name="ScrollViewer" MaxHeight="700" VerticalScrollBarVisibility="Auto">

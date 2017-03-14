@@ -11,11 +11,13 @@ using Innouvous.Utils;
 
 namespace DevRant.WPF
 {
-    internal class RantViewerViewModel
+    internal class RantViewerViewModel : Innouvous.Utils.Merged45.MVVM45.ViewModel
     {
         private IDevRantClient api;
         private Window window;
         private Action<string> onScroll;
+        private const string Favorite = "_Favorite";
+        private const string Unfavorite = "Un_favorite";
 
         public RantViewerViewModel(Window window, Rant rant, IDevRantClient api, Action<string> onScroll)
         {
@@ -26,14 +28,6 @@ namespace DevRant.WPF
             
             Comments = new ObservableCollection<Comment>();
             GetComments();
-        }
-
-        public long Top
-        {
-            get
-            {
-                return 10;
-            }
         }
         
         public bool LoggedIn
@@ -102,6 +96,33 @@ namespace DevRant.WPF
         private void OpenInBrowser()
         {
             Utilities.OpenFeedItem(Rant);
+        }
+
+        public string FavoriteString
+        {
+            get { return Rant.IsFavorite ? Unfavorite : Favorite ; }
+        }
+        public ICommand ToggleFavoriteCommand
+        {
+            get
+            {
+                return new mvvm.CommandHelper(ToggleFavorite);
+            }
+        }
+
+        private async void ToggleFavorite()
+        {
+            try
+            {
+                await api.User.ToggleFavorite(Rant.ID);
+                Rant.IsFavorite = !Rant.IsFavorite;
+                RaisePropertyChanged("FavoriteString");
+
+            }
+            catch (Exception e)
+            {
+                MessageBoxFactory.ShowError(e);
+            }
         }
 
         public Rant Rant { get; set; } //TODO: Make private, check DP

@@ -27,6 +27,10 @@ namespace DevRant.Dtos
             {
                 return Get<int>("favorited") == 1;
             }
+            set
+            {
+                Set("favorited", value? 1 : 0);
+            }
         }
 
         /// <summary>
