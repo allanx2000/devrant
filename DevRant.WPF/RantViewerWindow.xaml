@@ -20,7 +20,7 @@
     <DockPanel LastChildFill="True">
 
         <Menu DockPanel.Dock="Top" HorizontalAlignment="Stretch">
-            <MenuItem Command="{Binding OpenInBrowserCommand}" Header="Open In Browser"/>
+            <MenuItem Command="{Binding OpenInBrowserCommand}" Header="Open In _Browser"/>
             <MenuItem Command="{Binding CloseCommand}" Header="Close"/>
         </Menu>
 

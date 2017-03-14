@@ -109,13 +109,21 @@ namespace DevRant.WPF
             }
         }
 
+        /// <summary>
+        /// Update the Notification label
+        /// </summary>
+        /// <param name="args"></param>
         private async void UpdateNotifications(NotificationsChecker.UpdateArgs args)
         {
             await UpdateNotifications(args, false);
         }
-
-        private object notifLock = new object();
-
+        
+        /// <summary>
+        /// Update the Notification label
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="forInit"></param>
+        /// <returns></returns>
         private async Task UpdateNotifications(NotificationsChecker.UpdateArgs args, bool forInit)
         {
             StringBuilder sb = new StringBuilder();
@@ -126,9 +134,13 @@ namespace DevRant.WPF
                 sb.Append(" (" + args.TotalUnread + ")");
                 NotificationsWeight = FontWeights.Bold;
 
-                if (currentSection == FeedType.Notifications)
+
+                lock (feeds)
                 {
-                    LoadNotifications();
+                    if (currentSection == FeedType.Notifications)
+                    {
+                        LoadNotifications();
+                    }
                 }
             }
             else
@@ -552,35 +564,42 @@ namespace DevRant.WPF
 
         private void LoadDrafts()
         {
-            var drafts = AppManager.Instance.DB.GetDrafts();
-            feeds.Clear();
-
-            foreach (var draft in drafts)
-            {
-                ViewModels.Draft vm = new Draft(draft);
-
-                feeds.Add(vm);
-            }
-
-
             currentSection = FeedType.Drafts;
 
-            feedView.SortDescriptions.Clear();
+            lock (feeds)
+            {
+                var drafts = AppManager.Instance.DB.GetDrafts();
+                feeds.Clear();
+
+                foreach (var draft in drafts)
+                {
+                    ViewModels.Draft vm = new Draft(draft);
+
+                    feeds.Add(vm);
+                }
+
+                feedView.SortDescriptions.Clear();
+            }
         }
 
         private async Task LoadCollabs()
         {
-            var collabs = await AppManager.Instance.API.Feeds.GetCollabsAsync();
-            feeds.Clear();
-
-            foreach (var c in collabs)
-            {
-                var collab = new ViewModels.Collab(c);
-                feeds.Add(collab);
-            }
-
             currentSection = FeedType.Collab;
-            feedView.SortDescriptions.Clear();
+
+            var collabs = await AppManager.Instance.API.Feeds.GetCollabsAsync();
+
+            lock (feeds)
+            {
+                feeds.Clear();
+
+                foreach (var c in collabs)
+                {
+                    var collab = new ViewModels.Collab(c);
+                    feeds.Add(collab);
+                }
+
+                feedView.SortDescriptions.Clear();
+            }
         }
 
 
@@ -1028,64 +1047,59 @@ namespace DevRant.WPF
 
         private void LoadFollowed()
         {
-            feeds.Clear();
-
-            foreach (var rant in fchecker.Posts)
-            {
-                if (!rant.Read)
-                    feeds.Add(rant);
-            }
-
-            UpdateFollowedInRants();
             currentSection = FeedType.Updates;
 
-            feedView.SortDescriptions.Clear();
+            lock (feeds)
+            {
+                feeds.Clear();
+
+                foreach (var rant in fchecker.Posts)
+                {
+                    if (!rant.Read)
+                        feeds.Add(rant);
+                }
+
+                UpdateFollowedInRants();
+
+                feedView.SortDescriptions.Clear();
+            }
         }
-
-        /*
-        private async Task LoadNotifications()
-        {
-            //TODO: Add get notifications
-
-            //var notif = await api.GetNotificationsAsync("allanx2000");
-
-            feeds.Clear();
-
-            feeds.Add(new Notification());
-            feeds.Add(new Notification());
-            feeds.Add(new Notification());
-        }
-        */
-
-
+        
         private void LoadNotifications()
         {
-            var notifs = nchecker.Notifications;
-            feeds.Clear();
-
-            foreach (var notif in notifs)
-            {
-                feeds.Add(notif);
-            }
-
             currentSection = FeedType.Notifications;
 
-            feedView.SortDescriptions.Clear();
+            lock (feeds)
+            {
+                var notifs = nchecker.Notifications;
+                feeds.Clear();
 
-            feedView.SortDescriptions.Add(new SortDescription("Read", ListSortDirection.Ascending));
-            feedView.SortDescriptions.Add(new SortDescription("CreateTimeRaw", ListSortDirection.Descending));
+                foreach (var notif in notifs)
+                {
+                    feeds.Add(notif);
+                }
+
+                
+                feedView.SortDescriptions.Clear();
+
+                feedView.SortDescriptions.Add(new SortDescription("Read", ListSortDirection.Ascending));
+                feedView.SortDescriptions.Add(new SortDescription("CreateTimeRaw", ListSortDirection.Descending));
+            }
         }
-
+        
         private async Task LoadFeed(FeedType type, RantSort sort = RantSort.Algo, StoryRange range = StoryRange.Day, bool filter = false)
         {
+        
+            currentSection = type;
+
             Func<int, int, Task<IReadOnlyCollection<Dtos.Rant>>> getter;
 
-            SettingsCollection collection = new SettingsCollection();
+            ValuesCollection otherVals = new ValuesCollection();
 
             switch (type)
             {
                 case FeedType.General:
-                    getter = async (skip, limit) => await api.Feeds.GetRantsAsync(sort: sort, skip: skip, limit: limit, settings: collection);
+                    getter = async (skip, limit) => await api.Feeds.GetRantsAsync(sort: sort, skip: skip, limit: limit, settings: otherVals);
                     break;
                 case FeedType.Stories:
                     getter = async (skip, limit) => await api.Feeds.GetStoriesAsync(range: range, sort: sort, skip: skip, limit: limit);
@@ -1134,36 +1148,34 @@ namespace DevRant.WPF
 
                 }
 
-                /*
-                if (collection.ContainsKey(SettingsCollection.Set))
-                {
-                    this.currentSet = collection[SettingsCollection.Set].ToString();
-                    currentSet = this.currentSet;
-                }
-                */
-
                 page++;
             }
-
-            feeds.Clear();
-
-            foreach (var rant in rants)
+            
+            lock (feeds)
             {
-                ViewModels.Rant r = new ViewModels.Rant(rant);
-                feeds.Add(r);
+                feeds.Clear();
+
+                foreach (var rant in rants)
+                {
+                    ViewModels.Rant r = new ViewModels.Rant(rant);
+                    feeds.Add(r);
+                }
             }
 
-            if (collection.Count > 0 && collection.ContainsKey(NotificationCount))
+            if (otherVals.Count > 0 && otherVals.ContainsKey(ValuesCollection.NumNotifs))
             {
-                int count = Convert.ToInt32(collection[NotificationCount]);
+                int count = Convert.ToInt32(otherVals[ValuesCollection.NumNotifs]);
+                if (count > 0)
+                {
+                    await nchecker.Check();
+                }
+
+
                 UpdateNotifications(new NotificationsChecker.UpdateArgs(count, count));
             }
 
             UpdateFollowedInRants();
-
             feedView.SortDescriptions.Clear();
-
-            currentSection = type;
 
             string message = "Loaded {0} rants from {1} pages";
             UpdateStatus(string.Format(message, rants.Count, page));

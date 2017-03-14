@@ -109,7 +109,7 @@ namespace DevRant.V1
         /// <param name="limit">Maximal rants to return.</param>
         /// <param name="skip">Number of rants to skip.</param>
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<Rant>> GetRantsAsync(RantSort sort = RantSort.Algo, int limit = 50, int skip = 0, SettingsCollection settings = null)
+        public async Task<IReadOnlyCollection<Rant>> GetRantsAsync(RantSort sort = RantSort.Algo, int limit = 50, int skip = 0, ValuesCollection settings = null)
         {
             var sortText = sort.ToString().ToLower();
 
@@ -134,16 +134,16 @@ namespace DevRant.V1
 
             if (settings != null)
             {
-                var num = tmp[SettingsCollection.NumNotifs];
-                if (tmp[SettingsCollection.NumNotifs] != null)
+                var num = tmp[ValuesCollection.NumNotifs];
+                if (tmp[ValuesCollection.NumNotifs] != null)
                 {
                     var notifs = Convert.ToInt32(num.ToString());
-                    settings[SettingsCollection.NumNotifs] = notifs;
+                    settings[ValuesCollection.NumNotifs] = notifs;
                 }
 
-                if (tmp[SettingsCollection.Set] != null)
+                if (tmp[ValuesCollection.Set] != null)
                 {
-                    settings[SettingsCollection.Set] = tmp[SettingsCollection.Set];
+                    settings[ValuesCollection.Set] = tmp[ValuesCollection.Set];
                 }
             }
 

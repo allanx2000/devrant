@@ -79,7 +79,7 @@ namespace DevRant.WPF
             if (item is ViewModels.Notification)
             {
                 var notif = item.AsNotification();
-                var raw = await api.GetRant(item.AsNotification().RantId);
+                var raw = await api.GetRant(notif.RantId);
                 item = new ViewModels.Rant(raw);
             }
             else if (item is ViewModels.Comment)

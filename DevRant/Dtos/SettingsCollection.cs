@@ -9,7 +9,7 @@ namespace DevRant.Dtos
     /// Holds the Settings information
     /// </summary>
 
-    public class SettingsCollection : Dictionary<string, object>
+    public class ValuesCollection : Dictionary<string, object>
     {
         /// <summary>
         /// 
@@ -32,7 +32,7 @@ namespace DevRant.Dtos
             }
         }
         
-        internal void AddAll(SettingsCollection other)
+        internal void AddAll(ValuesCollection other)
         {
             foreach (var kv in other)
             {

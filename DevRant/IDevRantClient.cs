@@ -28,7 +28,7 @@ namespace DevRant
         /// <param name="limit">Maximal rants to return.</param>
         /// <param name="skip">Number of rants to skip.</param>
         /// <param name="settings">If passed, will hold the values of settings that may be returned in the response</param>
-        Task<IReadOnlyCollection<Rant>> GetRantsAsync(RantSort sort = RantSort.Algo, int limit = 50, int skip = 0, SettingsCollection settings = null);
+        Task<IReadOnlyCollection<Rant>> GetRantsAsync(RantSort sort = RantSort.Algo, int limit = 50, int skip = 0, ValuesCollection settings = null);
         
         /// <summary>
         /// Requests a collection of stories 

@@ -1,6 +1,7 @@
 ﻿PostViewer
 	-Add buttons to RantViewer and commands for handling
 		-Un/Favorite
+		-Need to update UI in Comments/Rants when modified
 
 -Create TextViewerWindow(string txtName)
 -Add <Separator><menuitem>help </> and About to View
