@@ -65,7 +65,7 @@ namespace DevRant.WPF.DataStore
             }
         }
 
-        public StoryRange DefaultRange
+        public RantRange DefaultRange
         {
             get
             {
@@ -175,7 +175,7 @@ namespace DevRant.WPF.DataStore
             }
         }
 
-        public void SetDefaultRange(StoryRange defaultStoryRange)
+        public void SetDefaultRange(RantRange defaultStoryRange)
         {
             Settings.StoryRange = defaultStoryRange;
             Settings.Save();

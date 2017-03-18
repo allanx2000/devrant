@@ -3,7 +3,7 @@
     /// <summary>
     /// StoryRange
     /// </summary>
-    public enum StoryRange
+    public enum RantRange
     {
         /// <summary>
         /// Day

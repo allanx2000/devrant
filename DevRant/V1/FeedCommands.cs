@@ -33,7 +33,7 @@ namespace DevRant.V1
         /// Requests a collection of stories sorted and selected by the arguments from the rest-api.
         /// </summary>
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<Rant>> GetStoriesAsync(RantSort sort = RantSort.Top, StoryRange range = StoryRange.Day, int limit = 50, int skip = 0)
+        public async Task<IReadOnlyCollection<Rant>> GetStoriesAsync(RantSort sort = RantSort.Top, RantRange range = RantRange.Day, int limit = 50, int skip = 0)
         {
             var sortText = sort.ToString().ToLower();
             var rangeText = range.ToString().ToLower();
@@ -109,16 +109,24 @@ namespace DevRant.V1
         /// <param name="limit">Maximal rants to return.</param>
         /// <param name="skip">Number of rants to skip.</param>
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<Rant>> GetRantsAsync(RantSort sort = RantSort.Algo, int limit = 50, int skip = 0, ValuesCollection settings = null)
+        public async Task<IReadOnlyCollection<Rant>> GetRantsAsync(RantSort sort = RantSort.Algo, RantRange range = RantRange.Day, int limit = 50, int skip = 0, ValuesCollection settings = null)
         {
             var sortText = sort.ToString().ToLower();
 
-            string url = owner.MakeUrl("/api/devrant/rants", new Parameters()
+            var paramz = new Parameters()
             {
                 {"sort", sortText},
                 {"limit", limit.ToString()},
                 {"skip", skip.ToString()},
-            });
+            };
+            
+            if (sort == RantSort.Top)
+            {
+                paramz.Add("range", range.ToString().ToLower());
+            }
+
+            string url = owner.MakeUrl("/api/devrant/rants", paramz);
+
 
             var response = await client.GetAsync(url);
             var responseText = await response.Content.ReadAsStringAsync();

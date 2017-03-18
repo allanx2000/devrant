@@ -46,8 +46,8 @@ namespace DevRant.WPF
             }
             DefaultFeed = ds.DefaultFeed;
 
-            StoryRanges = new List<StoryRange>();
-            foreach (StoryRange i in Enum.GetValues(typeof(StoryRange)))
+            StoryRanges = new List<RantRange>();
+            foreach (RantRange i in Enum.GetValues(typeof(RantRange)))
             {
                 StoryRanges.Add(i);
             }
@@ -142,10 +142,10 @@ namespace DevRant.WPF
             get { return usersView.View; }
         }
 
-        public List<StoryRange> StoryRanges { get; private set; }
-        public StoryRange DefaultStoryRange
+        public List<RantRange> StoryRanges { get; private set; }
+        public RantRange DefaultStoryRange
         {
-            get { return Get<StoryRange>(); }
+            get { return Get<RantRange>(); }
             set
             {
                 Set(value);

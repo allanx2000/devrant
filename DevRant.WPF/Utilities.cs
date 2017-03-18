@@ -92,11 +92,22 @@ namespace DevRant.WPF
 
             if (item is ViewModels.Rant)
             {
-                Window dlg;
-                dlg = new RantViewerWindow((ViewModels.Rant)item, api);
 
-                dlg.Owner = owner;
-                dlg.ShowDialog();
+                var rant = item.AsRant();
+
+                if (rant.CanAnimate == Visibility.Visible) //TODO: should be bool
+                {
+                    string url = GetRantUrl(rant.RantId);
+                    Process.Start(url);
+                }
+                else
+                {
+                    Window dlg;
+                    dlg = new RantViewerWindow((ViewModels.Rant)item, api);
+
+                    dlg.Owner = owner;
+                    dlg.ShowDialog();
+                }
             }
             else if (item is ViewModels.Collab)
             {

@@ -20,15 +20,16 @@ namespace DevRant
         /// <param name="skip"></param>
         /// <returns></returns>
         Task<IReadOnlyCollection<Collab>> GetCollabsAsync(int limit = 50, int skip = 0);
-        
+
         /// <summary>
         /// Requests a collection of rants sorted and selected by the arguments from the rest-api.
         /// </summary>
         /// <param name="sort">Sorting of the rant collection.</param>
+        /// <param name="range">Range of feed, only for Top</param>
         /// <param name="limit">Maximal rants to return.</param>
         /// <param name="skip">Number of rants to skip.</param>
         /// <param name="settings">If passed, will hold the values of settings that may be returned in the response</param>
-        Task<IReadOnlyCollection<Rant>> GetRantsAsync(RantSort sort = RantSort.Algo, int limit = 50, int skip = 0, ValuesCollection settings = null);
+        Task<IReadOnlyCollection<Rant>> GetRantsAsync(RantSort sort = RantSort.Algo, RantRange range = RantRange.Day, int limit = 50, int skip = 0, ValuesCollection settings = null);
         
         /// <summary>
         /// Requests a collection of stories 
@@ -38,7 +39,7 @@ namespace DevRant
         /// <param name="limit">Maximal rants to return.</param>
         /// <param name="skip">Number of rants to skip.</param>
         /// <returns></returns>
-        Task<IReadOnlyCollection<Rant>> GetStoriesAsync(RantSort sort = RantSort.Top, StoryRange range = StoryRange.Day, int limit = 50, int skip = 0);
+        Task<IReadOnlyCollection<Rant>> GetStoriesAsync(RantSort sort = RantSort.Top, RantRange range = RantRange.Day, int limit = 50, int skip = 0);
     }
 
     /// <summary>

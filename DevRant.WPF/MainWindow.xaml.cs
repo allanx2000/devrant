@@ -44,7 +44,7 @@ namespace DevRant.WPF
                 var listBox = (ListBox)sender;
                 var item = (ListBoxItem)listBox.SelectedItem;
 
-                if (item == null)
+                if (item == null || item.Tag == null)
                     return;
                 
                 await LoadFeed((SectionType) item.Tag, true);                
@@ -78,11 +78,22 @@ namespace DevRant.WPF
         private async Task LoadFeed(SectionType section, bool resetOffset = false)
         {
             SetIsEnabled(false);
-            await vm.LoadSection(section, resetOffset);
-            SetIsEnabled(true);
 
-            if (FeedListBox.Items.Count > 0)
-                FeedListBox.ScrollIntoView(FeedListBox.Items[0]);
+            try
+            {
+                await vm.LoadSection(section, resetOffset);
+                
+                if (FeedListBox.Items.Count > 0)
+                    FeedListBox.ScrollIntoView(FeedListBox.Items[0]);
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally
+            {
+                SetIsEnabled(true);
+            }
         }
         
         private void FeedListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)

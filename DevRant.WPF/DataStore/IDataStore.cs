@@ -17,7 +17,7 @@ namespace DevRant.WPF.DataStore
 
         string DBFolder { get; }
 
-        StoryRange DefaultRange { get; }
+        RantRange DefaultRange { get; }
         RantSort DefaultFeed { get;}
         bool HideUsername { get; }
         bool ShowCreateTime { get; }
@@ -32,7 +32,7 @@ namespace DevRant.WPF.DataStore
 
         void SetDBFolder(string path);
 
-        void SetDefaultRange(StoryRange defaultStoryRange);
+        void SetDefaultRange(RantRange defaultStoryRange);
         void SetDefaultFeed(RantSort defaultFeed);
         List<string> SetFollowing(ICollection<string> users);
         void SetUpdatesInterval(int updateCheckInterval);

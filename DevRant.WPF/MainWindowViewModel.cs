@@ -88,7 +88,6 @@ namespace DevRant.WPF
             }
 
             UpdateFollowedPosts(fchecker.GetFeedUpdate());
-            UpdateNotifications(new NotificationsChecker.UpdateArgs(0, 0), true);
             UpdateDrafts(db.GetNumberOfDrafts());
         }
 
@@ -517,28 +516,38 @@ namespace DevRant.WPF
                         await LoadFeed(FeedType.General, sort: RantSort.Recent, filter: AppManager.Instance.Settings.FilterOutRead);
                         break;
 
-                    case SectionType.Top:
-                        await LoadFeed(FeedType.General, sort: RantSort.Top);
+                    case SectionType.TopDay:
+                        await LoadFeed(FeedType.General, sort: RantSort.Top, range: RantRange.Day);
                         break;
-                        //TODO: Add others
+                    case SectionType.Top: //TODO: Add Default to options
+                    case SectionType.TopWeek:
+                        await LoadFeed(FeedType.General, sort: RantSort.Top, range: RantRange.Week);
+                        break;
+                    case SectionType.TopMonth:
+                        await LoadFeed(FeedType.General, sort: RantSort.Top, range: RantRange.Month);
+                        break;
+                    case SectionType.TopAll:
+                        await LoadFeed(FeedType.General, sort: RantSort.Top, range: RantRange.All);
+                        break;
+
 
                     case SectionType.Story:
-                        filter = ds.DefaultRange != StoryRange.All ? AppManager.Instance.Settings.FilterOutRead : false;
+                        filter = ds.DefaultRange != RantRange.All ? AppManager.Instance.Settings.FilterOutRead : false;
 
                         await LoadFeed(FeedType.Stories, ds.DefaultFeed, AppManager.Instance.Settings.DefaultRange,
                             filter: filter);
                         break;
                     case SectionType.StoryDay:
-                        await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Day, filter: ds.FilterOutRead);
+                        await LoadFeed(FeedType.Stories, ds.DefaultFeed, RantRange.Day, filter: ds.FilterOutRead);
                         break;
                     case SectionType.StoryWeek:
-                        await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Week, filter: ds.FilterOutRead);
+                        await LoadFeed(FeedType.Stories, ds.DefaultFeed, RantRange.Week, filter: ds.FilterOutRead);
                         break;
                     case SectionType.StoryMonth:
-                        await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Month, filter: ds.FilterOutRead);
+                        await LoadFeed(FeedType.Stories, ds.DefaultFeed, RantRange.Month, filter: ds.FilterOutRead);
                         break;
                     case SectionType.StoryAll:
-                        await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.All);
+                        await LoadFeed(FeedType.Stories, ds.DefaultFeed, RantRange.All);
                         break;
 
 
@@ -555,6 +564,9 @@ namespace DevRant.WPF
                     case SectionType.Updates:
                         LoadFollowed();
                         break;
+
+                    default:
+                        throw new NotSupportedException(section.ToString() + " not supported.");
                 }
 
                 currentSectionType = section;
@@ -1101,7 +1113,7 @@ namespace DevRant.WPF
 
         private int offset = 0;
 
-        private async Task LoadFeed(FeedType type, RantSort sort = RantSort.Algo, StoryRange range = StoryRange.Day, bool filter = false)
+        private async Task LoadFeed(FeedType type, RantSort sort = RantSort.Algo, RantRange range = RantRange.Day, bool filter = false)
         {
         
             currentFeedType = type;
@@ -1113,7 +1125,7 @@ namespace DevRant.WPF
             switch (type)
             {
                 case FeedType.General:
-                    getter = async (skip, limit) => await api.Feeds.GetRantsAsync(sort: sort, skip: skip, limit: limit, settings: otherVals);
+                    getter = async (skip, limit) => await api.Feeds.GetRantsAsync(sort: sort, range: range, skip: skip, limit: limit, settings: otherVals);
                     break;
                 case FeedType.Stories:
                     getter = async (skip, limit) => await api.Feeds.GetStoriesAsync(range: range, sort: sort, skip: skip, limit: limit);
@@ -1162,6 +1174,7 @@ namespace DevRant.WPF
                     foreach (var r in tmp)
                     {
                         if (ids.Contains(r.Id)
+                            || VoteState.None != r.Voted
                             || VoteState.Disabled == r.Voted
                             || r.Score < minScore
                             || (ds.FilterOutRead && db.IsRead(r.Id)))

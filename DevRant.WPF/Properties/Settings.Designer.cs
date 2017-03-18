@@ -108,9 +108,9 @@ namespace DevRant.WPF.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Week")]
-        public global::DevRant.Enums.StoryRange StoryRange {
+        public global::DevRant.Enums.RantRange StoryRange {
             get {
-                return ((global::DevRant.Enums.StoryRange)(this["StoryRange"]));
+                return ((global::DevRant.Enums.RantRange)(this["StoryRange"]));
             }
             set {
                 this["StoryRange"] = value;
