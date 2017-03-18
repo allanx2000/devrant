@@ -11,8 +11,8 @@
         Title="devRant++" Height="800" Width="800"
         Closed="Window_Closed" x:Name="mainWindow">
 
-    
-    
+
+
     <Window.Resources>
         <converters:VisibilityConverter x:Key="VisibilityConverter"/>
         <local:FeedListItemTemplateSelector x:Key="feedListTemplateSelector"/>
@@ -102,11 +102,11 @@
                     <MenuItem Header="_Rant" Command="{Binding ViewSpecificRantCommand}"/>
                     <MenuItem Header="_Profile" Command="{Binding ViewSpecificProfileCommand}"/>
                 </MenuItem>
-                
+
                 <MenuItem Header="_Options" Command="{Binding OpenOptionsCommand}"/>
                 <MenuItem Header="_Surprise Me!" Command="{Binding SupriseMeCommand}"/>
             </Menu>
-            
+
             <Menu DockPanel.Dock="Right" IsEnabled="{Binding LoggedIn}">
                 <MenuItem Header="View My _Profile" Command="{Binding ViewMyProfileCommand}"/>
                 <MenuItem Header="Post a Ne_w Rant" Command="{Binding PostCommand}"/>
@@ -140,7 +140,7 @@
                 <ListBoxItem Name="GeneralFeed" IsSelected="True" Tag="{x:Static ctrl:SectionType.General}">General</ListBoxItem>
                 <ListBoxItem Style="{StaticResource SubSection}" Tag="{x:Static ctrl:SectionType.GeneralAlgo}">Algo</ListBoxItem>
                 <ListBoxItem Style="{StaticResource SubSection}" Tag="{x:Static ctrl:SectionType.GeneralRecent}">Recent</ListBoxItem>
-                
+
                 <ListBoxItem Tag="{x:Static ctrl:SectionType.Top}">Top</ListBoxItem>
                 <ListBoxItem Style="{StaticResource SubSection}" Tag="{x:Static ctrl:SectionType.TopDay}">Day</ListBoxItem>
                 <ListBoxItem Style="{StaticResource SubSection}" Tag="{x:Static ctrl:SectionType.TopWeek}">Week</ListBoxItem>
@@ -186,7 +186,7 @@
                 <ListBox.InputBindings>
                     <KeyBinding Command="{Binding OpenPostCommand}" Key="Return"/>
                 </ListBox.InputBindings>
-                
+
                 <ListBox.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Open" Command="{Binding OpenPostCommand}"/>
@@ -217,13 +217,11 @@
         <Button Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center" Command="{Binding CheckUpdatesCommand}">Check For _Updates</Button>
 
         <StackPanel Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center"  Orientation="Horizontal">
-        <Button Click="RefreshFeed">_Refresh Feed</Button>
-    
-        <!--    
-            <Button Command="{Binding LoadMoreCommand}">Load _More</Button>
-        -->
-        
+            <Button Click="LoadMore">Load _More</Button>
+            <Label Width="100"/>
+            <Button Click="RefreshFeed">_Refresh Feed</Button>
         </StackPanel>
+        
         <StatusBar Cursor="Hand" Grid.Row="4" Grid.ColumnSpan="2" Padding="3" MouseDoubleClick="StatusBar_MouseDoubleClick">
             <TextBlock Text="{Binding StatusMessage}"/>
         </StatusBar>

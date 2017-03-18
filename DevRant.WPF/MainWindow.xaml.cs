@@ -33,7 +33,16 @@ namespace DevRant.WPF
             var item = (ListBoxItem)SectionsListBox.SelectedItem;
             if (item != null)
             {
-                await LoadFeed((SectionType) item.Tag);
+                await LoadFeed((SectionType) item.Tag, true);
+            }
+        }
+
+        private async void LoadMore(object sender, RoutedEventArgs e)
+        {
+            var item = (ListBoxItem)SectionsListBox.SelectedItem;
+            if (item != null)
+            {
+                await LoadFeed((SectionType)item.Tag, false);
             }
         }
 
@@ -75,7 +84,7 @@ namespace DevRant.WPF
                 IsEnabled = false;
         }
 
-        private async Task LoadFeed(SectionType section, bool resetOffset = false)
+        private async Task LoadFeed(SectionType section, bool resetOffset)
         {
             SetIsEnabled(false);
 
