@@ -27,12 +27,14 @@ namespace DevRant.WPF
 {
     internal class MainWindowViewModel : ViewModel
     {
-        private Window window;
+        private MainWindow window;
 
         private FollowedUserChecker fchecker;
 
-        private FeedType currentSection;
-        private string currentSectionName;
+        private FeedType currentFeedType;
+        private SectionType currentSectionType;
+
+        private object feed_lock = new object();
 
         private ObservableCollection<FeedItem> feeds = new ObservableCollection<FeedItem>();
         private CollectionViewSource feedView;
@@ -41,7 +43,7 @@ namespace DevRant.WPF
         public int MinScore { get { return 20; } }
 
 
-        public MainWindowViewModel(Window window)
+        public MainWindowViewModel(MainWindow window)
         {
             this.window = window;
 
@@ -77,7 +79,7 @@ namespace DevRant.WPF
             {
                 if (await Login())
                 {
-                    await LoadSection(currentSectionName);
+                    await LoadSection(currentSectionType);
                 }
             }
             catch (Exception e)
@@ -135,9 +137,9 @@ namespace DevRant.WPF
                 NotificationsWeight = FontWeights.Bold;
 
 
-                lock (feeds)
+                lock (feed_lock)
                 {
-                    if (currentSection == FeedType.Notifications)
+                    if (currentFeedType == FeedType.Notifications)
                     {
                         LoadNotifications();
                     }
@@ -181,7 +183,7 @@ namespace DevRant.WPF
                 sb.Append(" (" + drafts + ")");
                 DraftsWeight = FontWeights.Bold;
 
-                if (currentSection == FeedType.Drafts)
+                if (currentFeedType == FeedType.Drafts)
                 {
                     LoadDrafts();
                 }
@@ -403,7 +405,7 @@ namespace DevRant.WPF
                         AppManager.Instance.DB.MarkRead(value.AsRant().ID);
                     }
 
-                    if (currentSection == FeedType.Updates)
+                    if (currentFeedType == FeedType.Updates)
                     {
                         UpdateFollowedPosts(fchecker.GetFeedUpdate());
                     }
@@ -489,9 +491,65 @@ namespace DevRant.WPF
         private IDevRantClient api;
         private IPersistentDataStore db;
 
-        public async Task LoadSection(string section)
+        // Support old way
+        public async Task LoadSection(string section, bool resetOffset = false)
         {
-            window.IsEnabled = false;
+            SectionType type;
+
+            switch (section)
+            {
+                case SectionGeneral:
+                    type = SectionType.General;
+                    break;
+                case SectionGeneralAlgo:
+                    type = SectionType.GeneralAlgo;
+                    break;
+                case SectionGeneralRecent:
+                    type = SectionType.GeneralRecent;
+                    break;
+                case SectionGeneralTop:
+                    type = SectionType.TopAll;
+                    break;
+                case SectionStories:
+                    type = SectionType.Story;
+                    break;
+                case SectionStoriesDay:
+                    type = SectionType.StoryDay;
+                    break;
+                case SectionStoriesWeek:
+                    type = SectionType.StoryWeek;
+                    break;
+                case SectionStoriesMonth:
+                    type = SectionType.StoryMonth;
+                    break;
+                case SectionStoriesAll:
+                    type = SectionType.StoryAll;
+                    break;
+                case SectionNotifications:
+                    type = SectionType.Notifications;
+                    break;
+                case SectionDrafts:
+                    type = SectionType.Drafts;
+                    break;
+                case SectionFollowed:
+                    type = SectionType.Updates;
+                    break;
+                case SectionCollab:
+                    type = SectionType.Collab;
+                    break;
+                default:
+                    throw new NotSupportedException(section);
+            }
+
+            await LoadSection(type, resetOffset);
+        }
+
+        public async Task LoadSection(SectionType section, bool resetOffset = false)
+        {
+            window.SetIsEnabled(false);
+
+            if (resetOffset)
+                ResetOffset();
 
             try
             {
@@ -499,58 +557,60 @@ namespace DevRant.WPF
 
                 switch (section)
                 {
-                    case SectionGeneral:
+                    case SectionType.General:
                         filter = AppManager.Instance.Settings.DefaultFeed != RantSort.Top ? AppManager.Instance.Settings.FilterOutRead : false;
 
                         await LoadFeed(FeedType.General, sort: AppManager.Instance.Settings.DefaultFeed,
                             filter: filter); //TODO: Add params from Settings
                         break;
-                    case SectionGeneralAlgo:
+                    case SectionType.GeneralAlgo:
                         await LoadFeed(FeedType.General, sort: RantSort.Algo, filter: AppManager.Instance.Settings.FilterOutRead);
                         break;
-                    case SectionGeneralRecent:
+                    case SectionType.GeneralRecent:
                         await LoadFeed(FeedType.General, sort: RantSort.Recent, filter: AppManager.Instance.Settings.FilterOutRead);
                         break;
-                    case SectionGeneralTop:
+
+                    case SectionType.Top:
                         await LoadFeed(FeedType.General, sort: RantSort.Top);
                         break;
-                    case SectionStories:
+                        //TODO: Add others
+
+                    case SectionType.Story:
                         filter = ds.DefaultRange != StoryRange.All ? AppManager.Instance.Settings.FilterOutRead : false;
 
                         await LoadFeed(FeedType.Stories, ds.DefaultFeed, AppManager.Instance.Settings.DefaultRange,
                             filter: filter);
                         break;
-                    case SectionStoriesDay:
+                    case SectionType.StoryDay:
                         await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Day, filter: ds.FilterOutRead);
                         break;
-                    case SectionStoriesWeek:
+                    case SectionType.StoryWeek:
                         await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Week, filter: ds.FilterOutRead);
                         break;
-                    case SectionStoriesMonth:
+                    case SectionType.StoryMonth:
                         await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.Month, filter: ds.FilterOutRead);
                         break;
-                    case SectionStoriesAll:
+                    case SectionType.StoryAll:
                         await LoadFeed(FeedType.Stories, ds.DefaultFeed, StoryRange.All);
                         break;
 
-                    case SectionNotifications:
+
+                    case SectionType.Collab:
+                        await LoadCollabs();
+                        break;
+
+                    case SectionType.Notifications:
                         LoadNotifications();
                         break;
-
-                    case SectionDrafts:
+                    case SectionType.Drafts:
                         LoadDrafts();
                         break;
-
-                    case SectionFollowed:
+                    case SectionType.Updates:
                         LoadFollowed();
-                        break;
-
-                    case SectionCollab:
-                        await LoadCollabs();
                         break;
                 }
 
-                currentSectionName = section;
+                currentSectionType = section;
             }
             catch
             {
@@ -558,15 +618,20 @@ namespace DevRant.WPF
             }
             finally
             {
-                window.IsEnabled = true;
+                window.SetIsEnabled(true);
             }
+        }
+
+        private void ResetOffset()
+        {
+            offset = 0;
         }
 
         private void LoadDrafts()
         {
-            currentSection = FeedType.Drafts;
+            currentFeedType = FeedType.Drafts;
 
-            lock (feeds)
+            lock (feed_lock)
             {
                 var drafts = AppManager.Instance.DB.GetDrafts();
                 feeds.Clear();
@@ -584,11 +649,11 @@ namespace DevRant.WPF
 
         private async Task LoadCollabs()
         {
-            currentSection = FeedType.Collab;
+            currentFeedType = FeedType.Collab;
 
             var collabs = await AppManager.Instance.API.Feeds.GetCollabsAsync();
 
-            lock (feeds)
+            lock (feed_lock)
             {
                 feeds.Clear();
 
@@ -701,7 +766,7 @@ namespace DevRant.WPF
 
         private async void SurpriseMe()
         {
-            window.IsEnabled = false;
+            window.SetIsEnabled(false);
 
             try
             {
@@ -729,7 +794,7 @@ namespace DevRant.WPF
             }
             finally
             {
-                window.IsEnabled = true;
+                window.SetIsEnabled(true);
             }
         }
 
@@ -1047,9 +1112,9 @@ namespace DevRant.WPF
 
         private void LoadFollowed()
         {
-            currentSection = FeedType.Updates;
+            currentFeedType = FeedType.Updates;
 
-            lock (feeds)
+            lock (feed_lock)
             {
                 feeds.Clear();
 
@@ -1067,9 +1132,9 @@ namespace DevRant.WPF
         
         private void LoadNotifications()
         {
-            currentSection = FeedType.Notifications;
+            currentFeedType = FeedType.Notifications;
 
-            lock (feeds)
+            lock (feed_lock)
             {
                 var notifs = nchecker.Notifications;
                 feeds.Clear();
@@ -1086,11 +1151,13 @@ namespace DevRant.WPF
                 feedView.SortDescriptions.Add(new SortDescription("CreateTimeRaw", ListSortDirection.Descending));
             }
         }
-        
+
+        private int offset = 0;
+
         private async Task LoadFeed(FeedType type, RantSort sort = RantSort.Algo, StoryRange range = StoryRange.Day, bool filter = false)
         {
         
-            currentSection = type;
+            currentFeedType = type;
 
             Func<int, int, Task<IReadOnlyCollection<Dtos.Rant>>> getter;
 
@@ -1110,14 +1177,26 @@ namespace DevRant.WPF
 
             List<Dtos.Rant> rants = new List<Dtos.Rant>();
 
-            //Remove duplicates
+            //Used to remove duplicates
             List<long> ids = new List<long>();
             
-            int page = 0;
-
             int maxPages = ds.MaxPages;
+            bool useOffset = true; //ds.UseOffset
+            
             var lim = ds.ResultsLimit;
             int minScore = ds.MinScore;
+
+
+            int page = 0;
+
+            if (useOffset)
+            {
+                page = maxPages * offset;
+                maxPages = (offset + 1) * maxPages;
+            }
+
+
+            bool shouldIncrement = true;
 
             while (rants.Count < lim && page < maxPages)
             {
@@ -1126,8 +1205,12 @@ namespace DevRant.WPF
                 try
                 {
                     var tmp = await getter.Invoke(skip, lim);
-                    //if (tmp.Count == 0)
-                    //    break;
+                    if (tmp == null || tmp.Count == 0)
+                    {
+                        ResetOffset();
+                        shouldIncrement = false;
+                        break;
+                    }
 
                     foreach (var r in tmp)
                     {
@@ -1150,8 +1233,11 @@ namespace DevRant.WPF
 
                 page++;
             }
+
+            if (useOffset && shouldIncrement)
+                IncrementOffset();
             
-            lock (feeds)
+            lock (feed_lock)
             {
                 feeds.Clear();
 
@@ -1179,6 +1265,11 @@ namespace DevRant.WPF
 
             string message = "Loaded {0} rants from {1} pages";
             UpdateStatus(string.Format(message, rants.Count, page));
+        }
+
+        private void IncrementOffset()
+        {
+            offset = (offset+1) % 5; //TODO: Replace 5 with ds.MaxOffset
         }
 
         /// <summary>

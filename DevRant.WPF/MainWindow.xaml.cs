@@ -47,7 +47,12 @@ namespace DevRant.WPF
                 if (item == null)
                     return;
 
-                await LoadFeed(item.Name);
+
+                if (item.Tag is SectionType)
+                {
+                }
+                else //Old
+                    await LoadFeed(item.Name, true);
             }
             catch (Exception ex)
             {
@@ -55,11 +60,42 @@ namespace DevRant.WPF
             }
         }
 
-        private async Task LoadFeed(string section)
+        int windowEnabled = 0;
+
+        public enum State
         {
-            IsEnabled = false;
-            await vm.LoadSection(section);
-            IsEnabled = true;
+            Enable,
+            Disable
+        }
+        public void SetIsEnabled(bool enabled)
+        {
+            if (enabled)
+                windowEnabled++;
+            else
+                windowEnabled--;
+
+            if (windowEnabled >= 0)
+                IsEnabled = true;
+            else
+                IsEnabled = false;
+        }
+
+        private async Task LoadFeed(SectionType section, bool resetOffset = false)
+        {
+            SetIsEnabled(false);
+            await vm.LoadSection(section, resetOffset);
+            SetIsEnabled(true);
+
+            if (FeedListBox.Items.Count > 0)
+                FeedListBox.ScrollIntoView(FeedListBox.Items[0]);
+        }
+
+        //Old
+        private async Task LoadFeed(string section, bool resetOffset = false)
+        {
+            SetIsEnabled(false);
+            await vm.LoadSection(section, resetOffset);
+            SetIsEnabled(true);
 
             if (FeedListBox.Items.Count > 0)
                 FeedListBox.ScrollIntoView(FeedListBox.Items[0]);

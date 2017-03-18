@@ -11,6 +11,8 @@
         Title="devRant++" Height="800" Width="800"
         Closed="Window_Closed" x:Name="mainWindow">
 
+    
+    
     <Window.Resources>
         <converters:VisibilityConverter x:Key="VisibilityConverter"/>
         <local:FeedListItemTemplateSelector x:Key="feedListTemplateSelector"/>
@@ -135,26 +137,37 @@
 
 
                 <!-- Names need to match the Section consts in MainWindowViewModel -->
-                <ListBoxItem Name="GeneralFeed" IsSelected="True">General</ListBoxItem>
-                <ListBoxItem Style="{StaticResource SubSection}" Name="GeneralAlgo">Algo</ListBoxItem>
-                <ListBoxItem Style="{StaticResource SubSection}" Name="GeneralTop">Top</ListBoxItem>
-                <ListBoxItem Style="{StaticResource SubSection}" Name="GeneralRecent">Recent</ListBoxItem>
-
-                <ListBoxItem Name="StoriesFeed">Stories</ListBoxItem>
-                <ListBoxItem Style="{StaticResource SubSection}" Name="StoriesDay">Day</ListBoxItem>
-                <ListBoxItem Style="{StaticResource SubSection}" Name="StoriesWeek">Week</ListBoxItem>
-                <ListBoxItem Style="{StaticResource SubSection}" Name="StoriesMonth">Month</ListBoxItem>
-                <ListBoxItem Style="{StaticResource SubSection}" Name="StoriesAll">All</ListBoxItem>
+                <ListBoxItem Name="GeneralFeed" IsSelected="True" Tag="{x:Static ctrl:SectionType.General}">General</ListBoxItem>
+                <ListBoxItem Style="{StaticResource SubSection}" Tag="{x:Static ctrl:SectionType.GeneralAlgo}">Algo</ListBoxItem>
+                <ListBoxItem Style="{StaticResource SubSection}" Tag="{x:Static ctrl:SectionType.GeneralRecent}">Recent</ListBoxItem>
                 
-                <ListBoxItem Name="CollabFeed">Collab</ListBoxItem>
+                <ListBoxItem Tag="{x:Static ctrl:SectionType.Top}">Top</ListBoxItem>
+                <ListBoxItem Style="{StaticResource SubSection}" Tag="{x:Static ctrl:SectionType.TopDay}">Day</ListBoxItem>
+                <ListBoxItem Style="{StaticResource SubSection}" Tag="{x:Static ctrl:SectionType.TopWeek}">Week</ListBoxItem>
+                <ListBoxItem Style="{StaticResource SubSection}" Tag="{x:Static ctrl:SectionType.TopMonth}">Month</ListBoxItem>
+                <ListBoxItem Style="{StaticResource SubSection}" Tag="{x:Static ctrl:SectionType.TopAll}">All</ListBoxItem>
+
+                <ListBoxItem  Tag="{x:Static ctrl:SectionType.Story}">Stories</ListBoxItem>
+                <ListBoxItem Style="{StaticResource SubSection}" Tag="{x:Static ctrl:SectionType.StoryDay}">Day</ListBoxItem>
+                <ListBoxItem Style="{StaticResource SubSection}" Tag="{x:Static ctrl:SectionType.StoryWeek}">Week</ListBoxItem>
+                <ListBoxItem Style="{StaticResource SubSection}" Tag="{x:Static ctrl:SectionType.StoryMonth}">Month</ListBoxItem>
+                <ListBoxItem Style="{StaticResource SubSection}" Tag="{x:Static ctrl:SectionType.StoryAll}">All</ListBoxItem>
+
+                <ListBoxItem Tag="{x:Static ctrl:SectionType.Collab}">Collab</ListBoxItem>
 
                 <Separator Height="5" />
-                
-                <ListBoxItem Name="FollowedUsers" Content="{Binding FollowedUsersLabel, FallbackValue='Updates'}" FontWeight="{Binding FollowedUsersWeight}"/>
-                <ListBoxItem Name="MyNotifications" Content="{Binding NotificationsLabel, FallbackValue='Notifications'}" 
+
+                <ListBoxItem Tag="{x:Static ctrl:SectionType.Updates}"
+                    Content="{Binding FollowedUsersLabel, FallbackValue='Updates'}" 
+                    FontWeight="{Binding FollowedUsersWeight}"/>
+
+                <ListBoxItem Tag="{x:Static ctrl:SectionType.Notifications}" 
+                             Content="{Binding NotificationsLabel, FallbackValue='Notifications'}" 
                              Visibility="{Binding NotificationsVisibility, FallbackValue=Collapsed}" 
                              FontWeight="{Binding NotificationsWeight}"/>
-                <ListBoxItem Name="RantDrafts" Content="{Binding DraftsLabel, FallbackValue='Drafts'}" 
+
+                <ListBoxItem Tag="{x:Static ctrl:SectionType.Drafts}"
+                             Content="{Binding DraftsLabel, FallbackValue='Drafts'}" 
                              Visibility="{Binding DraftsVisibility, FallbackValue=Collapsed}" 
                              FontWeight="{Binding DraftsWeight}"/>
             </ListBox>

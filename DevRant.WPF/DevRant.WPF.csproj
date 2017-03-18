@@ -28,7 +28,7 @@
     <TargetCulture>en</TargetCulture>
     <ProductName>devRant++ %28an unofficial client%29</ProductName>
     <PublisherName>innouvous</PublisherName>
-    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationRevision>4</ApplicationRevision>
     <ApplicationVersion>1.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -105,9 +105,10 @@
     </ApplicationDefinition>
     <Compile Include="AppManager.cs" />
     <Compile Include="Controls\ButtonType.cs" />
+    <Compile Include="Controls\SectionType.cs" />
     <Compile Include="Converters\VoteReasonConverter.cs" />
     <Compile Include="DataStore\SavedPostContent.cs" />
-    <Compile Include="DevRant\WPF\ViewModels\DummyCommentable.cs" />
+    <Compile Include="ViewModels\DummyCommentable.cs" />
     <Compile Include="IDInputWindow.xaml.cs">
       <DependentUpon>IDInputWindow.xaml</DependentUpon>
     </Compile>
