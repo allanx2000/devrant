@@ -33,7 +33,7 @@ namespace DevRant.WPF
             var item = (ListBoxItem)SectionsListBox.SelectedItem;
             if (item != null)
             {
-                await LoadFeed(item.Name);
+                await LoadFeed((SectionType) item.Tag);
             }
         }
 
@@ -46,13 +46,8 @@ namespace DevRant.WPF
 
                 if (item == null)
                     return;
-
-
-                if (item.Tag is SectionType)
-                {
-                }
-                else //Old
-                    await LoadFeed(item.Name, true);
+                
+                await LoadFeed((SectionType) item.Tag, true);                
             }
             catch (Exception ex)
             {
@@ -89,18 +84,7 @@ namespace DevRant.WPF
             if (FeedListBox.Items.Count > 0)
                 FeedListBox.ScrollIntoView(FeedListBox.Items[0]);
         }
-
-        //Old
-        private async Task LoadFeed(string section, bool resetOffset = false)
-        {
-            SetIsEnabled(false);
-            await vm.LoadSection(section, resetOffset);
-            SetIsEnabled(true);
-
-            if (FeedListBox.Items.Count > 0)
-                FeedListBox.ScrollIntoView(FeedListBox.Items[0]);
-        }
-
+        
         private void FeedListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             try

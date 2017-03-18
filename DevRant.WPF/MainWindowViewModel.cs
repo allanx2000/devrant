@@ -490,60 +490,7 @@ namespace DevRant.WPF
         private IDataStore ds;
         private IDevRantClient api;
         private IPersistentDataStore db;
-
-        // Support old way
-        public async Task LoadSection(string section, bool resetOffset = false)
-        {
-            SectionType type;
-
-            switch (section)
-            {
-                case SectionGeneral:
-                    type = SectionType.General;
-                    break;
-                case SectionGeneralAlgo:
-                    type = SectionType.GeneralAlgo;
-                    break;
-                case SectionGeneralRecent:
-                    type = SectionType.GeneralRecent;
-                    break;
-                case SectionGeneralTop:
-                    type = SectionType.TopAll;
-                    break;
-                case SectionStories:
-                    type = SectionType.Story;
-                    break;
-                case SectionStoriesDay:
-                    type = SectionType.StoryDay;
-                    break;
-                case SectionStoriesWeek:
-                    type = SectionType.StoryWeek;
-                    break;
-                case SectionStoriesMonth:
-                    type = SectionType.StoryMonth;
-                    break;
-                case SectionStoriesAll:
-                    type = SectionType.StoryAll;
-                    break;
-                case SectionNotifications:
-                    type = SectionType.Notifications;
-                    break;
-                case SectionDrafts:
-                    type = SectionType.Drafts;
-                    break;
-                case SectionFollowed:
-                    type = SectionType.Updates;
-                    break;
-                case SectionCollab:
-                    type = SectionType.Collab;
-                    break;
-                default:
-                    throw new NotSupportedException(section);
-            }
-
-            await LoadSection(type, resetOffset);
-        }
-
+        
         public async Task LoadSection(SectionType section, bool resetOffset = false)
         {
             window.SetIsEnabled(false);
