@@ -53,9 +53,9 @@ namespace DevRant.WPF
         /// <param name="username"></param>
         /// <param name="owner"></param>
         /// <param name="api"></param>
-        public static void OpenProfile(string username, Window owner = null)
+        public static void OpenProfile(string username, Window owner = null, bool openInBrowser = false)
         {
-            if (AppManager.Instance.Settings.OpenInProfileViewer)
+            if (!openInBrowser && AppManager.Instance.Settings.OpenInProfileViewer)
             {
                 ProfileViewerWindow window = new ProfileViewerWindow(username, AppManager.Instance.API);
                 window.Owner = owner;

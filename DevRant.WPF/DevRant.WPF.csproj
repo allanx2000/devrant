@@ -28,7 +28,7 @@
     <TargetCulture>en</TargetCulture>
     <ProductName>devRant++ %28an unofficial client%29</ProductName>
     <PublisherName>innouvous</PublisherName>
-    <ApplicationRevision>9</ApplicationRevision>
+    <ApplicationRevision>10</ApplicationRevision>
     <ApplicationVersion>1.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>

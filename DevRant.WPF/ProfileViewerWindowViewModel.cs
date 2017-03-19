@@ -245,7 +245,7 @@ namespace DevRant.WPF
 
         private void OpenInBrowser()
         {
-            Utilities.OpenProfile(Username);
+            Utilities.OpenProfile(Username, openInBrowser: true);
         }
 
         public ICommand LoadMoreCommand
