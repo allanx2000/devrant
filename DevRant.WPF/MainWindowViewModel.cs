@@ -50,8 +50,11 @@ namespace DevRant.WPF
             this.ds = new AppSettingsDataStore();
             this.api = new DevRantClient();
             this.db = SQLiteStore.CreateInstance(ds.DBFolder);
-
+            
             AppManager.Initialize(api, ds, db);
+
+            SetLabels();
+
 
             statusMessages = new MessageCollection();
             statusMessages.Changed += StatusChanged;
@@ -71,6 +74,13 @@ namespace DevRant.WPF
 
             //TestLogin();
             //Test();
+        }
+
+        private void SetLabels()
+        {
+            NotificationsLabel = "Notifications";
+            DraftsLabel = "Drafts";
+            FollowedUsersLabel = "Updates";
         }
 
         private async void Startup()

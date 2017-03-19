@@ -304,6 +304,8 @@ namespace DevRant.WPF
                     data.AddImage(bytes, ImagePath);
                 }
 
+                window.IsEnabled = false;
+
                 if (type == EditPostWindow.Type.Rant)
                 {
                     
@@ -339,6 +341,10 @@ namespace DevRant.WPF
             catch (Exception e)
             {
                 MessageBoxFactory.ShowError(e, owner: window);
+            }
+            finally
+            {
+                window.IsEnabled = true;
             }
         }
 

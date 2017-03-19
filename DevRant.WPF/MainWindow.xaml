@@ -217,7 +217,7 @@
         <Button Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center" Command="{Binding CheckUpdatesCommand}">Check For _Updates</Button>
 
         <StackPanel Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center"  Orientation="Horizontal">
-            <Button Click="LoadMore">Load _More</Button>
+            <Button Click="LoadMore">Load Mor_e</Button>
             <Label Width="100"/>
             <Button Click="RefreshFeed">_Refresh Feed</Button>
         </StackPanel>

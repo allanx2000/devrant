@@ -42,7 +42,7 @@
 
         <DockPanel Visibility="{Binding TagsVisibility}" LastChildFill="True" Grid.Row="1">
             <Label FontWeight="Bold" DockPanel.Dock="Left">Tags:</Label>
-            <TextBox Text="{Binding TagsString}" MaxLength="50"/>
+            <TextBox Text="{Binding TagsString}" MaxLength="100"/>
         </DockPanel>
 
         <DockPanel LastChildFill="True" Grid.Row="2">
