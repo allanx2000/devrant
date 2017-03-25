@@ -100,6 +100,39 @@ namespace DevRant.WPF
             Utilities.OpenFeedItem(Rant);
         }
 
+        
+        public ICommand FollowUserCommand
+        {
+            get
+            {
+                return new mvvm.CommandHelper(ToggleFollowUser);
+            }
+        }
+
+        private void ToggleFollowUser()
+        {
+            try
+            {
+                var settings = AppManager.Instance.Settings;
+
+                if (settings.IsFollowing(Rant.Username))
+                {
+                    settings.Unfollow(Rant.Username);
+                }
+                else
+                {
+                    settings.Follow(Rant.Username);
+                }
+
+                RaisePropertyChanged("FollowUserString");
+                Rant.Followed = settings.IsFollowing(Rant.Username);
+            }
+            catch (Exception e)
+            {
+                MessageBoxFactory.ShowError(e);
+            }
+        }
+
         public ICommand ToggleFavoriteCommand
         {
             get

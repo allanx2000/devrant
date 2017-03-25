@@ -4,6 +4,15 @@
              xmlns:local="clr-namespace:DevRant.WPF"
              StartupUri="MainWindow.xaml" Startup="Application_Startup">
     <Application.Resources>
-        <ResourceDictionary Source="pack://application:,,,/Innouvous.Utils.Merged;component/GenericDictionary45.xaml"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Innouvous.Utils.Merged;component/GenericDictionary45.xaml"/>
+                <ResourceDictionary>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Padding" Value="5"/>
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

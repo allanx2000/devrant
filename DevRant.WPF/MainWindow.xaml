@@ -92,11 +92,6 @@
         </Grid.ColumnDefinitions>
 
         <DockPanel Grid.Row="0" Grid.ColumnSpan="4" LastChildFill="True">
-            <DockPanel.Resources>
-                <Style TargetType="MenuItem">
-                    <Setter Property="Padding" Value="5"/>
-                </Style>
-            </DockPanel.Resources>
             <Menu DockPanel.Dock="Left">
                 <MenuItem Header="_View...">
                     <MenuItem Header="_Rant" Command="{Binding ViewSpecificRantCommand}"/>
