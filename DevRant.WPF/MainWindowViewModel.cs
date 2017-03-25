@@ -29,7 +29,8 @@ namespace DevRant.WPF
     {
         private MainWindow window;
 
-        private FollowedUserChecker fchecker;
+        private FollowedUserChecker userChecker;
+        private FollowedRantChecker rantChecker;
 
         private FeedType currentFeedType;
         private SectionType currentSectionType;
@@ -62,9 +63,13 @@ namespace DevRant.WPF
             feedView.Source = feeds;
 
             //Initialize the properties
-            fchecker = new FollowedUserChecker();
-            fchecker.OnUpdate += UpdateFollowedPosts;
-            fchecker.Start();
+            userChecker = new FollowedUserChecker();
+            userChecker.OnUpdate += UpdateFollowedPosts;
+            userChecker.Start();
+
+            rantChecker = new FollowedRantChecker();
+            rantChecker.OnUpdate += UpdateFollowedPosts;
+            rantChecker.Start();
 
             nchecker = new NotificationsChecker();
             nchecker.OnUpdate += UpdateNotifications;
@@ -96,7 +101,7 @@ namespace DevRant.WPF
                 statusMessages.AddMessage(e.Message);
             }
 
-            UpdateFollowedPosts(fchecker.GetFeedUpdate());
+            UpdateFollowedPosts(userChecker.GetFeedUpdate());
             UpdateDrafts(db.GetNumberOfDrafts());
         }
 
@@ -415,7 +420,7 @@ namespace DevRant.WPF
 
                     if (currentFeedType == FeedType.Updates)
                     {
-                        UpdateFollowedPosts(fchecker.GetFeedUpdate());
+                        UpdateFollowedPosts(userChecker.GetFeedUpdate());
                     }
                 }
 
@@ -828,8 +833,10 @@ namespace DevRant.WPF
         private void CheckForUpdates()
         {
             UpdateStatus("Checking for updates...");
-            fchecker.Restart();
+            userChecker.Restart();
+            rantChecker.Restart();
             nchecker.Restart();
+
         }
 
         public ICommand OpenOptionsCommand
@@ -847,7 +854,7 @@ namespace DevRant.WPF
             if (!dlg.Cancelled)
             {
                 if (dlg.AddedUsers.Count > 0)
-                    fchecker.GetAll(dlg.AddedUsers);
+                    userChecker.GetAll(dlg.AddedUsers);
 
                 RaisePropertyChanged("UsernameVisibility");
                 RaisePropertyChanged("DateVisibility");
@@ -873,7 +880,7 @@ namespace DevRant.WPF
 
                     //Restart
                     nchecker.Stop();
-                    fchecker.Stop();
+                    userChecker.Stop();
 
                     MainWindow newWindow = new MainWindow();
                     newWindow.Show();
@@ -917,7 +924,7 @@ namespace DevRant.WPF
             ds.Follow(username);
 
             UpdateFollowedInRants();
-            fchecker.GetAll(username);
+            userChecker.GetAll(username);
         }
 
         public ICommand ViewMyProfileCommand
@@ -1050,7 +1057,9 @@ namespace DevRant.WPF
 
             FollowedUsersLabel = labelBuilder.ToString();
 
-            if (updateStatus && args.Type != UpdateType.UpdateFeed)
+            if (updateStatus 
+                && args.Type != UpdateType.UpdateFeed
+                && args.Type != UpdateType.UpdatedRants)
             {
                 string message = null;
 

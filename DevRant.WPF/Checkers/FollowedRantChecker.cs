@@ -86,7 +86,9 @@ namespace DevRant.WPF.Checkers
                         {
                             if (comment.CreatedTime > lastTime)
                             {
-                                added.Add(new ViewModels.Rant(rant));
+                                var vm = new ViewModels.Rant(rant);
+                                vm.UpdateText = "A new comment was added by " + rant.Username;
+                                AppManager.Instance.AddUpdate(vm);
                             }
                         }
                     }
@@ -106,7 +108,7 @@ namespace DevRant.WPF.Checkers
                         manager.Settings.FollowedRantsLastChecked = latest;
                     }
 
-                    SendUpdate(UpdateType.UpdatedRants, added.Count);
+                    SendUpdate(UpdateType.UpdatedRants);
 
                     Thread.Sleep(manager.Settings.FollowedRantsInterval);
                 }
