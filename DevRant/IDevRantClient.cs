@@ -70,7 +70,14 @@ namespace DevRant
         /// </summary>
         /// <param name="rantId"></param>
         /// <returns></returns>
-        Task ToggleFavorite(long rantId);
+        Task Favorite(long rantId);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rantId"></param>
+        /// <returns></returns>
+        Task Unfavorite(long rantId);
 
 
         /// <summary>
@@ -148,8 +155,7 @@ namespace DevRant
         /// </summary>
         /// <param name="commentId"></param>
         void DeleteComment(int commentId);
-
-
+        
         /// <summary>
         /// 
         /// </summary>

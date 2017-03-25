@@ -193,7 +193,15 @@ namespace DevRant.WPF
         {
             try
             {
-                await api.User.ToggleFavorite(Rant.ID);
+                if (Rant.IsFavorite)
+                {
+                    await api.User.Unfavorite(Rant.ID);
+                }
+                else
+                {
+                    await api.User.Favorite(Rant.ID);
+                }
+
                 Rant.IsFavorite = !Rant.IsFavorite;
                 RaisePropertyChanged("FavoriteString");
 

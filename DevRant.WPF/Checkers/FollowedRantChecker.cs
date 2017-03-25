@@ -65,14 +65,15 @@ namespace DevRant.WPF.Checkers
                 {
                     if (!IsLatest(version))
                         break;
-
                     RemoveRead();
 
+                    
                     long lastTime = manager.Settings.FollowedRantsLastChecked;
 
                     if (lastTime == 0)
                         lastTime = Utilities.ToUnixTime(DateTime.Today);
 
+                    DateTime start = DateTime.Now;
                     List<ViewModels.Rant> added = new List<ViewModels.Rant>();
 
                     List<long> rantIds = manager.DB.GetSubscribedRantIds();
@@ -96,6 +97,7 @@ namespace DevRant.WPF.Checkers
                     if (!IsLatest(version))
                         break;
 
+                    long? newTime = null;
                     if (added.Count > 0)
                     {
                         long latest = added.Max(x => x.RawCreateTime);
@@ -105,7 +107,11 @@ namespace DevRant.WPF.Checkers
                             Posts.Add(r);
                         }
 
-                        manager.Settings.FollowedRantsLastChecked = latest;
+                        newTime = latest;
+                    }
+                    else
+                    {
+                        manager.Settings.FollowedRantsLastChecked = Utilities.ToUnixTime(start);
                     }
 
                     SendUpdate(UpdateType.UpdatedRants);

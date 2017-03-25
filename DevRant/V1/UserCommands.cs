@@ -360,7 +360,7 @@ namespace DevRant.V1
             owner.CheckSuccess(tmp);
         }
 
-        public async Task ToggleFavorite(long rantId)
+        public async Task Favorite(long rantId)
         {
             string url = owner.MakeUrl(Constants.PathRants + rantId + "/favorite");
 
@@ -372,6 +372,18 @@ namespace DevRant.V1
             owner.CheckSuccess(tmp);
         }
 
-        
+        public async Task Unfavorite(long rantId)
+        {
+            string url = owner.MakeUrl(Constants.PathRants + rantId + "/unfavorite");
+
+            var body = owner.CreatePostBody(new Parameters());
+            var response = await client.PostAsync(url, body);
+            var responseText = await response.Content.ReadAsStringAsync();
+
+            JObject tmp = JObject.Parse(responseText);
+            owner.CheckSuccess(tmp);
+        }
+
+
     }
 }
