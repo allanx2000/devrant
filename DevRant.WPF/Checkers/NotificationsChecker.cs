@@ -20,7 +20,7 @@ namespace DevRant.WPF.Checkers
 
         private int latestVersion = 0;
         private const int SleepTime = CheckInterval * 60 * 1000;
-        private const int CheckInterval = 10; //Minutes
+        private const int CheckInterval = 5; //Minutes
         
         public ObservableCollection<ViewModels.Notification> Notifications { get; private set; }
 

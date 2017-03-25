@@ -1,10 +1,11 @@
 ﻿PostViewer
 	-Add buttons to RantViewer and commands for handling
-		-Un/Favorite
 		-Need to update UI in Comments/Rants when modified
 
 -Create TextViewerWindow(string txtName)
 -Add <Separator><menuitem>help </> and About to View
 
 -Add disabled color to VoteControl
--Mark special if image is animated (how?)
+
+-Track posts that Followed Users +1d
+-Follow: follow a rant, only notify when OP adds a new comment to his rant

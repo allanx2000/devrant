@@ -85,7 +85,7 @@
     <Compile Include="Exceptions\InvalidCredentialsException.cs" />
     <Compile Include="KeyValueList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Enums\StoryRange.cs" />
+    <Compile Include="Enums\RantRange.cs" />
     <Compile Include="V1\FeedCommands.cs" />
     <Compile Include="V1\UserCommands.cs" />
   </ItemGroup>

@@ -104,6 +104,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppManager.cs" />
+    <Compile Include="Checkers\FollowedRantChecker.cs" />
+    <Compile Include="Checkers\UpdateArgs.cs" />
+    <Compile Include="Checkers\UpdateType.cs" />
     <Compile Include="Controls\ButtonType.cs" />
     <Compile Include="Controls\SectionType.cs" />
     <Compile Include="Converters\VoteReasonConverter.cs" />

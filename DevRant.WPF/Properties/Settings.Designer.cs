@@ -212,5 +212,17 @@ namespace DevRant.WPF.Properties {
                 this["ResultsLimit"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public long FollowedRantsLastChecked {
+            get {
+                return ((long)(this["FollowedRantsLastChecked"]));
+            }
+            set {
+                this["FollowedRantsLastChecked"] = value;
+            }
+        }
     }
 }

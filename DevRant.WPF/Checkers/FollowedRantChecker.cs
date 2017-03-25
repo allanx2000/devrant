@@ -7,43 +7,29 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Permissions;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace DevRant.WPF.Checkers
 {
-    internal class FollowedUserChecker
+    internal class FollowedRantChecker
     {
         private Thread checkerThread;
 
-        private IDevRantClient api;
-        private IDataStore ds;
-        private IPersistentDataStore history;
-
-        public UpdateArgs GetFeedUpdate()
+        public UpdateArgs CheckFollowedRantsForUpdates()
         {
-            return new UpdateArgs(UpdateType.UpdateFeed, 0, null, Posts);
+            return new UpdateArgs(UpdateType.UpdatedRants, 0, null, Posts);
         }
 
         public ObservableCollection<ViewModels.Rant> Posts { get; private set; }
 
-        public FollowedUserChecker(IDataStore ds, IDevRantClient api, IPersistentDataStore history)
+        public FollowedRantChecker()
         {
-            this.ds = ds;
-            this.api = api;
-            this.history = history;
-            
             Posts = new ObservableCollection<ViewModels.Rant>();
-        }
-
-        public FollowedUserChecker() : this(AppManager.Instance.Settings, AppManager.Instance.API, AppManager.Instance.DB)
-        {
-
         }
 
         public delegate void OnUpdatedHandler(UpdateArgs args);
         public event OnUpdatedHandler OnUpdate;
 
-        
-        
         private void SafeStart(object paramz)
         {
         }
@@ -71,6 +57,8 @@ namespace DevRant.WPF.Checkers
         }
         private async void RunChecker(int version)
         {
+            AppManager manager = AppManager.Instance;
+
             try
             {
                 while (true)
@@ -80,25 +68,25 @@ namespace DevRant.WPF.Checkers
 
                     RemoveRead();
 
-                    long lastTime = ds.FollowedUsersLastChecked;
+                    long lastTime = manager.Settings.FollowedRantsLastChecked;
+
+                    if (lastTime == 0)
+                        lastTime = Utilities.ToUnixTime(DateTime.Today);
 
                     List<ViewModels.Rant> added = new List<ViewModels.Rant>();
 
-                    var users = ds.FollowedUsers.ToList(); //Can be modified while checking
+                    var rantIds = await GetFavoritedRantIds(manager);
 
-                    foreach (string user in users)
+                    foreach (long rantId in rantIds)
                     {
-                        Profile profile = await api.GetProfileAsync(user);
+                        Dtos.Rant rant = await manager.API.GetRant(rantId);
+                        long userId = rant.UserId;
 
-                        foreach (var rant in profile.Rants)
+                        foreach (var comment in rant.Comments)
                         {
-                            if (rant.CreatedTime > lastTime)
+                            if (comment.CreatedTime > lastTime)
                             {
-                                if (!history.IsRead(rant.Id))
-                                {
-                                    ViewModels.Rant r = new ViewModels.Rant(rant);
-                                    added.Add(r);
-                                }
+                                added.Add(new ViewModels.Rant(rant));
                             }
                         }
                     }
@@ -115,19 +103,43 @@ namespace DevRant.WPF.Checkers
                             Posts.Add(r);
                         }
 
-                        ds.FollowedUsersLastChecked = latest;
+                        manager.Settings.FollowedRantsLastChecked = latest;
                     }
 
-                    SendUpdate(UpdateType.UpdatesCheck, added.Count);
+                    SendUpdate(UpdateType.UpdatedRants, added.Count);
 
-                    int millis = ds.FollowedUsersUpdateInterval * 60 * 1000;
-                    Thread.Sleep(millis);
+                    Thread.Sleep(manager.Settings.FollowedRantsInterval);
                 }
             }
             catch (Exception ex)
             {
                 SendUpdate(UpdateType.Error, error: ex);
             }
+        }
+
+        private async Task<List<long>> GetFavoritedRantIds(AppManager manager)
+        {
+            List<long> ids = new List<long>();
+
+            //TODO: Get all, paging how?
+            Profile profile;
+
+            int skipCounter = 0;
+
+            while (true)
+            {
+                profile = await manager.API.GetProfileAsync(manager.API.User.LoggedInUser, Enums.ProfileContentType.Favorites, skipCounter);
+
+                if (profile.Rants.Count == 0)
+                    break;
+
+                foreach (Dtos.Rant rant in profile.Rants)
+                {
+                    ids.Add(rant.Id);
+                }
+            }
+
+            return ids;
         }
 
         private void RemoveRead()
@@ -154,45 +166,6 @@ namespace DevRant.WPF.Checkers
             Stop();
 
             Start();
-        }
-
-        public void GetAll(string username)
-        {
-            var list = new List<string>();
-            list.Add(username);
-            GetAll(list);
-        }
-
-        public void GetAll(IEnumerable<string> users)
-        {
-            Thread th = new Thread(() => GetAllForUsers(users));
-            th.Start();
-        }
-
-        private async void GetAllForUsers(IEnumerable<string> users)
-        {
-            List<ViewModels.Rant> added = new List<ViewModels.Rant>();
-
-            foreach (string user in users)
-            {
-                try
-                {
-                    Profile profile = await api.GetProfileAsync(user);
-
-                    foreach (var rant in profile.Rants)
-                    {
-                        ViewModels.Rant r = new ViewModels.Rant(rant);
-                        Posts.Add(r);
-                        added.Add(r);
-                    }
-                }
-                catch (Exception e)
-                {
-                    var st = e.StackTrace;
-                }
-            }
-
-            SendUpdate(UpdateType.GetAllForUser, added.Count, string.Join(", ", users));
         }
     }
 }

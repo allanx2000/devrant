@@ -41,8 +41,7 @@ namespace DevRant.WPF
 
         public int MaxPages { get { return 15; } }
         public int MinScore { get { return 20; } }
-
-
+        
         public MainWindowViewModel(MainWindow window)
         {
             this.window = window;
@@ -830,7 +829,7 @@ namespace DevRant.WPF
         {
             UpdateStatus("Checking for updates...");
             fchecker.Restart();
-            nchecker.Check();
+            nchecker.Restart();
         }
 
         public ICommand OpenOptionsCommand
@@ -1024,7 +1023,7 @@ namespace DevRant.WPF
         /// Updates the Update label in the Sections list
         /// </summary>
         /// <param name="args"></param>
-        private void UpdateFollowedPosts(FollowedUserChecker.UpdateArgs args)
+        private void UpdateFollowedPosts(UpdateArgs args)
         {
             UpdateFollowedPosts(args, true);
         }
@@ -1034,7 +1033,7 @@ namespace DevRant.WPF
         /// </summary>
         /// <param name="args"></param>
         /// <param name="updateStatus">Whether to send a status</param>
-        private void UpdateFollowedPosts(FollowedUserChecker.UpdateArgs args, bool updateStatus)
+        private void UpdateFollowedPosts(UpdateArgs args, bool updateStatus)
         {
             StringBuilder labelBuilder = new StringBuilder();
             labelBuilder.Append("Updates");
@@ -1051,19 +1050,19 @@ namespace DevRant.WPF
 
             FollowedUsersLabel = labelBuilder.ToString();
 
-            if (updateStatus && args.Type != FollowedUserChecker.UpdateType.UpdateFeed)
+            if (updateStatus && args.Type != UpdateType.UpdateFeed)
             {
                 string message = null;
 
                 switch (args.Type)
                 {
-                    case FollowedUserChecker.UpdateType.UpdatesCheck:
+                    case UpdateType.UpdatesCheck:
                         message = string.Format("Found {0} new posts", args.Added);
                         break;
-                    case FollowedUserChecker.UpdateType.GetAllForUser:
+                    case UpdateType.GetAllForUser:
                         message = "Got rants for user: " + args.Users;
                         break;
-                    case FollowedUserChecker.UpdateType.Error:
+                    case UpdateType.Error:
 
                         if (args.Error is InvalidCredentialsException)
                         {
@@ -1223,7 +1222,8 @@ namespace DevRant.WPF
                 int count = Convert.ToInt32(otherVals[ValuesCollection.NumNotifs]);
                 if (count > 0)
                 {
-                    await nchecker.Check();
+                    //Just refresh
+                    nchecker.Check();
                 }
 
 

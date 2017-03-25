@@ -19,6 +19,9 @@ namespace DevRant.WPF
         private const string Favorite = "_Favorite";
         private const string Unfavorite = "Un_favorite";
 
+        private const string UnfollowUser = "Unfollow _User";
+        private const string FollowUser = "Follow _User";
+
         public RantViewerViewModel(Window window, Rant rant, IDevRantClient api, Action<string> onScroll)
         {
             Rant = rant;
@@ -61,15 +64,12 @@ namespace DevRant.WPF
                 MessageBoxFactory.ShowError(e);
             }
         }
-
-        public ICommand CloseCommand
-        {
-            get
-            {
-                return new mvvm.CommandHelper(() => window.Close());
-            }
-        }
-
+        
+        /// <summary>
+        /// Handles the link buttons in the screen
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         internal async Task ButtonClicked(ButtonClickedEventArgs args)
         {
             try
@@ -85,6 +85,8 @@ namespace DevRant.WPF
             }
         }
 
+        #region Command
+
         public ICommand OpenInBrowserCommand
         {
             get
@@ -98,10 +100,6 @@ namespace DevRant.WPF
             Utilities.OpenFeedItem(Rant);
         }
 
-        public string FavoriteString
-        {
-            get { return Rant.IsFavorite ? Unfavorite : Favorite ; }
-        }
         public ICommand ToggleFavoriteCommand
         {
             get
@@ -125,6 +123,28 @@ namespace DevRant.WPF
             }
         }
 
+        public ICommand CloseCommand
+        {
+            get
+            {
+                return new mvvm.CommandHelper(() => window.Close());
+            }
+        }
+
+        #endregion
+
+        #region Properties
+        
+        public string FavoriteString
+        {
+            get { return Rant.IsFavorite ? Unfavorite : Favorite; }
+        }
+
+        public string FollowUserString
+        {
+            get { return AppManager.Instance.Settings.IsFollowing(Rant.Username)? UnfollowUser : FollowUser; }
+        }
+
         public Rant Rant { get; set; } //TODO: Make private, check DP
 
         public ObservableCollection<Comment> Comments { get; set; }
@@ -143,5 +163,7 @@ namespace DevRant.WPF
                 }
             }
         }
+
+        #endregion
     }
 }

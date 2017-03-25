@@ -18,14 +18,29 @@
     </Window.InputBindings>
 
     <DockPanel LastChildFill="True">
+        <Grid  DockPanel.Dock="Top" HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-        <Menu DockPanel.Dock="Top" HorizontalAlignment="Stretch">
-            <MenuItem Command="{Binding OpenInBrowserCommand}" Header="Open In _Browser"/>
-            <MenuItem Command="{Binding ToggleFavoriteCommand}" Header="{Binding FavoriteString, FallbackValue=Favorite}"/>
-            <!--
+            <Menu Grid.Column="1"/>
+
+            <Menu Grid.Column="0">
+                <MenuItem Command="{Binding OpenInBrowserCommand}" Header="Open In _Browser"/>
+                <MenuItem Command="{Binding ToggleFavoriteCommand}" Header="{Binding FavoriteString, FallbackValue=Favorite}"/>
+            </Menu>
+
+
+            <Menu Grid.Column="2">
+                <MenuItem Command="{Binding FollowUserCommand}" Header="{Binding FollowUserString, FallbackValue='FollowUserString'}"/>
+                <MenuItem Command="{Binding SubscribeCommand}" Header="{Binding SubscribeString, FallbackValue=SubscribeString}"/>
+            </Menu>
+        </Grid>
+        <!--
             <MenuItem Command="{Binding CloseCommand}" Header="Close"/>
             -->
-        </Menu>
 
         <ScrollViewer Name="ScrollViewer" MaxHeight="700" VerticalScrollBarVisibility="Auto">
             <Grid Margin="5" >

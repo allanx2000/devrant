@@ -14,6 +14,8 @@ namespace DevRant.WPF.DataStore
         IReadOnlyList<string> FollowedUsers { get; }
         long FollowedUsersLastChecked { get; set; }
         int FollowedUsersUpdateInterval { get; }
+        
+        long FollowedRantsLastChecked { get; set; }
 
         string DBFolder { get; }
 
@@ -26,6 +28,7 @@ namespace DevRant.WPF.DataStore
         int ResultsLimit { get; }
         int MaxPages { get; }
         int MinScore { get; set; }
+        int FollowedRantsInterval { get; set; }
 
         void Unfollow(string user);
         void Follow(string user);
@@ -42,6 +45,7 @@ namespace DevRant.WPF.DataStore
         void SetLogin(LoginInfo loginInfo);
         void SetFilterOutRead(bool filterOutRead);
         void SetLimits(int resultsLimit, int minScore, int maxPages);
+        bool IsFollowing(string username);
 
 
         /*

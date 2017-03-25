@@ -13,9 +13,7 @@ namespace DevRant.WPF.DataStore
     class AppSettingsDataStore : IDataStore
     {
         private Properties.Settings Settings = Properties.Settings.Default;
-
         private DataBucket bucket = new DataBucket();
-
         private List<string> followedUsers;
 
         public AppSettingsDataStore()
@@ -35,6 +33,33 @@ namespace DevRant.WPF.DataStore
             get { return true; }
         }
 
+        public LoginInfo GetLoginInfo()
+        {
+            if (!string.IsNullOrEmpty(Settings.Username) && !string.IsNullOrEmpty(Settings.Password))
+            {
+                return new LoginInfo(Settings.Username, Settings.Password);
+            }
+            else
+                return null;
+        }
+
+        public void SetLogin(LoginInfo info)
+        {
+            Settings.Username = info.Username;
+            Settings.Password = info.Password;
+            Settings.Save();
+        }
+
+        public bool IsFollowing(string username)
+        {
+            if (FollowedUsers != null && followedUsers.Contains(username))
+                return true;
+            else
+                return false;
+        }
+
+
+        #region Followed Users
         public IReadOnlyList<string> FollowedUsers
         {
             get
@@ -47,7 +72,6 @@ namespace DevRant.WPF.DataStore
         {
             get
             {
-                //return Utilities.ToUnixTime(DateTime.UtcNow.AddHours(-12));
                 return Settings.LastChecked;
             }
             set
@@ -65,6 +89,61 @@ namespace DevRant.WPF.DataStore
             }
         }
 
+        public void Follow(string user)
+        {
+            if (!followedUsers.Contains(user))
+            {
+                followedUsers.Add(user);
+                SaveUsers();
+            }
+        }
+
+        private void SaveUsers()
+        {
+            if (Settings.FollowedUsers == null)
+            {
+                Settings.FollowedUsers = new System.Collections.Specialized.StringCollection();
+            }
+            else
+                Settings.FollowedUsers.Clear();
+
+            foreach (var user in followedUsers)
+                Settings.FollowedUsers.Add(user);
+
+            Settings.Save();
+        }
+
+        public void Unfollow(string user)
+        {
+            if (followedUsers.Contains(user))
+            {
+                followedUsers.Remove(user);
+                SaveUsers();
+            }
+        }
+
+        public List<string> SetFollowing(ICollection<string> users)
+        {
+            var same = users.Intersect(followedUsers);
+
+            var added = from i in users where !same.Contains(i) select i;
+            var list = added.ToList();
+
+            followedUsers.Clear();
+            followedUsers.AddRange(users);
+            SaveUsers();
+
+            return list;
+        }
+
+        public void SetUpdatesInterval(int updateCheckInterval)
+        {
+            Settings.FollowedUsersUpdateInterval = updateCheckInterval;
+            Settings.Save();
+        }
+        #endregion
+
+        #region Section Options
         public RantRange DefaultRange
         {
             get
@@ -81,6 +160,20 @@ namespace DevRant.WPF.DataStore
             }
         }
 
+        public void SetDefaultRange(RantRange defaultStoryRange)
+        {
+            Settings.StoryRange = defaultStoryRange;
+            Settings.Save();
+        }
+
+        public void SetDefaultFeed(RantSort defaultFeed)
+        {
+            Settings.StorySort = defaultFeed;
+            Settings.Save();
+        }
+        #endregion
+
+        #region Display Options
         public bool HideUsername
         {
             get
@@ -97,6 +190,20 @@ namespace DevRant.WPF.DataStore
             }
         }
 
+        public void SetHideUsername(bool hide)
+        {
+            Settings.HideUsername = hide;
+            Settings.Save();
+        }
+
+        public void SetShowCreateTime(bool showCreateTime)
+        {
+            Settings.ShowCreateTime = showCreateTime;
+            Settings.Save();
+        }
+        #endregion
+
+        #region Query Options
         public bool FilterOutRead
         {
             get
@@ -135,106 +242,12 @@ namespace DevRant.WPF.DataStore
             {
                 return Settings.MinScore;
             }
-
             set
             {
                 throw new NotImplementedException();
             }
         }
 
-        public void Follow(string user)
-        {
-            if (!followedUsers.Contains(user))
-            {
-                followedUsers.Add(user);
-                SaveUsers();
-            }
-        }
-
-        private void SaveUsers()
-        {
-            if (Settings.FollowedUsers == null)
-            {
-                Settings.FollowedUsers = new System.Collections.Specialized.StringCollection();
-            }
-            else
-                Settings.FollowedUsers.Clear();
-
-            foreach (var user in followedUsers)
-                Settings.FollowedUsers.Add(user);
-
-            Settings.Save();
-        }
-
-        public void Unfollow(string user)
-        {
-            if (followedUsers.Contains(user))
-            {
-                followedUsers.Remove(user);
-                SaveUsers();
-            }
-        }
-
-        public void SetDefaultRange(RantRange defaultStoryRange)
-        {
-            Settings.StoryRange = defaultStoryRange;
-            Settings.Save();
-        }
-
-        public void SetDefaultFeed(RantSort defaultFeed)
-        {
-            Settings.StorySort = defaultFeed;
-            Settings.Save();
-        }
-
-        public List<string> SetFollowing(ICollection<string> users)
-        {
-            var same = users.Intersect(followedUsers);
-
-            var added = from i in users where !same.Contains(i) select i;
-            var list = added.ToList();
-
-            followedUsers.Clear();
-            followedUsers.AddRange(users);
-            SaveUsers();
-
-            return list;
-        }
-
-        public void SetUpdatesInterval(int updateCheckInterval)
-        {
-            Settings.FollowedUsersUpdateInterval = updateCheckInterval;
-            Settings.Save();
-        }
-
-        public LoginInfo GetLoginInfo()
-        {
-            if (!string.IsNullOrEmpty(Settings.Username) && !string.IsNullOrEmpty(Settings.Password))
-            {
-                return new LoginInfo(Settings.Username, Settings.Password);
-            }
-            else
-                return null;
-        }
-
-        public void SetHideUsername(bool hide)
-        {
-            Settings.HideUsername = hide;
-            Settings.Save();
-        }
-
-        public void SetShowCreateTime(bool showCreateTime)
-        {
-            Settings.ShowCreateTime = showCreateTime;
-            Settings.Save();
-        }
-
-        public void SetLogin(LoginInfo info)
-        {
-            Settings.Username = info.Username;
-            Settings.Password = info.Password;
-            Settings.Save();
-        }
 
         public void SetFilterOutRead(bool filterOutRead)
         {
@@ -275,5 +288,38 @@ namespace DevRant.WPF.DataStore
             Settings.MaxPages = maxPages;
             Settings.Save();
         }
+
+        #endregion
+
+        #region Followed Rants
+        public long FollowedRantsLastChecked
+        {
+            get
+            {
+                return Settings.FollowedRantsLastChecked;
+            }
+
+            set
+            {
+                Settings.LastChecked = value;
+                Settings.Save();
+            }
+        }
+
+        private const int followedRantsInterval = 60 * 60 * 1000; //1hr
+        public int FollowedRantsInterval
+        {
+            get
+            {
+                return followedRantsInterval;
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+        #endregion
+
     }
 }

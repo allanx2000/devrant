@@ -7,10 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace DevRant.WPF
-{
-
-    //TODO: Move libs into project/GitHub
-
+{   
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -24,8 +21,6 @@ namespace DevRant.WPF
             this.DataContext = vm;
 
             InitializeComponent();
-
-            //SectionsListBox.se
         }
 
         private async void RefreshFeed(object sender, RoutedEventArgs e)
