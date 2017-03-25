@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Permissions;
 using System.Threading;
+using DevRant.Enums;
 
 namespace DevRant.WPF.Checkers
 {
@@ -20,18 +21,15 @@ namespace DevRant.WPF.Checkers
 
         public UpdateArgs GetFeedUpdate()
         {
-            return new UpdateArgs(UpdateType.UpdateFeed, 0, null, Posts);
+            return new UpdateArgs(UpdateType.UpdateFeed, 0, null);
         }
 
-        public ObservableCollection<ViewModels.Rant> Posts { get; private set; }
 
         public FollowedUserChecker(IDataStore ds, IDevRantClient api, IPersistentDataStore history)
         {
             this.ds = ds;
             this.api = api;
-            this.history = history;
-            
-            Posts = new ObservableCollection<ViewModels.Rant>();
+            this.history = history;            
         }
 
         public FollowedUserChecker() : this(AppManager.Instance.Settings, AppManager.Instance.API, AppManager.Instance.DB)
@@ -78,7 +76,7 @@ namespace DevRant.WPF.Checkers
                     if (!IsLatest(version))
                         break;
 
-                    RemoveRead();
+                    AppManager.Instance.RemoveReadUpdates();
 
                     long lastTime = ds.FollowedUsersLastChecked;
 
@@ -88,19 +86,11 @@ namespace DevRant.WPF.Checkers
 
                     foreach (string user in users)
                     {
-                        Profile profile = await api.GetProfileAsync(user);
+                        Profile profile = await api.GetProfileAsync(user, ProfileContentType.Rants);
+                        AddTo(lastTime, user, ProfileContentType.Rants, profile.Rants, added);
 
-                        foreach (var rant in profile.Rants)
-                        {
-                            if (rant.CreatedTime > lastTime)
-                            {
-                                if (!history.IsRead(rant.Id))
-                                {
-                                    ViewModels.Rant r = new ViewModels.Rant(rant);
-                                    added.Add(r);
-                                }
-                            }
-                        }
+                        profile = await api.GetProfileAsync(user, ProfileContentType.Upvoted);
+                        AddTo(lastTime, user, ProfileContentType.Upvoted, profile.Rants, added);                        
                     }
 
                     if (!IsLatest(version))
@@ -112,7 +102,7 @@ namespace DevRant.WPF.Checkers
 
                         foreach (var r in added)
                         {
-                            Posts.Add(r);
+                            AppManager.Instance.AddUpdate(r);
                         }
 
                         ds.FollowedUsersLastChecked = latest;
@@ -130,19 +120,30 @@ namespace DevRant.WPF.Checkers
             }
         }
 
-        private void RemoveRead()
+        //TODO: NEed lastTime? IsRead should be enough?
+        //Check if isRead is stored even if Filter is false
+        private void AddTo(long lastTime, string username, ProfileContentType type, List<Dtos.Rant> rants, List<ViewModels.Rant> added)
         {
-            var read = Posts.Where(x => x.Read).ToList();
+            foreach (var rant in rants)
+            {
+                if (rant.CreatedTime > lastTime)
+                {
+                    if (!history.IsRead(rant.Id))
+                    {
+                        ViewModels.Rant r = new ViewModels.Rant(rant);
+                        r.UpdateText = MakeMessage(type, username);
 
-            foreach (var r in read)
-                Posts.Remove(r);
+                        added.Add(r);
+                    }
+                }
+            }
         }
-
+        
         internal void SendUpdate(UpdateType type, int added = 0, string users = null, Exception error = null)
         {
             if (OnUpdate != null)
             {
-                var update = new UpdateArgs(type, added, users, Posts);
+                var update = new UpdateArgs(type, added, users);
                 update.Error = error;
 
                 OnUpdate.Invoke(update);
@@ -182,7 +183,8 @@ namespace DevRant.WPF.Checkers
                     foreach (var rant in profile.Rants)
                     {
                         ViewModels.Rant r = new ViewModels.Rant(rant);
-                        Posts.Add(r);
+                        r.UpdateText = MakeMessage(Enums.ProfileContentType.Rants, user);
+
                         added.Add(r);
                     }
                 }
@@ -193,6 +195,19 @@ namespace DevRant.WPF.Checkers
             }
 
             SendUpdate(UpdateType.GetAllForUser, added.Count, string.Join(", ", users));
+        }
+
+        private string MakeMessage(ProfileContentType type, string user)
+        {
+            switch (type)
+            {
+                case ProfileContentType.Upvoted:
+                    return user + " +1'd a rant";
+                case ProfileContentType.Rants:
+                    return "New rant by " + user;
+                default:
+                    return null;
+            }
         }
     }
 }

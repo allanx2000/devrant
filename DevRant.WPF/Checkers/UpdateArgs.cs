@@ -8,17 +8,15 @@ namespace DevRant.WPF.Checkers
 {
     public class UpdateArgs
     {
-        public UpdateArgs(UpdateType type, int added, string users, ICollection<ViewModels.Rant> posts)
+        public UpdateArgs(UpdateType type, int added, string users)
         {
             Added = added;
             Type = type;
 
-            if (posts != null)
-            {
-                Total = posts.Count;
-                TotalUnread = posts.Count(x => !x.Read);
-            }
-
+            var updates = AppManager.Instance.UpdatesFeed;
+            Total = updates.Count;
+            TotalUnread = updates.Count(x => !x.Read);
+            
             if (users != null)
                 Users = users;
         }

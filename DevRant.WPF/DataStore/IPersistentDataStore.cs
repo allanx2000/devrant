@@ -21,5 +21,12 @@ namespace DevRant.WPF.DataStore
         List<SavedPostContent> GetDrafts();
         SavedPostContent GetDraft(long id);
         void UpdateDraft(SavedPostContent data);
+
+
+        List<long> GetSubscribedRantIds();
+        bool IsSubscribed(int postId);
+        void Subscribe(int postId);
+        void Unsubscribe(int postId);
+
     }
 }

@@ -17,7 +17,7 @@ namespace DevRant.WPF.Checkers
 
         public UpdateArgs CheckFollowedRantsForUpdates()
         {
-            return new UpdateArgs(UpdateType.UpdatedRants, 0, null, Posts);
+            return new UpdateArgs(UpdateType.UpdatedRants, 0, null);
         }
 
         public ObservableCollection<ViewModels.Rant> Posts { get; private set; }
@@ -75,8 +75,8 @@ namespace DevRant.WPF.Checkers
 
                     List<ViewModels.Rant> added = new List<ViewModels.Rant>();
 
-                    var rantIds = await GetFavoritedRantIds(manager);
-
+                    List<long> rantIds = manager.DB.GetSubscribedRantIds();
+                    
                     foreach (long rantId in rantIds)
                     {
                         Dtos.Rant rant = await manager.API.GetRant(rantId);
@@ -117,10 +117,11 @@ namespace DevRant.WPF.Checkers
             }
         }
 
-        private async Task<List<long>> GetFavoritedRantIds(AppManager manager)
+        private async Task<List<long>> GetSubscribedRantIds(AppManager manager)
         {
             List<long> ids = new List<long>();
 
+            
             //TODO: Get all, paging how?
             Profile profile;
 
@@ -154,7 +155,7 @@ namespace DevRant.WPF.Checkers
         {
             if (OnUpdate != null)
             {
-                var update = new UpdateArgs(type, added, users, Posts);
+                var update = new UpdateArgs(type, added, users);
                 update.Error = error;
 
                 OnUpdate.Invoke(update);

@@ -19,6 +19,9 @@ namespace DevRant.WPF.ViewModels
         
         public string AvatarImage { get { return rant.AvatarImage; } }
 
+        //For updates
+        public string UpdateText { get; set; }
+
         public long RantId { get { return rant.Id; } }
         public string Text { get { return rant.Text; } }
         public int Votes {

@@ -9,7 +9,10 @@
              d:DesignHeight="300" d:DesignWidth="300" x:Name="control">
     <!-- This control also supports displaying comments-->
 
-    <Grid>
+    <StackPanel Orientation="Vertical">
+        <Label FontWeight="Bold" Content="{Binding UpdateText, ElementName=control}"/>
+        
+        <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80"/>
             <ColumnDefinition Width="*"/>
@@ -124,4 +127,5 @@
 
         </StackPanel>
     </Grid>
+    </StackPanel>
 </local:MyUserControl>

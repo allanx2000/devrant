@@ -26,11 +26,11 @@ namespace DevRant.WPF.Controls
         public static DependencyProperty LoggedInProperty = DependencyProperty.Register("LoggedIn", typeof(bool), typeof(RantControl));
         public static DependencyProperty DateVisibilityProperty = DependencyProperty.Register("DateVisibility", typeof(Visibility), typeof(RantControl));
         public static DependencyProperty UsernameVisibilityProperty = DependencyProperty.Register("UsernameVisibility", typeof(Visibility), typeof(RantControl));
-        
+
 
 
         public event VoteButton.OnClick ButtonClicked;
-        
+
         public bool LoggedIn
         {
             get
@@ -43,12 +43,12 @@ namespace DevRant.WPF.Controls
                 RaisePropertyChange();
             }
         }
-        
+
         public Visibility DateVisibility
         {
             get
             {
-                return (Visibility) GetValue(DateVisibilityProperty);
+                return (Visibility)GetValue(DateVisibilityProperty);
             }
             set
             {
@@ -124,11 +124,25 @@ namespace DevRant.WPF.Controls
             }
         }
 
+        public string UpdateText
+        {
+            get
+            {
+                return bucket.Get<string>("UpdateText");
+            }
+            set
+            {
+                bucket.Set("UpdateText", value);
+                RaisePropertyChange();
+            }
+        }
+
+
         public ImageSource Avatar
         {
             get
             {
-                return  bucket.Get<ImageSource>("Avatar");
+                return bucket.Get<ImageSource>("Avatar");
             }
             set
             {
@@ -171,7 +185,7 @@ namespace DevRant.WPF.Controls
             if (e.NewValue != null)
             {
                 this.item = e.NewValue as FeedItem;
-                
+
                 Rant r = item as Rant;
                 if (r != null)
                 {
@@ -179,11 +193,12 @@ namespace DevRant.WPF.Controls
                         ByUser = true;
 
                     ReplyVisibility = Visibility.Visible;
+                    UpdateText = r.UpdateText;
                 }
 
                 TagsVisibility = Utilities.ConvertToVisibility(r != null && !string.IsNullOrEmpty(r.TagsString));
                 CommentsVisibility = Utilities.ConvertToVisibility(r != null);
-                
+
                 Comment comment = item.AsComment();
                 if (comment != null)
                 {
@@ -200,7 +215,7 @@ namespace DevRant.WPF.Controls
                 if (AppManager.Instance.API != null && UsernameVisibility == Visibility.Visible && hasAvatar != null)
                 {
                     Avatar = AppManager.Instance.API.GetAvatar(hasAvatar.AvatarImage);
-                }       
+                }
             }
         }
 
@@ -211,7 +226,7 @@ namespace DevRant.WPF.Controls
 
         private void Button_Clicked(object sender, ButtonClickedEventArgs args)
         {
-            
+
             if (ButtonClicked != null)
                 ButtonClicked.Invoke(sender, args);
         }
@@ -220,7 +235,7 @@ namespace DevRant.WPF.Controls
         {
             Button_Clicked(sender, args);
         }
-        
+
         public ICommand LinkClickedCommand
         {
             get
@@ -228,6 +243,7 @@ namespace DevRant.WPF.Controls
                 return new Innouvous.Utils.MVVM.CommandHelper(LinkClicked);
             }
         }
+
 
         private void LinkClicked(object arg)
         {
@@ -253,7 +269,7 @@ namespace DevRant.WPF.Controls
                 }
 
                 args.SelectedItem = DataContext as FeedItem;
-                
+
                 //Change to ButtonClicked
                 ButtonClicked.Invoke(this, args);
             }
@@ -268,7 +284,7 @@ namespace DevRant.WPF.Controls
                 Utilities.OpenProfile(((HasUsername)item).Username, window);
             }
         }
-        
-        
+
+
     }
 }

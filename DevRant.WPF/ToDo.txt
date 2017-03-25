@@ -7,5 +7,10 @@
 
 -Add disabled color to VoteControl
 
+-Move followed users to store in DB
+-Implement followed rants store in DB
+
 -Track posts that Followed Users +1d
 -Follow: follow a rant, only notify when OP adds a new comment to his rant
+
+-Ids int or long, make consistent

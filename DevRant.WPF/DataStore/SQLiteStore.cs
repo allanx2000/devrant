@@ -54,18 +54,28 @@ namespace DevRant.WPF.DataStore
             {
                 ExecuteNonQuery(CreateDraftsTableQuery);
             }
+
+            if (!SQLUtils.CheckTableExists(TableSubscribed, this))
+            {
+                ExecuteNonQuery(CreateSubscribedTableQuery);
+            }
         }
 
         private const string TableRead = "tbl_read";
         private const string TableDrafts = "tbl_drafts";
+        private const string TableSubscribed = "tbl_subscribed";
 
         private string CreateReadTableQuery;
         private string CreateDraftsTableQuery;
-        
+        private string CreateSubscribedTableQuery;
+
         #region Create Queries
         private void CreateQueries()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb;
+
+            #region Read   
+            sb = new StringBuilder();
 
             sb.AppendLine("CREATE TABLE {0} (");
             sb.AppendLine("PostID       INTEGER NOT NULL PRIMARY KEY,");
@@ -75,6 +85,32 @@ namespace DevRant.WPF.DataStore
             CreateReadTableQuery = string.Format(sb.ToString(), TableRead);
             sb.Clear();
 
+
+            InsertReadQuery = "INSERT INTO {0} VALUES({1},'{2}')";
+            FindReadQuery = "SELECT COUNT(*) FROM {0} WHERE PostID = {1}";
+
+            #endregion
+
+            #region Subscribed   
+            sb = new StringBuilder();
+
+            sb.AppendLine("CREATE TABLE {0} (");
+            sb.AppendLine("PostID       INTEGER NOT NULL PRIMARY KEY,");
+            sb.AppendLine("Added        datetime NOT NULL");
+            sb.AppendLine(")");
+
+            CreateSubscribedTableQuery = string.Format(sb.ToString(), TableSubscribed);
+
+            InsertSubscribedQuery = "INSERT INTO {0} VALUES({1},'{2}')";
+            FindSubscribedQuery = "SELECT COUNT(*) FROM {0} WHERE PostID = {1}";
+            DeleteSubscribedQuery = "DELETE FROM {0} WHERE PostID = {1}";
+
+            #endregion
+
+
+            #region Drafts
+            sb = new StringBuilder();
+
             sb.AppendLine("CREATE TABLE {0} (");
             sb.AppendLine("ID           INTEGER NOT NULL PRIMARY KEY,");
             sb.AppendLine("TextString   TEXT NOT NULL,");
@@ -83,20 +119,19 @@ namespace DevRant.WPF.DataStore
             sb.AppendLine(")");
 
             CreateDraftsTableQuery = string.Format(sb.ToString(), TableDrafts);
-            sb.Clear();
-
-
-            InsertReadQuery = "INSERT INTO {0} VALUES({1},'{2}')";
-            FindReadQuery = "SELECT COUNT(*) FROM {0} WHERE PostID = {1}";
 
             InsertDraftQuery = "INSERT INTO {0} VALUES(NULL,'{1}',{2},{3})";
             UpdateDraftQuery = "UPDATE {0} SET TextString = '{2}', ImagePath={3}, TagString={4} WHERE ID = {1}";
+
+            #endregion
+
         }
 
         private void CreateAllTables()
         {
             ExecuteNonQuery(CreateReadTableQuery);
             ExecuteNonQuery(CreateDraftsTableQuery);
+            ExecuteNonQuery(CreateSubscribedTableQuery);
         }
 
         #endregion
@@ -122,6 +157,53 @@ namespace DevRant.WPF.DataStore
         }
 
         #endregion
+
+        #region Subscribed
+        private string InsertSubscribedQuery;
+        private string FindSubscribedQuery;
+        private string DeleteSubscribedQuery;
+        
+        public List<long> GetSubscribedRantIds()
+        {
+            string cmd = "select * from " + TableSubscribed;
+
+            List<long> ids = new List<long>();
+
+            var table = ExecuteSelect(cmd);
+
+            foreach (DataRow r in table.Rows)
+            {
+                long id = Convert.ToInt64(r["PostId"]);
+                ids.Add(id);
+            }
+
+            return ids;
+        }
+
+        public bool IsSubscribed(int postId)
+        {
+            string query = string.Format(FindSubscribedQuery, TableSubscribed, postId);
+            int count = Convert.ToInt32(ExecuteScalar(query));
+            return count > 0;
+        }
+
+        public void Subscribe(int postId)
+        {
+            if (IsSubscribed(postId))
+                throw new Exception("Already Subscribed to: " + postId);
+
+            string query = string.Format(InsertSubscribedQuery, TableSubscribed, postId, SQLUtils.ToSQLDateTime(DateTime.Now));
+            ExecuteNonQuery(query);
+        }
+
+        public void Unsubscribe(int postId)
+        {
+            string query = string.Format(DeleteSubscribedQuery, TableSubscribed, postId);
+            ExecuteNonQuery(query);
+        }
+
+        #endregion
+
 
         #region Drafts
         private string InsertDraftQuery;
@@ -229,6 +311,7 @@ namespace DevRant.WPF.DataStore
 
             ExecuteNonQuery(cmd);
         }
+
 
         #endregion
     }

@@ -22,6 +22,16 @@ namespace DevRant.WPF
         private const string UnfollowUser = "Unfollow _User";
         private const string FollowUser = "Follow _User";
 
+        private const string SubscribeRant = "_Subscribe For Updates";
+        private const string UnsubscribeRant = "Un_subscribe";
+        
+        public Rant Rant { get; set; } //TODO: Make private, check DP
+
+        public bool LoggedIn
+        {
+            get { return api.User.LoggedIn; }
+        }
+        
         public RantViewerViewModel(Window window, Rant rant, IDevRantClient api, Action<string> onScroll)
         {
             Rant = rant;
@@ -33,9 +43,67 @@ namespace DevRant.WPF
             GetComments();
         }
         
-        public bool LoggedIn
+
+        /// <summary>
+        /// Handles the link buttons in the screen
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        internal async Task ButtonClicked(ButtonClickedEventArgs args)
         {
-            get { return api.User.LoggedIn; }
+            try
+            {
+                bool handled = await Utilities.HandleButtons(window, args);
+
+                if (handled)
+                    GetComments();
+            }
+            catch (Exception e)
+            {
+                MessageBoxFactory.ShowError(e);
+            }
+        }
+
+        #region Comments
+        public ObservableCollection<Comment> Comments { get; set; }
+
+        private async void GetComments()
+        {
+            Dtos.Rant rant = await api.GetRant(this.Rant.ID);
+
+            if (rant.Comments != null)
+            {
+                Comments.Clear();
+
+                foreach (var c in rant.Comments)
+                {
+                    Comments.Add(new Comment(c));
+                }
+            }
+        }
+        #endregion
+
+        #region Misc Commands
+
+        public ICommand OpenInBrowserCommand
+        {
+            get
+            {
+                return new mvvm.CommandHelper(OpenInBrowser);
+            }
+        }
+
+        private void OpenInBrowser()
+        {
+            Utilities.OpenFeedItem(Rant);
+        }
+
+        public ICommand CloseCommand
+        {
+            get
+            {
+                return new mvvm.CommandHelper(() => window.Close());
+            }
         }
 
 
@@ -64,43 +132,14 @@ namespace DevRant.WPF
                 MessageBoxFactory.ShowError(e);
             }
         }
-        
-        /// <summary>
-        /// Handles the link buttons in the screen
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        internal async Task ButtonClicked(ButtonClickedEventArgs args)
-        {
-            try
-            {
-                bool handled = await Utilities.HandleButtons(window, args);
+        #endregion
 
-                if (handled)
-                    GetComments();
-            }
-            catch (Exception e)
-            {
-                MessageBoxFactory.ShowError(e);
-            }
+        #region Follow User
+        public string FollowUserString
+        {
+            get { return AppManager.Instance.Settings.IsFollowing(Rant.Username) ? UnfollowUser : FollowUser; }
         }
 
-        #region Command
-
-        public ICommand OpenInBrowserCommand
-        {
-            get
-            {
-                return new mvvm.CommandHelper(OpenInBrowser);
-            }
-        }
-
-        private void OpenInBrowser()
-        {
-            Utilities.OpenFeedItem(Rant);
-        }
-
-        
         public ICommand FollowUserCommand
         {
             get
@@ -133,6 +172,15 @@ namespace DevRant.WPF
             }
         }
 
+        #endregion
+        
+        #region Favorite Rant
+
+        public string FavoriteString
+        {
+            get { return Rant.IsFavorite ? Unfavorite : Favorite; }
+        }
+
         public ICommand ToggleFavoriteCommand
         {
             get
@@ -156,47 +204,54 @@ namespace DevRant.WPF
             }
         }
 
-        public ICommand CloseCommand
+        #endregion
+
+        #region Subscribe Rant
+
+        public string SubscribeString
+        {
+            get {
+                bool subscribed = false;
+                if (Rant != null)
+                    subscribed = AppManager.Instance.DB.IsSubscribed(Rant.ID);
+
+                return subscribed? UnsubscribeRant: SubscribeRant;
+            }
+        }
+
+        public ICommand SubscribeCommand
         {
             get
             {
-                return new mvvm.CommandHelper(() => window.Close());
+                return new mvvm.CommandHelper(ToggleSubscribe);
             }
         }
 
-        #endregion
-
-        #region Properties
-        
-        public string FavoriteString
+        private void ToggleSubscribe()
         {
-            get { return Rant.IsFavorite ? Unfavorite : Favorite; }
-        }
-
-        public string FollowUserString
-        {
-            get { return AppManager.Instance.Settings.IsFollowing(Rant.Username)? UnfollowUser : FollowUser; }
-        }
-
-        public Rant Rant { get; set; } //TODO: Make private, check DP
-
-        public ObservableCollection<Comment> Comments { get; set; }
-
-        private async void GetComments()
-        {
-            Dtos.Rant rant = await api.GetRant(this.Rant.ID);
-
-            if (rant.Comments != null)
+            try
             {
-                Comments.Clear();
+                var db = AppManager.Instance.DB;
 
-                foreach (var c in rant.Comments)
+                int id = Rant.ID;
+                if (db.IsSubscribed(id))
                 {
-                    Comments.Add(new Comment(c));
+                    db.Unsubscribe(id);
                 }
+                else
+                {
+                    db.Subscribe(id);
+                }
+
+                RaisePropertyChanged("SubscribeString");
+            }
+            catch (Exception e)
+            {
+                MessageBoxFactory.ShowError(e);
             }
         }
 
         #endregion
+
     }
 }

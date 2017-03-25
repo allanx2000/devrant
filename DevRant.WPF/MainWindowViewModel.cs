@@ -571,7 +571,7 @@ namespace DevRant.WPF
                         LoadDrafts();
                         break;
                     case SectionType.Updates:
-                        LoadFollowed();
+                        LoadUpdatesSection();
                         break;
 
                     default:
@@ -580,7 +580,7 @@ namespace DevRant.WPF
 
                 currentSectionType = section;
             }
-            catch
+            catch (Exception e)
             {
                 throw;
             }
@@ -1078,7 +1078,7 @@ namespace DevRant.WPF
             }
         }
 
-        private void LoadFollowed()
+        private void LoadUpdatesSection()
         {
             currentFeedType = FeedType.Updates;
 
@@ -1086,7 +1086,7 @@ namespace DevRant.WPF
             {
                 feeds.Clear();
 
-                foreach (var rant in fchecker.Posts)
+                foreach (var rant in AppManager.Instance.UpdatesFeed)
                 {
                     if (!rant.Read)
                         feeds.Add(rant);
@@ -1183,8 +1183,8 @@ namespace DevRant.WPF
                     foreach (var r in tmp)
                     {
                         if (ids.Contains(r.Id)
+                            || r.Username == LoggedInUser
                             || VoteState.None != r.Voted
-                            || VoteState.Disabled == r.Voted
                             || r.Score < minScore
                             || (ds.FilterOutRead && db.IsRead(r.Id)))
                         {

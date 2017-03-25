@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DevRant.WPF.DataStore;
+using System.Collections.ObjectModel;
+using DevRant.WPF.ViewModels;
 
 namespace DevRant.WPF
 {
@@ -24,8 +26,18 @@ namespace DevRant.WPF
 
         private AppManager()
         {
+            UpdatesFeed = new ObservableCollection<ViewModels.Rant>();
+        }
+
+        #region Updates Feed
+        public ObservableCollection<ViewModels.Rant> UpdatesFeed { get; private set; }
+
+        public void RemoveReadUpdates()
+        {
 
         }
+
+        #endregion
 
         public IDevRantClient API { get; private set; }
         public IDataStore Settings { get; private set; }
@@ -39,6 +51,16 @@ namespace DevRant.WPF
                 Settings = settings,
                 DB = db
             };
+        }
+
+        internal void AddUpdate(Rant r)
+        {
+            //TODO: Need someway to check for dups before adding
+            foreach (var existing in UpdatesFeed)
+                if (existing.ID == r.ID)
+                    return;
+
+            UpdatesFeed.Add(r);
         }
     }
 }
